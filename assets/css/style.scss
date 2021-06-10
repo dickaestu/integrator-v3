@@ -1,0 +1,83 @@
+$musa_green_dark_text: #3c8aa3;
+$white: #fff;
+$musa_green_light_text: #a4aeb7;
+$musa_grey: #bdbdbd;
+
+.pb-0 {
+  padding-bottom: 0 !important;
+}
+
+#login {
+  .jumbotron {
+    max-height: 100vh;
+    max-width: 100%;
+    position: relative;
+    height: 100vh;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    img {
+      object-fit: cover;
+      object-position: center;
+      height: 100vh;
+      max-height: 100vh;
+      width: 100%;
+      display: block;
+    }
+    .centered {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 35%;
+      margin: 0 auto;
+      .logo {
+        margin: 0 auto;
+      }
+      .v-card {
+        padding: 70px 24px 24px;
+        border: 1px solid #dedede;
+        border-radius: 5px;
+        img {
+          margin: 0 auto;
+          display: block;
+          width: 100%;
+        }
+        .v-input {
+          width: 75%;
+          margin: 0 auto;
+          background: transparent;
+          border: 1px solid #c4d2de;
+        }
+        .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
+          > .v-input__control
+          > .v-input__slot {
+          box-shadow: none;
+        }
+        .btn {
+          background: $musa_green_dark_text;
+          color: $white;
+        }
+        .musa_green_light_text {
+          color: $musa_green_light_text;
+        }
+        .musa_grey {
+          color: $musa_grey;
+        }
+        .musa_green_dark_text {
+          color: $musa_green_dark_text;
+        }
+        a {
+          text-decoration: none;
+        }
+        .power-musa {
+          object-fit: cover;
+          object-position: center;
+          display: inline-block;
+          width: 30%;
+          height: auto;
+        }
+      }
+    }
+  }
+}
