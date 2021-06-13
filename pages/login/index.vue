@@ -20,6 +20,10 @@
                   placeholder="Username"
                   solo
                   hide-details="auto"
+                  value=""
+                  :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="show2 ? 'text' : 'password'"
+                  @click:append="show2 = !show2"
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
@@ -27,6 +31,10 @@
                   placeholder="Password"
                   solo
                   hide-details="auto"
+                  value=""
+                  :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="show3 ? 'text' : 'password'"
+                  @click:append="show3 = !show3"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" class="pb-0">
@@ -42,7 +50,7 @@
               </v-col>
               <v-col cols="12">
                 <span class="musa_grey">powered by</span>
-                <img class="power-musa" :src="musa" :alt="musa"></img>
+                <img class="power-musa" :src="musa" :alt="musa" />
               </v-col>
             </v-row>
           </v-card>
@@ -56,6 +64,9 @@
 export default {
   name: "Login",
   data: () => ({
+    show2: true,
+    show3: false,
+    password: "Password",
     bg: require("~/assets/images/bg-login.jpg"),
     logo: require("~/assets/images/logo.png"),
     musa: require("~/assets/images/musa.png")

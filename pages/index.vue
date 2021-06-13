@@ -1,8 +1,6 @@
 <template>
   <section>
-    <!-- <SwiperHome />
-    <ContentOne />
-    <Premium /> -->
+    <Header />
   </section>
 </template>
 

@@ -3,11 +3,17 @@ $white: #fff;
 $musa_green_light_text: #a4aeb7;
 $musa_grey: #bdbdbd;
 
+body {
+  font-family: "Inter", sans-serif;
+}
+
 .pb-0 {
   padding-bottom: 0 !important;
 }
 
-#login {
+#login,
+#forgot,
+#reset {
   .jumbotron {
     max-height: 100vh;
     max-width: 100%;
@@ -79,5 +85,107 @@ $musa_grey: #bdbdbd;
         }
       }
     }
+  }
+}
+
+#forgot,
+#reset {
+  .jumbotron {
+    .centered {
+      .v-card {
+        padding: 45px 45px 70px 45px;
+        // min-height: 75vh;
+        h1 {
+          position: relative;
+          &::after {
+            content: "";
+            width: 100%;
+            bottom: -10px;
+            // margin: 0.3em auto;
+            display: block;
+            height: 1px;
+            background: #c4d2de;
+            position: absolute;
+          }
+        }
+        p {
+          font-size: 14px;
+          margin-top: 20px;
+        }
+        label {
+          font-weight: 600;
+          margin-bottom: 0.5em;
+        }
+        .v-input {
+          width: 100%;
+          margin: 0 auto;
+          background: transparent;
+          border: 1px solid #c4d2de;
+          border-radius: 2px;
+          margin-top: 0.5em;
+          .v-input__control {
+            min-height: unset;
+          }
+        }
+        .position-bottom {
+          min-height: 40vh;
+        }
+      }
+    }
+  }
+}
+
+#reset {
+  .jumbotron {
+    .centered {
+      .v-card {
+        padding: 45px;
+        h1 {
+          position: relative;
+          &::after {
+            content: "";
+            width: 100%;
+            bottom: -10px;
+            display: block;
+            height: 1px;
+            background: #c4d2de;
+            position: absolute;
+          }
+        }
+        p {
+          font-size: 14px;
+          margin-top: 20px;
+        }
+        label {
+          font-weight: 600;
+          margin-bottom: 0.5em;
+        }
+        .v-input {
+          width: 100%;
+          margin: 0 auto;
+          background: transparent;
+          border: 1px solid #c4d2de;
+          border-radius: 2px;
+          margin-top: 0.5em;
+          .v-input__control {
+            min-height: unset;
+          }
+        }
+      }
+    }
+  }
+}
+
+#header {
+  .v-toolbar {
+    background: linear-gradient(
+        89.89deg,
+        rgba(42, 100, 118, 0.84) 12.7%,
+        rgba(11, 61, 82, 0.7812) 91.69%
+      ),
+      #ffffff;
+  }
+  .logo {
+    width: 10%;
   }
 }
