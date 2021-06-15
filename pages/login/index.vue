@@ -46,7 +46,7 @@
               <v-col cols="12" class="musa_green_light_text">
                 <span>Question & Documentations:</span>
                 <br />
-                <a href="#" class="musa_green_dark_text">www.musagreen.com</a>
+                <a href="#" class="musa_green_login">www.musagreen.com</a>
               </v-col>
               <v-col cols="12">
                 <span class="musa_grey">powered by</span>

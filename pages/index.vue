@@ -1,6 +1,8 @@
 <template>
   <section>
     <Header />
+    <MenuHome />
+    <ContentOne />
   </section>
 </template>
 
