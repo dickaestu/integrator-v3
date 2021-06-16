@@ -3,7 +3,8 @@
     <div class="jumbotron">
       <img :src="bg" :alt="bg" />
       <div class="centered">
-        <v-form>
+        <Notification :message="error" v-if="error"/>
+        <v-form method="POST" @submit.prevent="login">
           <v-card>
             <v-row>
               <v-col cols="12">
@@ -17,10 +18,10 @@
               </v-col>
               <v-col cols="12" class="pb-0">
                 <v-text-field
-                  placeholder="Username"
+                  placeholder="Email"
                   solo
                   hide-details="auto"
-                  value=""
+                  name="email"
                   :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="show2 ? 'text' : 'password'"
                   @click:append="show2 = !show2"
@@ -31,14 +32,14 @@
                   placeholder="Password"
                   solo
                   hide-details="auto"
-                  value=""
+                  name="password"
                   :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="show3 ? 'text' : 'password'"
                   @click:append="show3 = !show3"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" class="pb-0">
-                <v-btn class="btn" depressed raised rounded text>Login</v-btn>
+                <v-btn class="btn" type="submit" depressed raised rounded text>Login</v-btn>
               </v-col>
               <v-col cols="12">
                 <a href="#" class="musa_green_light_text">Forgot Password?</a>
@@ -61,16 +62,42 @@
 </template>
 
 <script>
+import Notification from '~/components/Notification'
+
 export default {
   name: "Login",
+  components: {
+    Notification,
+  },
   data: () => ({
     show2: true,
     show3: false,
-    password: "Password",
+    email: "",
+    password: "",
     bg: require("~/assets/images/bg-login.jpg"),
     logo: require("~/assets/images/logo.png"),
     musa: require("~/assets/images/musa.png")
-  })
+  }),
+  watch: {},
+  mounted() {},
+  methods: {
+    async login() {
+      try {
+        await this.$auth.loginWith('local', {
+          data: {
+            email: this.email,
+            password: this.password,
+          },
+        })
+        window.console.log('test login with', this.$auth.loginWith)
+        // window.console.log('test login user', this.$auth.user)
+        // this.$router.push('/')
+        this.$router.push(this.localePath('/'))
+      } catch (e) {
+        this.error = e.response.data.message
+      }
+    },
+  },
 };
 </script>
 
