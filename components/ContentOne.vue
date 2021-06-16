@@ -247,7 +247,42 @@ export default {
             label: {
               borderWidth: 0,
               borderRadius: 6,
-              text: "upper threshold: 8",
+              text: "lower threshold: 6",
+              textAnchor: "center",
+              position: "left",
+              offsetX: 0,
+              offsetY: -15,
+              style: {
+                opacity: 0.5,
+                background: "#F0F2F4",
+                color: "#69747E;",
+                fontSize: "12px",
+                fontWeight: 400,
+                fontFamily: undefined,
+                cssClass: "apexcharts-yaxis-annotation-label",
+                padding: {
+                  left: 7,
+                  right: 7,
+                  top: 7,
+                  bottom: 7
+                }
+              }
+            }
+          },
+          {
+            y: 40,
+            y2: null,
+            strokeDashArray: 7,
+            borderColor: "#FFD4A2",
+            opacity: 1,
+            offsetX: 0,
+            offsetY: 0,
+            width: "100%",
+            yAxisIndex: 0,
+            label: {
+              borderWidth: 0,
+              borderRadius: 6,
+              text: "upper threshold: 10",
               textAnchor: "center",
               position: "left",
               offsetX: 0,

@@ -63,12 +63,22 @@ export default {
     strategies: {
       local: {
         endpoints: {
-          login: { url: 'login', method: 'post', propertyName: 'data.token' },
-          user: { url: 'me', method: 'get', propertyName: 'data' },
+          login: { url: 'login', method: 'post', propertyName: 'data.access_token' },
+          // user: { url: 'me', method: 'get', propertyName: 'data'},
+          user: false,
+          token: {
+            property: 'access_token',
+            required: true,
+            type: false,
+          },
           logout: false
         }
       }
     }
+  },
+
+  router: {
+    middleware: ['auth']
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

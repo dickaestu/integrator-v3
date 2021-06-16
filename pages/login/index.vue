@@ -3,7 +3,6 @@
     <div class="jumbotron">
       <img :src="bg" :alt="bg" />
       <div class="centered">
-        <Notification :message="error" v-if="error"/>
         <v-form method="POST" @submit.prevent="login">
           <v-card>
             <v-row>
@@ -18,6 +17,7 @@
               </v-col>
               <v-col cols="12" class="pb-0">
                 <v-text-field
+                  v-model="email"
                   placeholder="Email"
                   solo
                   hide-details="auto"
@@ -29,6 +29,7 @@
               </v-col>
               <v-col cols="12">
                 <v-text-field
+                  v-model="password"
                   placeholder="Password"
                   solo
                   hide-details="auto"
@@ -62,13 +63,10 @@
 </template>
 
 <script>
-import Notification from '~/components/Notification'
 
 export default {
   name: "Login",
-  components: {
-    Notification,
-  },
+  auth: false,
   data: () => ({
     show2: true,
     show3: false,
@@ -91,8 +89,8 @@ export default {
         })
         window.console.log('test login with', this.$auth.loginWith)
         // window.console.log('test login user', this.$auth.user)
-        // this.$router.push('/')
-        this.$router.push(this.localePath('/'))
+        this.$router.push('/')
+        // this.$router.push(this.localePath('/'))
       } catch (e) {
         this.error = e.response.data.message
       }
