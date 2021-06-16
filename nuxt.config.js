@@ -45,65 +45,56 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
-    "@nuxtjs/auth",
+    "@nuxtjs/auth"
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     proxy: true,
-    browserBaseURL: 'https://musa-integrator-v3-sandbox-production.up.railway.app/api',
+    browserBaseURL:
+      "https://musa-integrator-v3-sandbox-production.up.railway.app/api",
     headers: {
       common: {
-        Accept: 'application/json, text/plain, */*',
-      },
-    },
+        Accept: "application/json, text/plain, */*"
+      }
+    }
   },
 
   auth: {
     strategies: {
       local: {
         endpoints: {
-          login: { url: 'login', method: 'post', propertyName: 'data.access_token' },
+          login: {
+            url: "login",
+            method: "post",
+            propertyName: "data.access_token"
+          },
           // user: { url: 'me', method: 'get', propertyName: 'data'},
           user: false,
           token: {
-            property: 'access_token',
+            property: "access_token",
             required: true,
-            type: false,
-          },
-          logout: false
+            type: false
+          }
+          // logout: false
         }
       }
     }
   },
 
   router: {
-    middleware: ['auth']
+    middleware: ["auth"]
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ["~/assets/variables.scss"]
-    // theme: {
-    //   dark: true,
-    //   themes: {
-    //     dark: {
-    //       primary: colors.blue.darken2,
-    //       accent: colors.grey.darken3,
-    //       secondary: colors.amber.darken3,
-    //       info: colors.teal.lighten1,
-    //       warning: colors.amber.base,
-    //       error: colors.deepOrange.accent4,
-    //       success: colors.green.accent3
-    //     }
-    //   }
-    // }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
   server: {
     port: 2500, // default: 3000
-    host: 'localhost', // default: localhost
-  },
+    host: "localhost" // default: localhost
+  }
 };

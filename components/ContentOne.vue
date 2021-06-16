@@ -90,7 +90,7 @@
         </v-row>
         <v-row>
           <v-col cols="2" v-for="(i, index) in items" :key="index">
-            <v-card class="pa-3 card-bottom">
+            <v-card class="pa-3 card-bottom" :class="i.color">
               <div class="d-flex justify-space-between">
                 <p class="title">{{ i.title }}</p>
                 <p class="unit mb-0">
@@ -102,20 +102,7 @@
               <p class="size mb-0">{{ i.size }}</p>
             </v-card>
           </v-col>
-          <v-col>
-            <v-card class="pa-3 card-bottom red">
-              <div class="d-flex justify-space-between">
-                <p class="title">TSS</p>
-                <p class="unit mb-0">
-                  Unit 01
-                  <br />
-                  <span class="desc">c4470d5a</span>
-                </p>
-              </div>
-              <p class="size mb-0">100 mg/L</p>
-            </v-card>
-          </v-col>
-          <v-col>
+          <!-- <v-col>
             <v-card class="pa-3 card-bottom yellow">
               <div class="d-flex justify-space-between">
                 <p class="title">NO3N</p>
@@ -132,7 +119,7 @@
                 </v-icon>
               </div>
             </v-card>
-          </v-col>
+          </v-col> -->
         </v-row>
       </v-container>
     </section>
@@ -170,61 +157,75 @@ export default {
       {
         title: "Debit",
         unit: "Unit 01",
-        desc: "fc78835c",
+        desc: "",
         size: "30 m3/s"
+      },
+      {
+        title: "TSS",
+        unit: "Unit 01",
+        desc: "",
+        size: "100 mg/L",
+        color: "red"
       },
       {
         title: "pH",
         unit: "Unit 01",
-        desc: "69ae0be6",
+        desc: "",
         size: "7"
+      },
+      {
+        title: "NO3N",
+        unit: "Unit 01",
+        desc: "",
+        size: "86 mg/L",
+        color: "yellow"
       },
       {
         title: "PO4",
         unit: "Unit 01",
-        desc: "fced01dc",
+        desc: "",
         size: "63 mg/L"
       },
       {
         title: "NH3N",
         unit: "Unit 01",
-        desc: "2223a244",
+        desc: "",
         size: "56 mg/L"
       },
       {
         title: "TDS",
         unit: "Unit 01",
-        desc: "1cab702c",
+        desc: "",
         size: "10 mg/L"
       },
       {
         title: "BOD 5",
         unit: "Unit 01",
-        desc: "42f608aa",
+        desc: "",
         size: "23 mg/L"
       },
       {
         title: "COD",
         unit: "Unit 01",
-        desc: "db617f5c",
+        desc: "",
         size: "60 mg/L"
       },
       {
         title: "Fe",
         unit: "Unit 01",
-        desc: "b594caa2",
+        desc: "",
         size: "20 mg/L"
       },
       {
         title: "Cu",
         unit: "Unit 01",
-        desc: "d7a06d0e",
+        desc: "",
         size: "9 mg/L"
       },
       {
         title: "Cr",
         unit: "Unit 01",
-        desc: "fe1456e4",
+        desc: "",
         size: "17 mg/L"
       }
     ],
@@ -282,7 +283,7 @@ export default {
             label: {
               borderWidth: 0,
               borderRadius: 6,
-              text: "upper threshold: 10",
+              text: "upper threshold: 8",
               textAnchor: "center",
               position: "left",
               offsetX: 0,
