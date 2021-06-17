@@ -50,8 +50,9 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    proxy: true,
+    proxy: false,
     browserBaseURL: 'https://musa-integrator-v3-sandbox-production.up.railway.app/api',
+    // browserBaseURL: 'https://7a312f874d9b.up.railway.app/api',
     headers: {
       common: {
         Accept: 'application/json, text/plain, */*',
@@ -62,18 +63,21 @@ export default {
   auth: {
     strategies: {
       local: {
+        token: {
+          property: 'access_token',
+          type: 'Bearer',
+          maxAge: 1800,
+          global: true,
+          required: true,
+          prefix: '_token.',
+          expirationPrefix: '_token_expiration.'
+        },
         endpoints: {
-          login: { url: 'login', method: 'post', propertyName: 'data.access_token' },
-          // user: { url: 'me', method: 'get', propertyName: 'data'},
-          user: false,
-          token: {
-            property: 'access_token',
-            required: true,
-            type: false,
-          },
-          logout: false
-        }
-      }
+          login: { url: 'login', method: 'post', propertyName: 'access_token'},
+          user: { url: 'me', method: 'get', propertyName: 'email'},
+          logout : false,
+        },
+      },
     }
   },
 

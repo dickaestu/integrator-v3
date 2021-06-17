@@ -87,7 +87,7 @@ export default {
             password: this.password,
           },
         })
-        window.console.log('test login with', this.$auth.loginWith)
+        // window.console.log('test login with', this.$auth.loginWith)
         // window.console.log('test login user', this.$auth.user)
         this.$router.push('/')
         // this.$router.push(this.localePath('/'))
