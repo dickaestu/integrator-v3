@@ -1,0 +1,543 @@
+<template>
+  <v-app>
+    <section id="user_management">
+      <Header />
+      <MenuConf />
+      <v-container>
+        <v-row>
+          <v-col>
+            <v-card class="mx-auto">
+              <v-navigation-drawer permanent width="100%">
+                <v-row class="fill-height" no-gutters>
+                  <v-navigation-drawer permanent dark class="menu-left">
+                    <v-list dense nav>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <h5>
+                            General Configuration
+                          </h5>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-divider></v-divider>
+                      <v-list-item link class="mb-7">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            Common Setup
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <h5>
+                            Device Configuration
+                          </h5>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-divider></v-divider>
+                      <v-list-item link>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            Device List
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item link>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            Unit List
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item link class="mb-7">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            Device Calibration
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-content>
+                          <h5>
+                            User Configuration
+                          </h5>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-divider></v-divider>
+                      <v-list-item link class="active">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            User Management
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-navigation-drawer>
+                  <v-list class="grow">
+                    <h3>User Management</h3>
+                    <v-row class="mt-4 mb-4">
+                      <v-col cols="4">
+                        <v-text-field
+                          solo
+                          v-model="search"
+                          prepend-inner-icon="mdi-magnify"
+                          label="Search"
+                          hide-details
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="2">
+                        <v-select
+                          class="radius"
+                          hide-details
+                          v-model="selectedFilters"
+                          :items="filters"
+                          prepend-inner-icon="mdi-filter"
+                          multiple
+                          label="Filter"
+                          solo
+                        >
+                          <template v-slot:prepend-item>
+                            <v-list-item ripple @click="toggle">
+                              <v-list-item-action>
+                                <v-icon
+                                  :color="
+                                    selectedFilters.length > 0
+                                      ? 'indigo darken-4'
+                                      : ''
+                                  "
+                                >
+                                  {{ icon }}
+                                </v-icon>
+                              </v-list-item-action>
+                              <v-list-item-content>
+                                <v-list-item-title>
+                                  Select All
+                                </v-list-item-title>
+                              </v-list-item-content>
+                            </v-list-item>
+                            <v-divider class="mt-2"></v-divider>
+                          </template>
+                          <template v-slot:selection="{ index }">
+                            <span v-if="index === 0">Filter</span>
+                          </template>
+                        </v-select>
+                      </v-col>
+                      <v-col offset="3">
+                        <template>
+                          <v-dialog v-model="dialog" max-width="500px">
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn v-bind="attrs" v-on="on">
+                                <v-icon left dark>
+                                  mdi-plus
+                                </v-icon>
+                                ADD USER
+                              </v-btn>
+                            </template>
+                          </v-dialog>
+                        </template>
+                      </v-col>
+                    </v-row>
+                    <v-data-table
+                      :headers="headers"
+                      :items="desserts"
+                      :search="search"
+                      sort-icon="mdi-menu-down"
+                      hide-default-footer
+                      item-key="name"
+                    >
+                      <template v-slot:top>
+                        <v-dialog
+                          content-class="edit_user_dialog"
+                          v-model="dialog"
+                          persistent
+                          max-width="500px"
+                        >
+                          <v-card>
+                            <v-card-title>
+                              <span class="text-h5">{{ formTitle }}</span>
+                            </v-card-title>
+                            <v-card-text>
+                              <v-container>
+                                <v-row>
+                                  <v-col cols="12">
+                                    <label>Name</label>
+                                    <v-text-field
+                                      class="form_edit"
+                                      v-model="editedItem.name"
+                                      label="Name"
+                                      solo
+                                      hide-details="auto"
+                                      placeholder="Name"
+                                    ></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12">
+                                    <label>Email</label>
+                                    <v-text-field
+                                      class="form_edit"
+                                      v-model="editedItem.email"
+                                      label="Email"
+                                      solo
+                                      hide-details="auto"
+                                      placeholder="Email"
+                                    ></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12">
+                                    <label>Roles</label>
+                                    <v-text-field
+                                      class="form_edit"
+                                      v-model="editedItem.roles"
+                                      label="Roles"
+                                      solo
+                                      hide-details="auto"
+                                      placeholder="Roles"
+                                    ></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12">
+                                    <label>Position</label>
+                                    <!-- <v-text-field
+                                      class="form_edit"
+                                      v-model="editedItem.position"
+                                      label="Position"
+                                      solo
+                                      hide-details="auto"
+                                      placeholder="Position"
+                                    ></v-text-field> -->
+                                    <v-select
+                                      class="form_edit_select"
+                                      v-model="editedItem.position"
+                                      :items="positions"
+                                      label="Position"
+                                      solo
+                                      hide-details="auto"
+                                    ></v-select>
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn text @click="close">
+                                Cancel
+                              </v-btn>
+                              <v-btn text @click="save">
+                                Save
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                        <v-dialog
+                          content-class="delete_user_dialog"
+                          persistent
+                          v-model="dialogDelete"
+                          max-width="500px"
+                        >
+                          <v-card>
+                            <v-card-title class="text-h5"
+                              >Delete User?</v-card-title
+                            >
+                            <v-card-text>
+                              Deleting a user will permanently remove them from
+                              the system.
+                            </v-card-text>
+                            <v-container fluid>
+                              <v-row class="pb-5 my-auto mx-auto">
+                                <v-col cols="6">
+                                  <v-btn text @click="deleteItemConfirm"
+                                    >Yes, DELETE USER</v-btn
+                                  >
+                                </v-col>
+                                <v-col cols="6">
+                                  <v-btn
+                                    class="cancel_delete"
+                                    text
+                                    @click="closeDelete"
+                                    >NO, KEEP USER</v-btn
+                                  >
+                                </v-col>
+                              </v-row>
+                            </v-container>
+                          </v-card>
+                        </v-dialog>
+                      </template>
+                      <template v-slot:[`item.notifications`]>
+                        <v-icon small class="mr-2">
+                          mdi-bell
+                        </v-icon>
+                      </template>
+                      <template v-slot:[`item.actions`]="{ item }">
+                        <v-menu>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-bind="attrs" v-on="on">
+                              mdi-dots-horizontal
+                            </v-icon>
+                          </template>
+                          <v-list class="py-0">
+                            <v-list-item @click="editItem(item)">
+                              <v-list-item-title>
+                                <v-icon small class="mr-1">
+                                  mdi-pencil
+                                </v-icon>
+                                Edit
+                              </v-list-item-title>
+                            </v-list-item>
+                            <v-list-item @click="deleteItem(item)">
+                              <v-list-item-title>
+                                <v-icon small class="mr-1">
+                                  mdi-delete
+                                </v-icon>
+                                Delete
+                              </v-list-item-title>
+                            </v-list-item>
+                          </v-list>
+                        </v-menu>
+                      </template>
+                      <template v-slot:no-data>
+                        <v-btn color="primary" @click="initialize">
+                          Reset
+                        </v-btn>
+                      </template>
+                      <template v-slot:[`item.roles`]="{ item }">
+                        <v-chip :color="getColor(item.roles)" dark>
+                          {{ item.roles }}
+                        </v-chip>
+                      </template>
+                    </v-data-table>
+                    <v-row class="pt-10 mb-5">
+                      <v-col offset="8">
+                        <v-dialog
+                          content-class="roles_description"
+                          v-model="dialogRoles"
+                          max-width="800px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn v-bind="attrs" v-on="on">
+                              SEE ROLES DESCRIPTION
+                            </v-btn>
+                          </template>
+                          <v-card>
+                            <v-card-title class="text-h5">
+                              Roles Description
+                            </v-card-title>
+                            <v-container>
+                              <v-row>
+                                <v-col cols="4">
+                                  <v-card class="card-img my-8">
+                                    <img :src="img_viewer" :alt="img_viewer" />
+                                  </v-card>
+                                  <v-btn class="btn__viewer mb-5">Viewer</v-btn>
+                                  <v-card-text>
+                                    View only
+                                    <br />
+                                    Change personal info
+                                  </v-card-text>
+                                </v-col>
+                                <v-col cols="4">
+                                  <v-card class="card-img my-8">
+                                    <img :src="img_viewer" :alt="img_viewer" />
+                                  </v-card>
+                                  <v-btn class="btn__editor mb-5">Editor</v-btn>
+                                  <v-card-text>
+                                    Limited edit access<br />
+                                    Change personal info<br />
+                                    Add and edit user<br />
+                                    Add and edit device<br />
+                                    Add issue history<br />
+                                    Add calibration history
+                                  </v-card-text>
+                                </v-col>
+                                <v-col cols="4">
+                                  <v-card class="card-img my-8">
+                                    <img :src="img_viewer" :alt="img_viewer" />
+                                  </v-card>
+                                  <v-btn class="btn__admin mb-5">Admin</v-btn>
+                                  <v-card-text>
+                                    Full edit access<br />
+                                    Change personal info<br />
+                                    Add and edit user<br />
+                                    Add and edit device<br />
+                                    Edit user roles<br />
+                                    Add issue history<br />
+                                    Add aclibration History
+                                  </v-card-text>
+                                </v-col>
+                              </v-row>
+                            </v-container>
+                          </v-card>
+                        </v-dialog>
+                      </v-col>
+                    </v-row>
+                  </v-list>
+                </v-row>
+              </v-navigation-drawer>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
+  </v-app>
+</template>
+
+<script>
+export default {
+  name: "user_management",
+  data: () => ({
+    img_viewer: require("~/assets/images/img_viewer.png"),
+    // img_editor: require("~/assets/images/img_editor.png"),
+    // img_admin: require("~/assets/images/img_admin.png"),
+    dialog: false,
+    dialogDelete: false,
+    dialogRoles: false,
+    search: "",
+    items: [
+      { title: "Home", icon: "mdi-view-dashboard" },
+      { title: "About", icon: "mdi-forum" }
+    ],
+    positions: ["CEO", "CTO", "Freelance"],
+    links: ["Home", "Contacts", "Settings"],
+    filters: ["Admin", "Editor", "Viewer"],
+    selectedFilters: [],
+    headers: [
+      {
+        text: "Name",
+        align: "start",
+        value: "name"
+      },
+      { text: "Email", value: "email" },
+      { text: "Roles", value: "roles" },
+      { text: "Position", value: "position" },
+      { text: "", value: "notifications", sortable: false },
+      { text: "", value: "actions", sortable: false }
+    ],
+    desserts: [],
+    editedIndex: -1,
+    editedItem: {
+      name: "",
+      email: "",
+      roles: "",
+      position: ""
+    },
+    defaultItem: {
+      name: "",
+      email: "",
+      roles: "",
+      position: ""
+    }
+  }),
+
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "Add New User" : "Edit User";
+    },
+    likesAllFilter() {
+      return this.selectedFilters.length === this.filters.length;
+    },
+    likesSomeFilter() {
+      return this.selectedFilters.length > 0 && !this.likesAllFilter;
+    },
+    icon() {
+      if (this.likesAllFilter) return "mdi-close-box";
+      if (this.likesSomeFilter) return "mdi-minus-box";
+      return "mdi-checkbox-blank-outline";
+    }
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+    dialogDelete(val) {
+      val || this.closeDelete();
+    }
+  },
+
+  created() {
+    this.initialize();
+  },
+
+  methods: {
+    toggle() {
+      this.$nextTick(() => {
+        if (this.likesAllFilter) {
+          this.selectedFilters = [];
+        } else {
+          this.selectedFilters = this.filters.slice();
+        }
+      });
+    },
+    getColor(roles) {
+      if (roles == "Admin") return "#386D7A";
+      else if (roles == "Editor") return "#4593BF";
+      else return "#71C7DC";
+    },
+    initialize() {
+      this.desserts = [
+        {
+          name: "Paksi Yudha Sasmita",
+          email: "paksiyudhasasmita@gmail.com",
+          roles: "Admin",
+          position: "CEO"
+        },
+        {
+          name: "Ivan Ega Pratama",
+          email: "ivanega@gmail.com",
+          roles: "Editor",
+          position: "CTO"
+        },
+        {
+          name: "Rafi Zulfahmi",
+          email: "rafizulfahmi@gmail.com",
+          roles: "Viewer",
+          position: "Freelance"
+        },
+        {
+          name: "Aulia Rizky H",
+          email: "auliarizkyh@gmail.com",
+          roles: "Viewer",
+          position: "Freelance"
+        }
+      ];
+    },
+
+    editItem(item) {
+      this.editedIndex = this.desserts.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      this.editedIndex = this.desserts.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
+
+    deleteItemConfirm() {
+      this.desserts.splice(this.editedIndex, 1);
+      this.closeDelete();
+    },
+
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+      } else {
+        this.desserts.push(this.editedItem);
+      }
+      this.close();
+    }
+  }
+};
+</script>
