@@ -11,7 +11,7 @@
               <p class="subtitle mb-0 mt-2">Log Summary</p>
               <p class="title mb-3">Last 24 Hours</p>
               <div
-                v-for="(i, index) in data"
+                v-for="(i, index) in log"
                 :key="index"
                 class="data-transfer"
               >
@@ -33,10 +33,10 @@
             <v-card class="pa-5 card-right">
               <v-row>
                 <v-col>
-                  <p class="ph mb-0">pH</p>
-                  <p class="unit mb-0">7</p>
+                  <p class="ph mb-0">{{ dataGrafik.title }}</p>
+                  <p class="unit mb-0">{{ dataGrafik.size }}</p>
                   <div class="d-flex justify-space-between">
-                    <p class="subtitle mb-0">Unit ID</p>
+                    <p class="subtitle mb-0">{{ dataGrafik.unit}}</p>
                     <p class="text mb-0">01</p>
                   </div>
                   <div class="d-flex justify-space-between">
@@ -90,7 +90,7 @@
         </v-row>
         <v-row>
           <v-col cols="2" v-for="(i, index) in items" :key="index">
-            <v-card class="pa-3 card-bottom">
+            <v-card class="pa-3 card-bottom" :class="i.color" @click="onClickSensors(i)">
               <div class="d-flex justify-space-between">
                 <p class="title">{{ i.title }}</p>
                 <p class="unit mb-0">
@@ -102,20 +102,7 @@
               <p class="size mb-0">{{ i.size }}</p>
             </v-card>
           </v-col>
-          <v-col>
-            <v-card class="pa-3 card-bottom red">
-              <div class="d-flex justify-space-between">
-                <p class="title">TSS</p>
-                <p class="unit mb-0">
-                  Unit 01
-                  <br />
-                  <span class="desc">c4470d5a</span>
-                </p>
-              </div>
-              <p class="size mb-0">100 mg/L</p>
-            </v-card>
-          </v-col>
-          <v-col>
+          <!-- <v-col>
             <v-card class="pa-3 card-bottom yellow">
               <div class="d-flex justify-space-between">
                 <p class="title">NO3N</p>
@@ -132,7 +119,7 @@
                 </v-icon>
               </div>
             </v-card>
-          </v-col>
+          </v-col> -->
         </v-row>
       </v-container>
     </section>
@@ -140,93 +127,84 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
+const UNITS_SENSORS = gql `
+  query units ($id: [ID!]) {
+    units (id: $id) {
+        id
+        name
+        location
+        latitude
+        longitude
+        certificationExpirationDate
+        description
+        sensors {
+            id
+            name
+            parameter
+            unitID
+            registerType
+            port
+            dataLength
+            measurementUnit
+            inputLow
+            inputHigh
+            outputLow
+            outputHigh
+            thresholdLow
+            thresholdHigh
+            customCalibration
+        }
+    }
+  }
+`;
+
+const SENSORS_MEASUREMENTS = gql `
+  query sensorMeasurements ($startTime: Timestamp, $endTime: Timestamp, $parameters: [String!]) {
+    sensorMeasurements (startTime: $startTime, endTime: $endTime, parameters: $parameters) {
+        parameter
+        timestamps
+        values
+    }
+  }
+`
+
+const LOGS_SUMMARY = gql `
+  {
+    todayLogSummary {
+      type
+      warn
+      error
+    }
+  }
+`
 export default {
   name: "ContentOne",
+  middleware: 'auth',
   data: () => ({
-    data: [
-      {
-        title: "Data Transfer",
-        subtitle_error: "Error",
-        content_error: "2",
-        subtitle_warning: "Warning",
-        content_warning: "0"
-      },
-      {
-        title: "Measurement",
-        subtitle_error: "Error",
-        content_error: "0",
-        subtitle_warning: "Warning",
-        content_warning: "5"
-      },
-      {
-        title: "Device Health",
-        subtitle_error: "Error",
-        content_error: "1",
-        subtitle_warning: "Warning",
-        content_warning: "0"
-      }
-    ],
+    log: [],
     items: [
-      {
-        title: "Debit",
-        unit: "Unit 01",
-        desc: "fc78835c",
-        size: "30 m3/s"
-      },
-      {
-        title: "pH",
-        unit: "Unit 01",
-        desc: "69ae0be6",
-        size: "7"
-      },
-      {
-        title: "PO4",
-        unit: "Unit 01",
-        desc: "fced01dc",
-        size: "63 mg/L"
-      },
-      {
-        title: "NH3N",
-        unit: "Unit 01",
-        desc: "2223a244",
-        size: "56 mg/L"
-      },
-      {
-        title: "TDS",
-        unit: "Unit 01",
-        desc: "1cab702c",
-        size: "10 mg/L"
-      },
-      {
-        title: "BOD 5",
-        unit: "Unit 01",
-        desc: "42f608aa",
-        size: "23 mg/L"
-      },
-      {
-        title: "COD",
-        unit: "Unit 01",
-        desc: "db617f5c",
-        size: "60 mg/L"
-      },
-      {
-        title: "Fe",
-        unit: "Unit 01",
-        desc: "b594caa2",
-        size: "20 mg/L"
-      },
-      {
-        title: "Cu",
-        unit: "Unit 01",
-        desc: "d7a06d0e",
-        size: "9 mg/L"
-      },
-      {
-        title: "Cr",
-        unit: "Unit 01",
-        desc: "fe1456e4",
-        size: "17 mg/L"
-      }
+      // {
+      //   title: "TSS",
+      //   unit: "Unit 01",
+      //   desc: "",
+      //   size: "100 mg/L",
+      //   color: "red"
+      // },
+      // {
+      //   title: "pH",
+      //   unit: "Unit 01",
+      //   desc: "",
+      //   size: "7"
+      // },
+      // {
+      //   title: "NO3N",
+      //   unit: "Unit 01",
+      //   desc: "",
+      //   size: "86 mg/L",
+      //   color: "yellow"
+      // },
     ],
     Unit: ["Unit 01", "Unit 02", "Unit 03"],
     Device: ["Sensors", "Controllers", "Actuators"],
@@ -235,7 +213,7 @@ export default {
         position: "front",
         yaxis: [
           {
-            y: 20,
+            y: null,
             y2: null,
             strokeDashArray: 7,
             borderColor: "#FFD4A2",
@@ -270,7 +248,7 @@ export default {
             }
           },
           {
-            y: 40,
+            y: 100,
             y2: null,
             strokeDashArray: 7,
             borderColor: "#FFD4A2",
@@ -282,7 +260,7 @@ export default {
             label: {
               borderWidth: 0,
               borderRadius: 6,
-              text: "upper threshold: 10",
+              text: "upper threshold: 100",
               textAnchor: "center",
               position: "left",
               offsetX: 0,
@@ -327,21 +305,21 @@ export default {
         enabled: false
       },
       xaxis: {
-        type: "category",
+        type: "numeric",
         categories: [""],
         labels: {
-          show: false
+          show: true
         },
         axisBorder: {
-          show: false
+          show: true
         },
         axisTicks: {
-          show: false
+          show: true
         }
       },
       yaxis: {
         labels: {
-          show: false
+          show: true
         }
       },
       fill: {
@@ -349,10 +327,133 @@ export default {
         opacityTo: 0.9
       },
       tooltip: {
-        enabled: false
+        enabled: true
       }
     },
-    series: [{ name: "Upper Threshold", data: ["1", "45", "25", "75"] }]
-  })
+    series: [],
+    yAxisGrafik : [],
+    dataGrafik :  {},
+    loadingSensors: false,
+    loadingGrafik : false,
+    loadingLogsSummary: false,
+  }),
+  // apollo : {
+  //   units : {
+  //     query : SENSOR_MEASUREMENTS_QUERY,
+  //     variables: {
+  //       "id": []
+  //     }
+  //   }
+    
+  // },
+  mounted() {
+    this.getSensors()
+    this.getLogSummary()
+  },
+  methods: {
+    async getSensors() {
+      try {
+        this.loadingSensors = true
+        const res = await this.$apollo.query({
+          query: UNITS_SENSORS,
+          variables: {
+            "id": []
+          },
+        });
+
+        if (res) {
+          this.loadingSensors = false
+          if(res.data.units.length > 0){
+            res.data.units[0].sensors.map((result) => {
+              this.items.push({
+                title: result.parameter,
+                unit: res.data.units[0].name,
+                desc: "",
+                size: `${result.dataLength} ${result.measurementUnit !== null ? result.measurementUnit : ''}`,
+                color: `${result.dataLength >= result.outputHigh ? `red` : result.dataLength >= result.thresholdHigh ? 'yellow' : ''}`,
+              })
+            })
+          }
+          this.getSensorMeasurements(this.items[0])
+        }
+      } catch (err) {
+        console.log(err)
+        this.loadingSensors = false
+        // this.searchResults = [];
+      }
+    },
+    onClickSensors(params) {
+      this.getSensorMeasurements(params)
+    },
+    async getSensorMeasurements(params) {
+      try {
+        this.loadingGrafik = true
+        const res = await this.$apollo.query({
+          query: SENSORS_MEASUREMENTS,
+          variables: {
+            "startTime": 1624107898,
+            "endTime": 1624147199,
+            "parameters": [params.title]
+          },
+        });
+
+        if (res) {
+          this.loadingGrafik = false
+          this.dataGrafik = params
+          // console.log(res.data.sensorMeasurements[0].values)
+          let value = res.data.sensorMeasurements[0].values
+          let time = res.data.sensorMeasurements[0].timestamps
+          let data = []
+          for (let i = 0; i < value.length; i++) {
+            let tanggal = new Date(time[i] * 1000)
+            data.push({
+              x: time[i],
+              y: value[i]
+            })
+          }
+          this.series = [
+            {
+              name: "Values",
+              data: data
+            }
+          ]
+          this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps
+        }
+      } catch (err) {
+        console.log(err)
+        this.loadingGrafik = false
+        // this.searchResults = [];
+      }
+    },
+    async getLogSummary() {
+      try {
+        this.loadingLogsSummary = true
+        const res = await this.$apollo.query({
+          query: LOGS_SUMMARY,
+          variables: {
+            
+          },
+        });
+
+        if (res) {
+          this.loadingLogsSummary = false
+          let result = res.data.todayLogSummary
+          result.map(items => {
+            this.log.push({
+                title: items.type === 'operation' ? 'Device Health' : items.type.split('_').join(' '),
+                subtitle_error: "Error",
+                content_error: items.error,
+                subtitle_warning: "Warning",
+                content_warning: items.warn
+            })
+          })
+        }
+      } catch (err) {
+        console.log(err)
+        this.loadingLogsSummary = false
+        // this.searchResults = [];
+      }
+    },
+  }
 };
 </script>

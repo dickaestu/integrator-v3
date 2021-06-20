@@ -9,16 +9,18 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/apollo": "^4.0.1-rc.5",
     "@nuxtjs/auth": "4.9.1",
     "@nuxtjs/axios": "^5.13.1",
     "apexcharts": "^3.27.1",
     "core-js": "^3.9.1",
-    "nuxt": "^2.15.3",
+    "graphql-tag": "^2.12.4",
+    "nuxt": "^2.15.7",
     "vue-apexcharts": "^1.6.1"
   },
   "devDependencies": {
-    "@nuxtjs/vuetify": "^1.11.3",
-    "sass": "^1.32.2",
-    "sass-loader": "^10.1.0"
+    "@nuxtjs/vuetify": "^1.12.1",
+    "sass": "^1.35.1",
+    "sass-loader": "^10.2.0"
   }
 }

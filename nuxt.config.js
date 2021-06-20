@@ -4,6 +4,8 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
+  target: 'static',
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: "%s - musa-green-dashboard",
@@ -38,14 +40,21 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
-    "@nuxtjs/vuetify"
+    "@nuxtjs/vuetify",
+    "@nuxtjs/apollo"
   ],
+
+  apollo: {
+    clientConfigs: {
+      default: '~/plugins/graphql-config.js'
+    }
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
-    "@nuxtjs/auth",
+    "@nuxtjs/auth"
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -55,9 +64,9 @@ export default {
     // browserBaseURL: 'https://7a312f874d9b.up.railway.app/api',
     headers: {
       common: {
-        Accept: 'application/json, text/plain, */*',
-      },
-    },
+        Accept: "application/json, text/plain, */*"
+      }
+    }
   },
 
   auth: {
@@ -82,32 +91,18 @@ export default {
   },
 
   router: {
-    middleware: ['auth']
+    middleware: ["auth"]
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ["~/assets/variables.scss"]
-    // theme: {
-    //   dark: true,
-    //   themes: {
-    //     dark: {
-    //       primary: colors.blue.darken2,
-    //       accent: colors.grey.darken3,
-    //       secondary: colors.amber.darken3,
-    //       info: colors.teal.lighten1,
-    //       warning: colors.amber.base,
-    //       error: colors.deepOrange.accent4,
-    //       success: colors.green.accent3
-    //     }
-    //   }
-    // }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
   server: {
     port: 2500, // default: 3000
-    host: 'localhost', // default: localhost
-  },
+    host: "localhost" // default: localhost
+  }
 };

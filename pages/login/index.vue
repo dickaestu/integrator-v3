@@ -81,12 +81,13 @@ export default {
   methods: {
     async login() {
       try {
-        await this.$auth.loginWith('local', {
+        let response = await this.$auth.loginWith('local', {
           data: {
             email: this.email,
             password: this.password,
           },
         })
+        localStorage.setItem('token_musa', response.data.access_token)
         // window.console.log('test login with', this.$auth.loginWith)
         // window.console.log('test login user', this.$auth.user)
         this.$router.push('/')
