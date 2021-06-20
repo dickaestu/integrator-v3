@@ -9,15 +9,30 @@ $musa_green_lighter_text: #7e8b95;
 $musa_green_dark_text: #69747e;
 $musa_green_error_red: #d45757;
 $musa_green_warning_red: #e79244;
+$musa_green_button_subdued_icon_text: #939fa9;
+$musa_green_quite_dark_text: #6b7075;
+
+@font-face {
+  font-family: "Gotham Light";
+  src: url("~@/assets/fonts/Gotham-Light.otf");
+}
+@font-face {
+  font-family: "Gotham Medium";
+  src: url("~@/assets/fonts/Gotham-Medium.otf");
+}
+@font-face {
+  font-family: "Gotham Bold";
+  src: url("~@/assets/fonts/Gotham-Book.otf");
+}
+
+$gotham-bold: "Gotham Bold", sans-serif;
+$gotham-light: "Gotham Light", sans-serif;
+$gotham-medium: "Gotham Medium", sans-serif;
 
 body {
   font-family: "Inter", sans-serif;
   background: $musa_background;
   height: auto;
-}
-
-.pb-0 {
-  padding-bottom: 0 !important;
 }
 
 .btn-transparent,
@@ -458,5 +473,272 @@ body {
   }
   .theme--light.v-label {
     color: $musa_green_light_text;
+  }
+}
+
+#user_management {
+  background: #f0f2f4;
+  min-height: 100vh;
+  .v-divider {
+    border-width: 0.5px;
+    background: #dedede;
+  }
+  .v-card {
+    border-radius: 24px;
+    box-shadow: none;
+    height: 100%;
+    .menu-left {
+      background: #456577;
+      h5 {
+        font-family: $gotham-light;
+        font-size: 14px;
+      }
+      .v-list {
+        &--nav {
+          padding: 20px 22px;
+        }
+      }
+      .v-list-item {
+        padding: 0;
+        &__title {
+          font-family: $gotham-medium;
+          font-size: 16px;
+        }
+        &.active {
+          padding: 0 8px;
+          background: $musa_green_button_light_green;
+          border-radius: 2px;
+          margin-top: 8px;
+        }
+      }
+    }
+    .v-list {
+      &.grow {
+        padding: 20px 22px;
+        .v-text-field.v-text-field--solo .v-input__control {
+          min-height: 36px;
+        }
+        .radius {
+          .v-input__slot {
+            border-radius: 100px;
+          }
+          span {
+            color: #939fa9;
+          }
+        }
+        h3 {
+          font-size: 36px;
+          font-family: $gotham-light;
+          color: #4c5964;
+        }
+        .v-input {
+          font-family: $gotham-medium;
+          text-transform: uppercase;
+          &__slot {
+            border: 1px solid #c4d2de;
+            box-shadow: none;
+            border-radius: 2px;
+            i {
+              color: $musa_green_button_subdued_icon_text !important;
+            }
+          }
+          .v-text-field {
+            &__slot {
+              input {
+                color: $musa_green_button_subdued_icon_text;
+              }
+              .v-label {
+                color: $musa_green_button_subdued_icon_text;
+              }
+            }
+          }
+          .v-select {
+            &__slot {
+              .v-input__append-inner {
+                display: none;
+              }
+              &--is-multi {
+                border-radius: 100px;
+              }
+              .v-label {
+                color: $musa_green_button_subdued_icon_text;
+              }
+            }
+          }
+        }
+        .v-btn {
+          border: 1px solid #51a1b4;
+          background: $white;
+          box-shadow: none;
+          color: #51a1b4;
+          border-radius: 100px;
+          font-family: $gotham-medium;
+          &:hover::before {
+            background: $white;
+            opacity: 1;
+          }
+        }
+        table {
+          th {
+            color: $musa_green_dark_text;
+            font-weight: 600;
+            font-size: 14px;
+          }
+        }
+        .v-chip {
+          width: 100%;
+          height: 28px;
+          font-size: 12px;
+          &__content {
+            margin: 0 auto;
+          }
+        }
+      }
+    }
+  }
+}
+.v-dialog {
+  &.edit_user_dialog {
+    border-radius: 24px;
+    border: none;
+    label {
+      font-weight: 600;
+    }
+    .v-btn {
+      background: #456577;
+      color: $white;
+    }
+    .v-card__title {
+      background: #456577;
+      color: $white;
+    }
+    .form_edit,
+    .form_edit_select {
+      margin-top: 0.5em;
+      .v-input {
+        &__control {
+          min-height: 36px;
+        }
+        &__slot {
+          border: 1px solid #c4d2de;
+          border-radius: 2px;
+          box-shadow: none !important;
+          input {
+            color: $musa_green_quite_dark_text;
+          }
+          .v-select {
+            .v-text-field {
+              padding-right: 0;
+            }
+            &__slot {
+              .v-label {
+                margin-left: 12px;
+                font-size: 14px;
+              }
+              .v-input__icon {
+                height: 36px;
+                width: 30px;
+                min-width: 30px;
+              }
+              .v-select__selections {
+                // border: 1px solid #c4d2de;
+                border-top-left-radius: 2px;
+                border-bottom-left-radius: 2px;
+                border-right: none;
+                background: $white;
+              }
+              .v-input__append-inner {
+                background: #f5f5f5;
+                border: 1px solid #cddade;
+                border-top-right-radius: 2px;
+                border-bottom-right-radius: 2px;
+              }
+              .v-icon {
+                color: #939fa9;
+              }
+            }
+          }
+        }
+      }
+    }
+    .form_edit_select {
+      .v-input {
+        &__slot {
+          padding-right: 0 !important;
+        }
+      }
+    }
+  }
+  &.delete_user_dialog {
+    border-radius: 24px;
+    border: none;
+    .v-btn {
+      background: $musa_green_error_red;
+      color: $white;
+      width: 90%;
+      border: 2px solid $musa_green_error_red;
+      border-radius: 100px;
+      margin: 0 auto;
+    }
+    .cancel_delete {
+      color: $musa_green_error_red;
+      border: 2px solid $musa_green_error_red;
+      background: $white;
+    }
+    .v-card {
+      .v-card__text {
+        padding: 20px 24px;
+        color: $musa_green_dark_text;
+      }
+    }
+    .v-card__title {
+      background: $musa_green_error_red;
+      color: $white;
+    }
+  }
+  &.roles_description {
+    border-radius: 24px;
+    border: none;
+    .v-card {
+      box-shadow: none;
+      .v-card__title {
+        background: #456577;
+        color: $white;
+      }
+    }
+    .card-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 24px;
+      box-shadow: 0px 1px 4px 4px rgba(50, 50, 50, 0.05);
+      margin: 0 auto;
+      img {
+        margin: auto;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: scale-down;
+        object-position: center;
+      }
+    }
+    .btn__viewer,
+    .btn__editor,
+    .btn__admin {
+      color: $white;
+      border-radius: 100px;
+      width: 55%;
+      display: block;
+      margin: 0 auto;
+      background-color: #71c7dc !important;
+      text-transform: capitalize;
+      font-weight: 400;
+      height: 32px;
+    }
+    .btn__editor {
+      background-color: #4593bf !important;
+    }
+    .btn__admin {
+      background-color: #386d7a !important;
+    }
   }
 }
