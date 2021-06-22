@@ -138,9 +138,8 @@
                     </v-row>
                     <v-data-table
                       :headers="headers"
-                      :items="desserts"
+                      :items="users"
                       :search="search"
-                      sort-icon="mdi-menu-down"
                       hide-default-footer
                       item-key="name"
                     >
@@ -293,7 +292,7 @@
                         </v-menu>
                       </template>
                       <template v-slot:no-data>
-                        <v-btn color="primary" @click="initialize">
+                        <v-btn color="primary" @click="users">
                           Reset
                         </v-btn>
                       </template>
@@ -373,6 +372,25 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-snackbar
+          :timeout="-1"
+          :value="toast"
+          color="blue-grey"
+          fixed
+          rounded="pill"
+        >
+          {{ toastMsgAddUser }}
+          <template v-slot:action="{ attrs }">
+            <v-btn
+              color="white"
+              text
+              v-bind="attrs"
+              @click="toast = false"
+            >
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
       </v-container>
     </section>
   </v-app>
@@ -380,9 +398,38 @@
 
 <script>
 import gql from 'graphql-tag'
-const ADD_USERS = gql `
+
+const GET_USERS = gql`
+  query users ($emails: [String!]) {
+    users (emails: $emails) {
+        id
+        name
+        email
+        roles
+        position
+        notify
+    }
+  }
+`
+const ADD_USERS = gql`
   mutation addUser ($user: InputUser!, $password: String!) {
     addUser (user: $user, password: $password) {
+        ok
+    }
+  }
+`
+
+const EDIT_USERS = gql`
+  mutation editUser ($userID: ID!, $user: InputUser!) {
+    editUser (userID: $userID, user: $user) {
+        ok
+    }
+  }
+`
+
+const DELETE_USERS = gql`
+  mutation deleteUser ($userID: ID!) {
+    deleteUser (userID: $userID) {
         ok
     }
   }
@@ -397,6 +444,8 @@ export default {
     dialog: false,
     dialogDelete: false,
     dialogRoles: false,
+    toastMsgAddUser: "",
+    toast: false,
     search: "",
     items: [
       { title: "Home", icon: "mdi-view-dashboard" },
@@ -418,21 +467,24 @@ export default {
       { text: "", value: "notifications", sortable: false },
       { text: "", value: "actions", sortable: false }
     ],
-    desserts: [],
+    users: [],
     editedIndex: -1,
     editedItem: {
       name: "",
       email: "",
       roles: "",
-      position: ""
+      position: "",
+      password: "",
     },
     defaultItem: {
       name: "",
       email: "",
       roles: "",
-      position: ""
+      position: "",
+      password: "",
     },
     loadingAddUser: false,
+    loadingGetUser: false,
   }),
 
   computed: {
@@ -462,10 +514,41 @@ export default {
   },
 
   created() {
-    this.initialize();
+    this.getUsers();
   },
 
   methods: {
+    async getUsers() {
+      try {
+        this.loadingGetUser = true
+        const res = await this.$apollo.query({
+          query: GET_USERS,
+          variables: {
+            "emails": []
+          },
+        });
+
+        if (res) {
+          this.loadingGetUser = false
+          if(res.data.users.length > 0){
+            res.data.users.map(user => {
+              this.users.push({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                roles: user.roles,
+                position: user.position,
+                notify: user.notify
+              })
+            })
+          }
+        }
+      } catch (err) {
+        console.log(err)
+        this.loadingGetUser = false
+        // this.searchResults = [];
+      }
+    },
     toggle() {
       this.$nextTick(() => {
         if (this.likesAllFilter) {
@@ -480,49 +563,38 @@ export default {
       else if (roles == "Editor") return "#4593BF";
       else return "#71C7DC";
     },
-    initialize() {
-      this.desserts = [
-        {
-          name: "Paksi Yudha Sasmita",
-          email: "paksiyudhasasmita@gmail.com",
-          roles: "Admin",
-          position: "CEO"
-        },
-        {
-          name: "Ivan Ega Pratama",
-          email: "ivanega@gmail.com",
-          roles: "Editor",
-          position: "CTO"
-        },
-        {
-          name: "Rafi Zulfahmi",
-          email: "rafizulfahmi@gmail.com",
-          roles: "Viewer",
-          position: "Freelance"
-        },
-        {
-          name: "Aulia Rizky H",
-          email: "auliarizkyh@gmail.com",
-          roles: "Viewer",
-          position: "Freelance"
-        }
-      ];
-    },
-
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+    async deleteItemConfirm() {
+      try {
+        const res = await this.$apollo.mutate({
+          mutation: DELETE_USERS,
+          variables: {
+            "userID" : this.editedItem.id,
+          },
+        });
+
+        if (res) {
+          if (res.data.deleteUser.ok) {
+            this.users.splice(this.editedIndex, 1);
+            this.toastMsgAddUser = "Data has been Deleted"
+            this.toast = true
+          }
+        }
+      } catch (err) {
+        console.log(err)
+        // this.searchResults = [];
+      }
       this.closeDelete();
     },
 
@@ -544,11 +616,40 @@ export default {
 
     async save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
         try {
           this.loadingAddUser = true
-          const res = await this.$apollo.query({
-            query: ADD_USERS,
+          const res = await this.$apollo.mutate({
+            mutation: EDIT_USERS,
+            variables: {
+              "userID" : this.editedItem.id,
+              "user": {
+                "name": this.editedItem.name,
+                "email": this.editedItem.email,
+                "roles": this.editedItem.roles,
+                "notify": true,
+                "position": this.editedItem.position
+              },
+            },
+          });
+
+          if (res) {
+            this.loadingAddUser = false
+            if (res.data.editUser.ok) {
+              Object.assign(this.users[this.editedIndex], this.editedItem);
+              this.toastMsgAddUser = "Data has been Edited"
+              this.toast = true
+            }
+          }
+        } catch (err) {
+          console.log(err)
+          this.loadingAddUser = false
+          // this.searchResults = [];
+        }
+      } else {
+        try {
+          this.loadingAddUser = true
+          const res = await this.$apollo.mutate({
+            mutation: ADD_USERS,
             variables: {
               "user": {
                 "name": this.editedItem.name,
@@ -557,22 +658,29 @@ export default {
                 "notify": true,
                 "position": this.editedItem.position
               },
-              "password": ""
+              "password": "password123"
             },
           });
 
           if (res) {
             this.loadingAddUser = false
+            if (res.data.addUser.ok) {
+              this.users.push({
+                name: this.editedItem.name,
+                email: this.editedItem.email,
+                roles: this.editedItem.roles,
+                position: this.editedItem.position,
+                password: this.editedItem.password,
+              })
+              this.toastMsgAddUser = "Success To Save"
+              this.toast = true
+            }
           }
         } catch (err) {
           console.log(err)
           this.loadingAddUser = false
           // this.searchResults = [];
         }
-        console.log('edited')
-      } else {
-        this.desserts.push(this.editedItem);
-        console.log('created')
       }
       this.close();
     }
