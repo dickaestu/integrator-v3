@@ -2,7 +2,7 @@
   <v-app>
     <section id="user_management">
       <Header />
-      <MenuConf />
+      <MenuHome />
       <v-container>
         <v-row>
           <v-col>
@@ -151,6 +151,7 @@
                           persistent
                           max-width="500px"
                         >
+                        <v-form method="POST" @submit.prevent="save">
                           <v-card>
                             <v-card-title>
                               <span class="text-h5">{{ formTitle }}</span>
@@ -223,6 +224,7 @@
                               </v-btn>
                             </v-card-actions>
                           </v-card>
+                        </v-form>
                         </v-dialog>
                         <v-dialog
                           content-class="delete_user_dialog"
@@ -377,6 +379,15 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+const ADD_USERS = gql `
+  mutation addUser ($user: InputUser!, $password: String!) {
+    addUser (user: $user, password: $password) {
+        ok
+    }
+  }
+`
+
 export default {
   name: "user_management",
   data: () => ({
@@ -420,7 +431,8 @@ export default {
       email: "",
       roles: "",
       position: ""
-    }
+    },
+    loadingAddUser: false,
   }),
 
   computed: {
@@ -530,11 +542,37 @@ export default {
       });
     },
 
-    save() {
+    async save() {
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        try {
+          this.loadingAddUser = true
+          const res = await this.$apollo.query({
+            query: ADD_USERS,
+            variables: {
+              "user": {
+                "name": this.editedItem.name,
+                "email": this.editedItem.email,
+                "roles": this.editedItem.roles,
+                "notify": true,
+                "position": this.editedItem.position
+              },
+              "password": ""
+            },
+          });
+
+          if (res) {
+            this.loadingAddUser = false
+          }
+        } catch (err) {
+          console.log(err)
+          this.loadingAddUser = false
+          // this.searchResults = [];
+        }
+        console.log('edited')
       } else {
         this.desserts.push(this.editedItem);
+        console.log('created')
       }
       this.close();
     }

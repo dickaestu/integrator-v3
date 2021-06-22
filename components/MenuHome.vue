@@ -22,7 +22,7 @@
               LOGS
             </v-btn>
           </router-link>
-          <router-link to="/" class="mr-5">
+          <router-link to="/configuration/user_management" class="mr-5">
             <v-btn class="btn" dark>
               <v-icon dark left>
                 mdi-cog

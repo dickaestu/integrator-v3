@@ -2,7 +2,7 @@
   <v-app>
     <section id="log">
       <Header />
-      <MenuLog />
+      <MenuHome />
       <v-container>
         <v-row class="d-flex justify-end mb-5">
           <v-col cols="2">
@@ -28,7 +28,7 @@
                   hide-details="auto"
                 ></v-text-field>
               </template>
-              <v-date-picker v-model="date" no-title scrollable>
+              <v-date-picker v-model="date" @change="dateChange(date)" no-title scrollable>
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="menu = false">
                   Cancel
@@ -67,7 +67,8 @@
                 dense
                 :headers="headers"
                 :items="items"
-                hide-default-footer
+                :items-per-page="10"
+                class="elevation-1"
               ></v-data-table>
             </v-col>
           </v-row>
@@ -78,67 +79,30 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
+const QUERY_LOGS = gql `
+  query logs ($startTime: Timestamp, $endTime: Timestamp, $type: [String!], $level: [String!]) {
+    logs (startTime: $startTime, endTime: $endTime, type: $type, level: $level) {
+        timestamp
+        caller
+        level
+        message
+        type
+    }
+    todayLogSummary {
+        type
+        warn
+        error
+    }
+  }
+`
 export default {
   name: "Log",
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
     menu: false,
-    items: [
-      {
-        date: "20:40:18 00:10:00",
-        type: "Api",
-        level: "Info",
-        desc: "Path: ‘/Api/Login’, Status: 200, Query: “, Body: ‘Redacted’"
-      },
-      {
-        date: "20:40:18 00:10:00",
-        type: "Api",
-        level: "Error",
-        desc:
-          "Cannot Load CSV File,‘/Users/MarsDataScience/Desktop/Project/MUSA/Integrator-Fullstack/Release/Csv/2021-01-26.Csv’ File not Exists"
-      },
-      {
-        date: "20:40:18 00:10:00",
-        type: "Api",
-        level: "Info",
-        desc:
-          "Path: ‘/Api/Protected/Common_setup’, Status: 200, Query: “, Body: “"
-      },
-      {
-        date: "20:40:18 00:10:00",
-        type: "Api",
-        level: "Error",
-        desc: "File Not Found"
-      },
-      {
-        date: "20:40:18 00:10:00",
-        type: "Api",
-        level: "Info",
-        desc:
-          "Path: ‘/Api/Protected/’Measurement_toggle, Status: 200, Query: “, Body: “"
-      },
-      {
-        date: "20:40:18 00:10:00",
-        type: "Api",
-        level: "Info",
-        desc:
-          "Path: ‘/Api/Protected/Last_measurement’, Status: 200, Query: “, Body: “"
-      },
-      {
-        date: "20:40:18 00:10:00",
-        type: "Api",
-        level: "Info",
-        desc:
-          "Path: ‘/Api/Protected/Log’, Status: 200, Query: “, Body: ‘(‘Filter’: {‘Start_date’: ‘2021-01-26’, ‘End_date’: ‘2021-01-26’),’Logs_type’: [‘Data_transfer’:’Measurement’]}’"
-      },
-      {
-        date: "20:40:18 00:10:00",
-        type: "Api",
-        level: "Info",
-        desc:
-          "Path: ‘/Api/Protected/Last_measurement’, Status: 200, Query: “, Body: “"
-      }
-    ],
+    items: [],
     headers: [
       { text: "Datetime", value: "date" },
       { text: "Type", value: "type" },
@@ -146,7 +110,51 @@ export default {
       { text: "Description", value: "desc" }
     ],
     Type: ["Api"],
-    Level: ["Info", "Error"]
-  })
+    Level: ["Info", "Error"],
+    loading: false
+  }),
+  mounted() {
+    this.getLogs()
+    console.log(this.date)
+  },
+  methods : {
+    async getLogs() {
+      try {
+        this.loading = true
+        const res = await this.$apollo.query({
+          query: QUERY_LOGS,
+          variables: {
+            "startTime": null,
+            "endTime": null,
+            "type": [
+            ],
+            "level": [
+            ]
+          },
+        });
+
+        if (res) {
+          this.loading = false
+          let result = res.data.logs
+
+          result.map(items => {
+            this.items.push({
+              date: new Date(items.timestamp * 1000),
+              type: items.type,
+              level: items.level,
+              desc: items.message
+            })
+          })
+        }
+      } catch (err) {
+        console.log(err)
+        this.loading = false
+        // this.searchResults = [];
+      }
+    },
+    dateChange(val){
+      console.log(val)
+    }
+  }
 };
 </script>
