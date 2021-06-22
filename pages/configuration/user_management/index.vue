@@ -161,23 +161,27 @@
                                   <v-col cols="12">
                                     <label>Name</label>
                                     <v-text-field
+                                      ref="editedItem.name"
                                       class="form_edit"
                                       v-model="editedItem.name"
                                       label="Name"
                                       solo
                                       hide-details="auto"
                                       placeholder="Name"
+                                      required
                                     ></v-text-field>
                                   </v-col>
                                   <v-col cols="12">
                                     <label>Email</label>
                                     <v-text-field
+                                      ref="editedItem.email"
                                       class="form_edit"
                                       v-model="editedItem.email"
                                       label="Email"
                                       solo
                                       hide-details="auto"
                                       placeholder="Email"
+                                      required
                                     ></v-text-field>
                                   </v-col>
                                   <v-col cols="12">
@@ -189,6 +193,7 @@
                                       solo
                                       hide-details="auto"
                                       placeholder="Roles"
+                                      required
                                     ></v-text-field>
                                   </v-col>
                                   <v-col cols="12">
@@ -446,6 +451,7 @@ export default {
     dialogRoles: false,
     toastMsgAddUser: "",
     toast: false,
+    errorMessages: '',
     search: "",
     items: [
       { title: "Home", icon: "mdi-view-dashboard" },
@@ -470,18 +476,18 @@ export default {
     users: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      email: "",
-      roles: "",
-      position: "",
-      password: "",
+      name: null,
+      email: null,
+      roles: null,
+      position: null,
+      password: null,
     },
     defaultItem: {
-      name: "",
-      email: "",
-      roles: "",
-      position: "",
-      password: "",
+      name: null,
+      email: null,
+      roles: null,
+      position: null,
+      password: null,
     },
     loadingAddUser: false,
     loadingGetUser: false,
@@ -510,7 +516,10 @@ export default {
     },
     dialogDelete(val) {
       val || this.closeDelete();
-    }
+    },
+    name () {
+      this.errorMessages = ''
+    },
   },
 
   created() {
