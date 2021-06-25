@@ -383,7 +383,7 @@ export default {
                 unit: res.data.units[0].name,
                 desc: "",
                 size: `${loopSensors[index].toFixed(2)} ${result.measurementUnit !== null ? result.measurementUnit : ''}`,
-                color: `${result.dataLength >= result.outputHigh ? `red` : result.dataLength >= result.thresholdHigh ? 'yellow' : ''}`,
+                color: `${loopSensors[index].toFixed(2) >= result.outputHigh ? `red` : loopSensors[index].toFixed(2) >= result.thresholdHigh ? 'yellow' : ''}`,
               })
             })
               
