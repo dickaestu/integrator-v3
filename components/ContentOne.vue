@@ -397,27 +397,33 @@ export default {
         });
 
         if (res) {
-          this.loadingSensors = false;
-          if (res.data.units.length > 0) {
-            res.data.units[0].sensors.map(result => {
+          this.loadingSensors = false
+          if(res.data.units.length > 0){
+            const promises = res.data.units[0].sensors.map(async result => {
+              const sensors = await this.getSensorMeasurements(result.parameter)
+              return sensors
+            })
+
+            const dataSensors = await Promise.all(promises)
+
+            const loopSensors = dataSensors.map(sensors => {
+              const val = sensors.data.sensorMeasurements[0].values
+              const lastVal = val[val.length - 1]
+              return lastVal
+            })
+
+            res.data.units[0].sensors.map((result, index) => {
               this.items.push({
                 title: result.parameter,
                 unit: res.data.units[0].name,
                 desc: "",
-                size: `${result.dataLength} ${
-                  result.measurementUnit !== null ? result.measurementUnit : ""
-                }`,
-                color: `${
-                  result.dataLength >= result.outputHigh
-                    ? `red`
-                    : result.dataLength >= result.thresholdHigh
-                    ? "yellow"
-                    : ""
-                }`
-              });
-            });
+                size: `${loopSensors[index].toFixed(2)} ${result.measurementUnit !== null ? result.measurementUnit : ''}`,
+                color: `${loopSensors[index].toFixed(2) >= result.outputHigh ? `red` : loopSensors[index].toFixed(2) >= result.thresholdHigh ? 'yellow' : ''}`,
+              })
+            })
+              
           }
-          this.getSensorMeasurements(this.items[0]);
+          this.getGraphicSensors(this.items[0])
         }
       } catch (err) {
         console.log(err);
@@ -426,7 +432,8 @@ export default {
       }
     },
     onClickSensors(params) {
-      this.getSensorMeasurements(params);
+      this.getGraphicSensors(params)
+      // this.getSensorMeasurements(params)
     },
     async getSensorMeasurements(params) {
       try {
@@ -434,33 +441,15 @@ export default {
         const res = await this.$apollo.query({
           query: SENSORS_MEASUREMENTS,
           variables: {
-            startTime: 1624107898,
-            endTime: 1624147199,
-            parameters: [params.title]
-          }
+            "startTime": 1622505659,
+            "endTime": 1622678399,
+            "parameters": [params]
+          },
         });
 
         if (res) {
-          this.loadingGrafik = false;
-          this.dataGrafik = params;
-          // console.log(res.data.sensorMeasurements[0].values)
-          let value = res.data.sensorMeasurements[0].values;
-          let time = res.data.sensorMeasurements[0].timestamps;
-          let data = [];
-          for (let i = 0; i < value.length; i++) {
-            let tanggal = new Date(time[i] * 1000);
-            data.push({
-              x: time[i],
-              y: value[i]
-            });
-          }
-          this.series = [
-            {
-              name: "Values",
-              data: data
-            }
-          ];
-          this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
+          this.loadingGrafik = false
+          return res
         }
       } catch (err) {
         console.log(err);
@@ -498,8 +487,27 @@ export default {
         // this.searchResults = [];
       }
     },
-    dateChange(val) {
-      console.log(val);
+    async getGraphicSensors(params){
+      let res = await this.getSensorMeasurements(params.title)
+      this.dataGrafik = params
+      // console.log(res.data.sensorMeasurements[0].values)
+      let value = res.data.sensorMeasurements[0].values
+      let time = res.data.sensorMeasurements[0].timestamps
+      let data = []
+      for (let i = 0; i < value.length; i++) {
+        let tanggal = new Date(time[i] * 1000)
+        data.push({
+          x: time[i],
+          y: value[i]
+        })
+      }
+      this.series = [
+        {
+          name: "Values",
+          data: data
+        }
+      ]
+      this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps
     }
   }
 };
