@@ -498,7 +498,7 @@ export default {
         let tanggal = new Date(time[i] * 1000)
         data.push({
           x: time[i],
-          y: value[i]
+          y: value[i].toFixed(2)
         })
       }
       this.series = [

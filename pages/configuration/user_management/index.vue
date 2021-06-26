@@ -150,85 +150,93 @@
                           persistent
                           max-width="500px"
                         >
-                        <v-form method="POST" @submit.prevent="save">
-                          <v-card>
-                            <v-card-title>
-                              <span class="text-h5">{{ formTitle }}</span>
-                            </v-card-title>
-                            <v-card-text>
-                              <v-container>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <label>Name</label>
-                                    <v-text-field
-                                      ref="editedItem.name"
-                                      class="form_edit"
-                                      v-model="editedItem.name"
-                                      label="Name"
-                                      solo
-                                      hide-details="auto"
-                                      placeholder="Name"
-                                      required
-                                    ></v-text-field>
-                                  </v-col>
-                                  <v-col cols="12">
-                                    <label>Email</label>
-                                    <v-text-field
-                                      ref="editedItem.email"
-                                      class="form_edit"
-                                      v-model="editedItem.email"
-                                      label="Email"
-                                      solo
-                                      hide-details="auto"
-                                      placeholder="Email"
-                                      required
-                                    ></v-text-field>
-                                  </v-col>
-                                  <v-col cols="12">
-                                    <label>Roles</label>
-                                    <v-text-field
-                                      class="form_edit"
-                                      v-model="editedItem.roles"
-                                      label="Roles"
-                                      solo
-                                      hide-details="auto"
-                                      placeholder="Roles"
-                                      required
-                                    ></v-text-field>
-                                  </v-col>
-                                  <v-col cols="12">
-                                    <label>Position</label>
-                                    <!-- <v-text-field
-                                      class="form_edit"
-                                      v-model="editedItem.position"
-                                      label="Position"
-                                      solo
-                                      hide-details="auto"
-                                      placeholder="Position"
-                                    ></v-text-field> -->
-                                    <v-select
-                                      class="form_edit_select"
-                                      v-model="editedItem.position"
-                                      :items="positions"
-                                      label="Position"
-                                      solo
-                                      hide-details="auto"
-                                    ></v-select>
-                                  </v-col>
-                                </v-row>
-                              </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn text @click="close">
-                                Cancel
-                              </v-btn>
-                              <v-btn text @click="save">
-                                Save
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-form>
+                          <v-form method="POST" @submit.prevent="save">
+                            <v-card>
+                              <v-card-title>
+                                <span class="text-h5">{{ formTitle }}</span>
+                              </v-card-title>
+                              <v-card-text>
+                                <v-container>
+                                  <v-row>
+                                    <v-col cols="12">
+                                      <label>Name</label>
+                                      <v-text-field
+                                        ref="editedItem.name"
+                                        class="form_edit"
+                                        v-model="editedItem.name"
+                                        label="Name"
+                                        solo
+                                        hide-details="auto"
+                                        placeholder="Name"
+                                        required
+                                      ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                      <label>Email</label>
+                                      <v-text-field
+                                        ref="editedItem.email"
+                                        class="form_edit"
+                                        v-model="editedItem.email"
+                                        label="Email"
+                                        solo
+                                        hide-details="auto"
+                                        placeholder="Email"
+                                        required
+                                      ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                      <label>Password</label>
+                                      <v-text-field
+                                        :value="password"
+                                        class="form_edit"
+                                        label="Password"
+                                        solo
+                                        hide-details="auto"
+                                        placeholder="Password"
+                                        required
+                                        append-icon="mdi-autorenew"
+                                        @click:append="onGenerate"
+                                      ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                      <label>Select Roles</label>
+                                      <v-select
+                                        ref="editedItem.roles"
+                                        class="form_edit_select"
+                                        v-model="editedItem.roles"
+                                        :items="roles"
+                                        label="Select Roles"
+                                        solo
+                                        hide-details="auto"
+                                      ></v-select>
+                                    </v-col>
+                                    <v-col cols="12">
+                                      <label>Position</label>
+                                      <v-text-field
+                                        ref="editedItem.positions"
+                                        class="form_edit"
+                                        v-model="editedItem.positions"
+                                        label="Position"
+                                        solo
+                                        hide-details="auto"
+                                        placeholder="Position"
+                                        required
+                                      ></v-text-field>
+                                    </v-col>
+                                  </v-row>
+                                </v-container>
+                              </v-card-text>
+                              <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn text @click="close">
+                                  Cancel
+                                </v-btn>
+                                <v-btn text @click="save">
+                                  Save
+                                </v-btn>
+                              </v-card-actions>
+                            </v-card>
+                          </v-form>
                         </v-dialog>
                         <v-dialog
                           content-class="delete_user_dialog"
@@ -386,12 +394,7 @@
         >
           {{ toastMsgAddUser }}
           <template v-slot:action="{ attrs }">
-            <v-btn
-              color="white"
-              text
-              v-bind="attrs"
-              @click="toast = false"
-            >
+            <v-btn color="white" text v-bind="attrs" @click="toast = false">
               Close
             </v-btn>
           </template>
@@ -402,43 +405,43 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 const GET_USERS = gql`
-  query users ($emails: [String!]) {
-    users (emails: $emails) {
-        id
-        name
-        email
-        roles
-        position
-        notify
+  query users($emails: [String!]) {
+    users(emails: $emails) {
+      id
+      name
+      email
+      roles
+      position
+      notify
     }
   }
-`
+`;
 const ADD_USERS = gql`
-  mutation addUser ($user: InputUser!, $password: String!) {
-    addUser (user: $user, password: $password) {
-        ok
+  mutation addUser($user: InputUser!, $password: String!) {
+    addUser(user: $user, password: $password) {
+      ok
     }
   }
-`
+`;
 
 const EDIT_USERS = gql`
-  mutation editUser ($userID: ID!, $user: InputUser!) {
-    editUser (userID: $userID, user: $user) {
-        ok
+  mutation editUser($userID: ID!, $user: InputUser!) {
+    editUser(userID: $userID, user: $user) {
+      ok
     }
   }
-`
+`;
 
 const DELETE_USERS = gql`
-  mutation deleteUser ($userID: ID!) {
-    deleteUser (userID: $userID) {
-        ok
+  mutation deleteUser($userID: ID!) {
+    deleteUser(userID: $userID) {
+      ok
     }
   }
-`
+`;
 
 export default {
   name: "user_management",
@@ -451,13 +454,20 @@ export default {
     dialogRoles: false,
     toastMsgAddUser: "",
     toast: false,
-    errorMessages: '',
+    errorMessages: "",
     search: "",
+    characters: {
+      value: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+      checked: true
+    },
+    password: "",
+    generateText: "",
+    gLength: 6,
     items: [
       { title: "Home", icon: "mdi-view-dashboard" },
       { title: "About", icon: "mdi-forum" }
     ],
-    positions: ["CEO", "CTO", "Freelance"],
+    roles: ["CEO", "CTO", "Freelance"],
     links: ["Home", "Contacts", "Settings"],
     filters: ["Admin", "Editor", "Viewer"],
     selectedFilters: [],
@@ -479,18 +489,16 @@ export default {
       name: null,
       email: null,
       roles: null,
-      position: null,
-      password: null,
+      position: null
     },
     defaultItem: {
       name: null,
       email: null,
       roles: null,
-      position: null,
-      password: null,
+      position: null
     },
     loadingAddUser: false,
-    loadingGetUser: false,
+    loadingGetUser: false
   }),
 
   computed: {
@@ -517,9 +525,9 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
-    name () {
-      this.errorMessages = ''
-    },
+    name() {
+      this.errorMessages = "";
+    }
   },
 
   created() {
@@ -527,19 +535,51 @@ export default {
   },
 
   methods: {
+    onMouseEnterGenerateBtn() {
+      this.generateText = "";
+    },
+    // onGenerate(len) {
+    //   let resultPassword = "";
+    //   let chars =
+    //     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    //   for (let i = 0; i < len; i++) {
+    //     resultPassword += chars.charAt(
+    //       Math.floor(Math.random() * chars.length)
+    //     );
+    //   }
+    //   this.password = resultPassword;
+    //   // console.log("test password", (this.password = password));
+    //   // return password;
+    // },
+    onGenerate() {
+      let result = "";
+      let charactersVal = "";
+      for (var j = 0; j < this.characters.length; j++) {
+        if (this.characters[j].checked) {
+          charactersVal += this.characters[j].value;
+        }
+      }
+      for (var i = 0; i < this.gLength; i++) {
+        result += charactersVal.charAt(
+          Math.floor(Math.random() * charactersVal.length)
+        );
+      }
+      this.password = result;
+      console.log("test password 1", this.result);
+    },
     async getUsers() {
       try {
-        this.loadingGetUser = true
+        this.loadingGetUser = true;
         const res = await this.$apollo.query({
           query: GET_USERS,
           variables: {
-            "emails": []
-          },
+            emails: []
+          }
         });
 
         if (res) {
-          this.loadingGetUser = false
-          if(res.data.users.length > 0){
+          this.loadingGetUser = false;
+          if (res.data.users.length > 0) {
             res.data.users.map(user => {
               this.users.push({
                 id: user.id,
@@ -547,14 +587,15 @@ export default {
                 email: user.email,
                 roles: user.roles,
                 position: user.position,
+                password: user.password,
                 notify: user.notify
-              })
-            })
+              });
+            });
           }
         }
       } catch (err) {
-        console.log(err)
-        this.loadingGetUser = false
+        console.log(err);
+        this.loadingGetUser = false;
         // this.searchResults = [];
       }
     },
@@ -577,36 +618,33 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-
     deleteItem(item) {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
-
     async deleteItemConfirm() {
       try {
         const res = await this.$apollo.mutate({
           mutation: DELETE_USERS,
           variables: {
-            "userID" : this.editedItem.id,
-          },
+            userID: this.editedItem.id
+          }
         });
 
         if (res) {
           if (res.data.deleteUser.ok) {
             this.users.splice(this.editedIndex, 1);
-            this.toastMsgAddUser = "Data has been Deleted"
-            this.toast = true
+            this.toastMsgAddUser = "Data has been Deleted";
+            this.toast = true;
           }
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
         // this.searchResults = [];
       }
       this.closeDelete();
     },
-
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -614,7 +652,6 @@ export default {
         this.editedIndex = -1;
       });
     },
-
     closeDelete() {
       this.dialogDelete = false;
       this.$nextTick(() => {
@@ -622,72 +659,72 @@ export default {
         this.editedIndex = -1;
       });
     },
-
     async save() {
       if (this.editedIndex > -1) {
         try {
-          this.loadingAddUser = true
+          this.loadingAddUser = true;
           const res = await this.$apollo.mutate({
             mutation: EDIT_USERS,
             variables: {
-              "userID" : this.editedItem.id,
-              "user": {
-                "name": this.editedItem.name,
-                "email": this.editedItem.email,
-                "roles": this.editedItem.roles,
-                "notify": true,
-                "position": this.editedItem.position
-              },
-            },
+              userID: this.editedItem.id,
+              user: {
+                name: this.editedItem.name,
+                email: this.editedItem.email,
+                roles: this.editedItem.roles,
+                notify: true,
+                position: this.editedItem.position,
+                password: false
+              }
+            }
           });
 
           if (res) {
-            this.loadingAddUser = false
+            this.loadingAddUser = false;
             if (res.data.editUser.ok) {
               Object.assign(this.users[this.editedIndex], this.editedItem);
-              this.toastMsgAddUser = "Data has been Edited"
-              this.toast = true
+              this.toastMsgAddUser = "Data has been Edited";
+              this.toast = true;
             }
           }
         } catch (err) {
-          console.log(err)
-          this.loadingAddUser = false
+          console.log(err);
+          this.loadingAddUser = false;
           // this.searchResults = [];
         }
       } else {
         try {
-          this.loadingAddUser = true
+          this.loadingAddUser = true;
           const res = await this.$apollo.mutate({
             mutation: ADD_USERS,
             variables: {
-              "user": {
-                "name": this.editedItem.name,
-                "email": this.editedItem.email,
-                "roles": this.editedItem.roles,
-                "notify": true,
-                "position": this.editedItem.position
+              user: {
+                name: this.editedItem.name,
+                email: this.editedItem.email,
+                roles: this.editedItem.roles,
+                notify: true,
+                position: this.editedItem.position
               },
-              "password": "password123"
-            },
+              password: "password123"
+            }
           });
 
           if (res) {
-            this.loadingAddUser = false
+            this.loadingAddUser = false;
             if (res.data.addUser.ok) {
               this.users.push({
                 name: this.editedItem.name,
                 email: this.editedItem.email,
                 roles: this.editedItem.roles,
                 position: this.editedItem.position,
-                password: this.editedItem.password,
-              })
-              this.toastMsgAddUser = "Success To Save"
-              this.toast = true
+                password: this.editedItem.password
+              });
+              this.toastMsgAddUser = "Success To Save";
+              this.toast = true;
             }
           }
         } catch (err) {
-          console.log(err)
-          this.loadingAddUser = false
+          console.log(err);
+          this.loadingAddUser = false;
           // this.searchResults = [];
         }
       }
