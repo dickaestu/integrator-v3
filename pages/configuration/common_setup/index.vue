@@ -118,7 +118,6 @@
                         <v-text-field
                           hide-details="auto"
                           label="120"
-                          placeholder="Placeholder"
                           solo
                         ></v-text-field>
                       </v-col>
@@ -145,7 +144,7 @@ export default {
   name: "common_setup",
   data: () => ({
     fruits: ["Apples", "Apricots", "Avocado"],
-    selectedFruits: [],
+    selectedFruits: []
   }),
   computed: {
     likesAllFruit() {
@@ -158,7 +157,7 @@ export default {
       if (this.likesAllFruit) return "mdi-close-box";
       if (this.likesSomeFruit) return "mdi-minus-box";
       return "mdi-checkbox-blank-outline";
-    },
+    }
   },
   methods: {
     toggle() {
@@ -169,7 +168,7 @@ export default {
           this.selectedFruits = this.fruits.slice();
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>

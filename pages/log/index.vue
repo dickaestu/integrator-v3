@@ -76,7 +76,13 @@
                 :headers="headers"
                 :items="items"
                 :items-per-page="10"
-              ></v-data-table>
+              >
+                <template v-slot:[`item.level`]="{ item }">
+                  <v-chip :color="getColor(item.level)" dark>
+                    {{ item.level }}
+                  </v-chip>
+                </template>
+              </v-data-table>
             </v-col>
           </v-row>
         </v-card>
@@ -150,8 +156,8 @@ export default {
           result.map(items => {
             this.items.push({
               date: new Date(items.timestamp * 1000),
-              type: items.type,
-              level: items.level,
+              type: items.type.toUpperCase(),
+              level: items.level.toUpperCase(),
               desc: items.message
             });
           });
@@ -161,6 +167,10 @@ export default {
         this.loading = false;
         // this.searchResults = [];
       }
+    },
+    getColor(level) {
+      if (level == "Info") return "#D45757";
+      else return "#399F4F";
     },
     dateChange(val) {
       console.log(val);

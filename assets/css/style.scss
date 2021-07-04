@@ -29,10 +29,18 @@ $gotham-bold: "Gotham Bold", sans-serif;
 $gotham-light: "Gotham Light", sans-serif;
 $gotham-medium: "Gotham Medium", sans-serif;
 
+.musa_green_dark_text {
+  color: $musa_green_dark_text;
+}
+
 body {
   font-family: "Inter", sans-serif;
   background: $musa_background;
-  height: auto;
+  min-height: 100vh;
+}
+
+.v-application--wrap {
+  background: $musa_background;
 }
 
 .btn-transparent,
@@ -266,25 +274,102 @@ body {
   }
 }
 
+.color_current_date--text {
+  color: #69747e !important;
+  caret-color: #69747e !important;
+}
+
+.date_single_range {
+  .v-date-picker-table .v-btn.v-btn--active {
+    background-color: #51a1b4 !important;
+    border-color: #51a1b4 !important;
+    color: $white !important;
+  }
+  .theme--light.v-date-picker-header
+    .v-date-picker-header__value:not(.v-date-picker-header__value--disabled)
+    button:not(:hover):not(:focus) {
+    color: $musa_green_dark_text;
+  }
+  .theme--light.v-btn {
+    color: $musa_green_dark_text;
+  }
+}
+
 #content-one {
   background: #f0f2f4;
   .v-card {
     box-shadow: 0px 1px 4px 4px rgba(9, 52, 66, 0.05);
     border-radius: 10px;
   }
+  .see_full {
+    background: $musa_green_button_light_green;
+    color: $white;
+    border-radius: 100px;
+    float: right;
+    margin-top: 3em;
+  }
+  .hover_card {
+    .w-25 {
+      &:hover {
+        .d-not-hover {
+          display: block;
+        }
+        .d-hover {
+          display: none;
+        }
+        width: 40%;
+        .card-left {
+          height: 58vh;
+          .title {
+            font-size: 20px !important;
+          }
+          .subtitle,
+          .text {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+  .w-25 {
+    width: 20%;
+    z-index: 9;
+    // transition: all 0.3s ease-in-out;
+    transition: 500ms ease;
+    position: absolute;
+  }
+  .w-75 {
+    width: 75%;
+    margin-left: 25%;
+  }
   .card-left {
+    width: 100%;
+    height: auto;
+    transition: 500ms ease;
+    .d-not-hover {
+      display: none;
+      transition: all 0.3s ease-in-out;
+    }
+    .d-hover {
+      display: block;
+      transition: all 0.3s ease-in-out;
+    }
     .subtitle {
       font-size: 12px;
       color: $musa_green_lighter_text;
+      transition: font-size 0.5s ease;
     }
     .title {
       font-size: 13px !important;
+      transition: font-size 0.5s ease;
       font-weight: 600;
       color: $musa_green_dark_text;
+      text-transform: capitalize;
     }
     .text {
       font-size: 12px;
       color: $musa_green_lighter_text;
+      transition: font-size 0.5s ease;
     }
     .error {
       color: $musa_green_error_red;
@@ -298,15 +383,29 @@ body {
     }
   }
   .card-right {
-    // #vuechart-example {
-    //   min-height: 300px !important;
-    // }
-    // .apexcharts-canvas {
-    //   height: 300px !important;
-    //   svg {
-    //     height: 300px;
-    //   }
-    // }
+    width: 100%;
+    .date_range {
+      .v-text-field__slot {
+        padding-left: 10px;
+        // margin-left: 10px;
+        border: 1px solid #c4d2de;
+        label {
+          left: 10px !important;
+        }
+        input {
+          color: #a4aeb7;
+        }
+      }
+      .v-input__append-inner {
+        border: 1px solid #c4d2de;
+        border-left: none;
+        background: #f0f3f5;
+        padding-left: 0;
+        .v-input__icon {
+          height: 32px;
+        }
+      }
+    }
     .ph {
       font-size: 30px;
       font-weight: 600;
@@ -407,6 +506,32 @@ body {
 
 #log {
   background: #f0f2f4;
+  .date_range {
+    .v-input__control {
+      min-height: auto;
+    }
+    .v-text-field__slot {
+      padding-left: 10px;
+      background: $white;
+      // margin-left: 10px;
+      border: 1px solid #c4d2de;
+      label {
+        left: 10px !important;
+      }
+      input {
+        color: #a4aeb7;
+      }
+    }
+    .v-input__append-inner {
+      border: 1px solid #c4d2de;
+      border-left: none;
+      background: #f0f3f5;
+      padding-left: 0;
+      .v-input__icon {
+        height: 32px;
+      }
+    }
+  }
   .v-card {
     box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.14),
       0px 3px 14px rgba(0, 0, 0, 0.12), 0px 4px 5px rgba(0, 0, 0, 0.2);
@@ -577,14 +702,6 @@ body {
           &:hover::before {
             background: $white;
             opacity: 1;
-          }
-        }
-        .save {
-          background: #51a1b4;
-          color: $white;
-          &:hover::before {
-            background: #51a1b4;
-            color: $white;
           }
         }
         table {

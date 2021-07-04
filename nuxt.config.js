@@ -4,7 +4,7 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
-  target: 'static',
+  target: "static",
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -46,7 +46,7 @@ export default {
 
   apollo: {
     clientConfigs: {
-      default: '~/plugins/graphql-config.js'
+      default: "~/plugins/graphql-config.js"
     }
   },
 
@@ -60,7 +60,8 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     proxy: false,
-    browserBaseURL: 'https://musa-integrator-v3-sandbox-production.up.railway.app/api',
+    browserBaseURL:
+      "https://musa-integrator-v3-sandbox-production.up.railway.app/api",
     // browserBaseURL: 'https://7a312f874d9b.up.railway.app/api',
     headers: {
       common: {
@@ -70,23 +71,27 @@ export default {
   },
 
   auth: {
+    redirect: {
+      logout: "/login"
+      // callback: "/login"
+    },
     strategies: {
       local: {
         token: {
-          property: 'access_token',
-          type: 'Bearer',
+          property: "access_token",
+          type: "Bearer",
           maxAge: 1800,
           global: true,
           required: true,
-          prefix: '_token.',
-          expirationPrefix: '_token_expiration.'
+          prefix: "_token.",
+          expirationPrefix: "_token_expiration."
         },
         endpoints: {
-          login: { url: 'login', method: 'post', propertyName: 'access_token'},
-          user: { url: 'me', method: 'get', propertyName: 'email'},
-          logout : false,
-        },
-      },
+          login: { url: "login", method: "post", propertyName: "access_token" },
+          user: { url: "me", method: "get", propertyName: "email" }
+          // logout : false,
+        }
+      }
     }
   },
 
