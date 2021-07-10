@@ -187,7 +187,7 @@
                                     <v-col cols="12">
                                       <label>Password</label>
                                       <v-text-field
-                                        :value="password"
+                                        v-model="editedItem.password"
                                         class="form_edit"
                                         label="Password"
                                         solo
@@ -215,7 +215,7 @@
                                       <v-text-field
                                         ref="editedItem.positions"
                                         class="form_edit"
-                                        v-model="editedItem.positions"
+                                        v-model="editedItem.position"
                                         label="Position"
                                         solo
                                         hide-details="auto"
@@ -467,7 +467,7 @@ export default {
       { title: "Home", icon: "mdi-view-dashboard" },
       { title: "About", icon: "mdi-forum" }
     ],
-    roles: ["CEO", "CTO", "Freelance"],
+    roles: ["Admin", "Editor", "Viewer"],
     links: ["Home", "Contacts", "Settings"],
     filters: ["Admin", "Editor", "Viewer"],
     selectedFilters: [],
@@ -489,7 +489,8 @@ export default {
       name: null,
       email: null,
       roles: null,
-      position: null
+      position: null,
+      password: null,
     },
     defaultItem: {
       name: null,
@@ -538,34 +539,10 @@ export default {
     onMouseEnterGenerateBtn() {
       this.generateText = "";
     },
-    // onGenerate(len) {
-    //   let resultPassword = "";
-    //   let chars =
-    //     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-    //   for (let i = 0; i < len; i++) {
-    //     resultPassword += chars.charAt(
-    //       Math.floor(Math.random() * chars.length)
-    //     );
-    //   }
-    //   this.password = resultPassword;
-    //   // console.log("test password", (this.password = password));
-    //   // return password;
-    // },
     onGenerate() {
-      let result = "";
-      let charactersVal = "";
-      for (var j = 0; j < this.characters.length; j++) {
-        if (this.characters[j].checked) {
-          charactersVal += this.characters[j].value;
-        }
-      }
-      for (var i = 0; i < this.gLength; i++) {
-        result += charactersVal.charAt(
-          Math.floor(Math.random() * charactersVal.length)
-        );
-      }
-      this.password = result;
-      console.log("test password 1", this.result);
+      var randomstring = Math.random().toString(36).slice(-8);
+      this.editedItem.password = randomstring
+      console.log("test password 1", randomstring);
     },
     async getUsers() {
       try {
@@ -704,7 +681,7 @@ export default {
                 notify: true,
                 position: this.editedItem.position
               },
-              password: "password123"
+              password: this.editedItem.password
             }
           });
 
