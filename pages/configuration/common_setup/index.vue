@@ -13,29 +13,39 @@
                     <v-list dense nav>
                       <v-list-item>
                         <v-list-item-content>
-                          <h5>General Configuration</h5>
+                          <h5>
+                            General Configuration
+                          </h5>
                         </v-list-item-content>
                       </v-list-item>
                       <v-divider></v-divider>
-                      <v-list-item link class="mb-7 active">
+                      <v-list-item link class="mb-7 active" to="/configuration/common_setup">
                         <v-list-item-content>
-                          <v-list-item-title> Common Setup </v-list-item-title>
+                          <v-list-item-title>
+                            Common Setup
+                          </v-list-item-title>
                         </v-list-item-content>
                       </v-list-item>
                       <v-list-item>
                         <v-list-item-content>
-                          <h5>Device Configuration</h5>
+                          <h5>
+                            Device Configuration
+                          </h5>
                         </v-list-item-content>
                       </v-list-item>
                       <v-divider></v-divider>
                       <v-list-item link>
                         <v-list-item-content>
-                          <v-list-item-title> Device List </v-list-item-title>
+                          <v-list-item-title>
+                            Device List
+                          </v-list-item-title>
                         </v-list-item-content>
                       </v-list-item>
                       <v-list-item link>
                         <v-list-item-content>
-                          <v-list-item-title> Unit List </v-list-item-title>
+                          <v-list-item-title>
+                            Unit List
+                          </v-list-item-title>
                         </v-list-item-content>
                       </v-list-item>
                       <v-list-item link class="mb-7">
@@ -47,11 +57,13 @@
                       </v-list-item>
                       <v-list-item>
                         <v-list-item-content>
-                          <h5>User Configuration</h5>
+                          <h5>
+                            User Configuration
+                          </h5>
                         </v-list-item-content>
                       </v-list-item>
                       <v-divider></v-divider>
-                      <v-list-item>
+                      <v-list-item link to="/configuration/user_management">
                         <v-list-item-content>
                           <v-list-item-title>
                             User Management

@@ -19,7 +19,7 @@
                         </v-list-item-content>
                       </v-list-item>
                       <v-divider></v-divider>
-                      <v-list-item link class="mb-7">
+                      <v-list-item link class="mb-7" to="/configuration/common_setup">
                         <v-list-item-content>
                           <v-list-item-title>
                             Common Setup
@@ -63,7 +63,7 @@
                         </v-list-item-content>
                       </v-list-item>
                       <v-divider></v-divider>
-                      <v-list-item link class="active">
+                      <v-list-item link class="active" to="/configuration/user_management">
                         <v-list-item-content>
                           <v-list-item-title>
                             User Management
