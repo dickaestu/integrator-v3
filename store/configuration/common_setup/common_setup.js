@@ -88,6 +88,7 @@ export const actions = {
     },
     async saveCommonSetup({commit}, payload) {
       let client = this.app.apolloProvider.defaultClient
+      console.log(payload)
         try {
             this.loadingSaveCommonSetup = true;
             const res = await client.mutate({

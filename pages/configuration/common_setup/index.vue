@@ -81,8 +81,8 @@
                       <v-col cols="8">
                         <v-select
                           class="common_device"
-                          v-model="selectedFruits"
-                          :items="fruits"
+                          v-model="selectedConnectionDevice"
+                          :items="connectionDevice"
                           placeholder="Select Connection Setup"
                           multiple
                           hide-details="auto"
@@ -93,7 +93,7 @@
                               <v-list-item-action>
                                 <v-icon
                                   :color="
-                                    selectedFruits.length > 0
+                                    selectedConnectionDevice.length > 0
                                       ? 'indigo darken-4'
                                       : ''
                                   "
@@ -116,6 +116,7 @@
                       <v-col cols="3" class="title">Data Interval</v-col>
                       <v-col cols="8">
                         <v-text-field
+                          v-model="interval"
                           hide-details="auto"
                           label="120"
                           solo
@@ -124,7 +125,7 @@
                     </v-row>
                     <v-row class="mt-15">
                       <v-col offset="8">
-                        <v-btn class="mr-5 save"> SAVE </v-btn>
+                        <v-btn class="mr-5 save" @click="save"> SAVE </v-btn>
                         <v-btn> CANCEL </v-btn>
                       </v-col>
                     </v-row>
@@ -143,15 +144,19 @@
 export default {
   name: "common_setup",
   data: () => ({
-    fruits: ["Apples", "Apricots", "Avocado"],
-    selectedFruits: []
+    connectionDevice: ["Device", "KLHK API", "MUSA Cloud"],
+    selectedConnectionDevice: [],
+    interval: "",
+    allowMeasurement: false,
+    allowEndpoint: false,
+    allowCloud: false
   }),
   computed: {
     likesAllFruit() {
-      return this.selectedFruits.length === this.fruits.length;
+      return this.selectedConnectionDevice.length === this.connectionDevice.length;
     },
     likesSomeFruit() {
-      return this.selectedFruits.length > 0 && !this.likesAllFruit;
+      return this.selectedConnectionDevice.length > 0 && !this.likesAllFruit;
     },
     icon() {
       if (this.likesAllFruit) return "mdi-close-box";
@@ -159,15 +164,67 @@ export default {
       return "mdi-checkbox-blank-outline";
     }
   },
+  mounted() {
+    this.getConnectionDevice();
+    this.getInterval();
+  },
   methods: {
     toggle() {
       this.$nextTick(() => {
         if (this.likesAllFruit) {
-          this.selectedFruits = [];
+          this.selectedConnectionDevice = [];
         } else {
-          this.selectedFruits = this.fruits.slice();
+          this.selectedConnectionDevice = this.connectionDevice.slice();
         }
       });
+    },
+    async getConnectionDevice(){
+      try {
+        const res = await this.$store.dispatch('configuration/common_setup/common_setup/getMeasurementDevice')
+        if (res.data.measurementToggle.allowMeasurement) {
+          this.selectedConnectionDevice.push('Device')
+        }
+        if (res.data.measurementToggle.allowEndpoint) {
+          this.selectedConnectionDevice.push('KLHK API')
+        }
+        if (res.data.measurementToggle.allowCloud) {
+          this.selectedConnectionDevice.push('MUSA Cloud')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getInterval(){
+      try {
+        const res = await this.$store.dispatch('configuration/common_setup/common_setup/getCommonSetup')
+        this.interval = res.data.commonSetup.interval
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async save(){
+      try {
+
+        this.allowMeasurement = this.selectedConnectionDevice.includes('Device')
+        this.allowEndpoint = this.selectedConnectionDevice.includes('KLHK API')
+        this.allowCloud = this.selectedConnectionDevice.includes('MUSA Cloud')
+
+        const toggle = {
+          'allowMeasurement' : this.allowMeasurement,
+          'allowEndpoint' : this.allowEndpoint,
+          'allowCloud' : this.allowCloud
+        }
+        const res = await this.$store.dispatch(
+          'configuration/common_setup/common_setup/saveCommonSetup',
+          {
+            interval : this.interval,
+            connectionDevice : toggle
+          }
+        )
+        console.log(res)
+      } catch (error) {
+        
+      }
     }
   }
 };
