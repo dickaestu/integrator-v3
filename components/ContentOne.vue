@@ -101,6 +101,7 @@
                             Cancel
                           </v-btn>
                           <v-btn text @click="$refs.menu.save(dates)">
+                          <!-- <v-btn text @click="getSensorMeasurements()"> -->
                             OK
                           </v-btn>
                         </v-date-picker>
@@ -232,7 +233,10 @@ export default {
   data: () => ({
     // current_date: new Date().toISOString().substr(0, 10),
     // toggle_dateRange: true,
-    dates: [],
+    dates: [
+      '2021-06-16',
+      '2021-06-16'
+    ],
     menu: false,
     log: [],
     items: [],
@@ -365,7 +369,10 @@ export default {
     dataGrafik: {},
     loadingSensors: false,
     loadingGrafik: false,
-    loadingLogsSummary: false
+    loadingLogsSummary: false,
+    timestamps1: new Date().getTime(),
+    timestamps2: new Date().getTime(),
+
   }),
   // apollo : {
   //   units : {
@@ -384,6 +391,15 @@ export default {
   mounted() {
     this.getSensors();
     this.getLogSummary();
+    var arr1 = this.dates[0];
+    arr1 = arr1.split("-");
+    var newDate = new Date( arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
+    this.timestamps1 = newDate
+
+    var arr2 = this.dates[1];
+    arr2 = arr2.split("-");
+    var newDate2 = new Date( arr2[0], arr2[1] - 1, arr2[2], 23, 59, 59).getTime();
+    this.timestamps2 = newDate2
   },
   methods: {
     async getSensors() {
@@ -397,27 +413,33 @@ export default {
         });
 
         if (res) {
-          this.loadingSensors = false;
-          if (res.data.units.length > 0) {
-            res.data.units[0].sensors.map(result => {
+          this.loadingSensors = false
+          if(res.data.units.length > 0){
+            const promises = res.data.units[0].sensors.map(async result => {
+              const sensors = await this.getSensorMeasurements(result.parameter)
+              return sensors
+            })
+
+            const dataSensors = await Promise.all(promises)
+
+            const loopSensors = dataSensors.map(sensors => {
+              const val = sensors.data.sensorMeasurements[0].values
+              const lastVal = val[val.length - 1]
+              return lastVal
+            })
+
+            res.data.units[0].sensors.map((result, index) => {
               this.items.push({
                 title: result.parameter,
                 unit: res.data.units[0].name,
                 desc: "",
-                size: `${result.dataLength} ${
-                  result.measurementUnit !== null ? result.measurementUnit : ""
-                }`,
-                color: `${
-                  result.dataLength >= result.outputHigh
-                    ? `red`
-                    : result.dataLength >= result.thresholdHigh
-                    ? "yellow"
-                    : ""
-                }`
-              });
-            });
+                size: `${loopSensors[index].toFixed(2)} ${result.measurementUnit !== null ? result.measurementUnit : ''}`,
+                color: `${loopSensors[index] >= result.outputHigh ? `red` : loopSensors[index] >= result.thresholdHigh ? 'yellow' : ''}`,
+              })
+            })
+
           }
-          this.getSensorMeasurements(this.items[0]);
+          this.getGraphicSensors(this.items[0]);
         }
       } catch (err) {
         console.log(err);
@@ -426,7 +448,7 @@ export default {
       }
     },
     onClickSensors(params) {
-      this.getSensorMeasurements(params);
+      this.getGraphicSensors(params);
     },
     async getSensorMeasurements(params) {
       try {
@@ -434,33 +456,15 @@ export default {
         const res = await this.$apollo.query({
           query: SENSORS_MEASUREMENTS,
           variables: {
-            startTime: 1624107898,
-            endTime: 1624147199,
-            parameters: [params.title]
+            startTime: this.timestamps1 / 1000,
+            endTime: this.timestamps2 / 1000,
+            parameters: [params]
           }
         });
 
         if (res) {
-          this.loadingGrafik = false;
-          this.dataGrafik = params;
-          // console.log(res.data.sensorMeasurements[0].values)
-          let value = res.data.sensorMeasurements[0].values;
-          let time = res.data.sensorMeasurements[0].timestamps;
-          let data = [];
-          for (let i = 0; i < value.length; i++) {
-            let tanggal = new Date(time[i] * 1000);
-            data.push({
-              x: time[i],
-              y: value[i]
-            });
-          }
-          this.series = [
-            {
-              name: "Values",
-              data: data
-            }
-          ];
-          this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
+          this.loadingGrafik = false
+          return res
         }
       } catch (err) {
         console.log(err);
@@ -499,7 +503,52 @@ export default {
       }
     },
     dateChange(val) {
-      console.log(val);
+      var arr1 = val[0];
+      arr1 = arr1.split("-");
+      var newDate = new Date( arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
+      this.timestamps1 = newDate
+
+      var arr2 = val[1];
+      arr2 = arr2.split("-");
+      var newDate2 = new Date( arr2[0], arr2[1] - 1, arr2[2], 23, 59, 59).getTime();
+      this.timestamps2 = newDate2
+
+      this.getGraphicSensors()
+    },
+    async getGraphicSensors(params){
+      if (params === undefined) {
+        params = this.dataGrafik
+      }
+      let res = await this.getSensorMeasurements(params.title)
+      this.dataGrafik = params
+      // console.log(res.data.sensorMeasurements[0].values)
+      let value = res.data.sensorMeasurements[0].values
+      let time = res.data.sensorMeasurements[0].timestamps
+      let data = []
+      let day = []
+      let month = []
+      let year = []
+      var tanggal = []
+      for (let i = 0; i < value.length; i++) {
+        day[i] = new Date(time[i] * 1000).toString()
+        // month[i] = new Date(time[i] * 1000).getMonth()
+        // year[i] = new Date(time[i] * 1000).getFullYear()
+        // tanggal.push(
+        //   day[i]+'-'+month[i]+'-'+year[i]
+        // )
+        console.log(day[i])
+        data.push({
+          x: day[i],
+          y: value[i].toFixed(2)
+        })
+      }
+      this.series = [
+        {
+          name: "Values",
+          data: data
+        }
+      ]
+      this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps
     }
   }
 };
