@@ -78,8 +78,9 @@ export default {
       } catch (err) {
         console.log(err);
         this.loadingLogsSummary = false;
+        // this.searchResults = [];
       }
-    }
+    },
   }
 };
 </script>

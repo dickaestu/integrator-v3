@@ -2,6 +2,7 @@
   <section>
     <Header />
     <Menu />
+    <!-- <ContentOne /> -->
     <Homepage />
   </section>
 </template>
@@ -10,7 +11,7 @@
 export default {
   name: "Home",
   middleware: "auth",
-  data: () => ({})
+  data: () => ({}),
 };
 </script>
 
