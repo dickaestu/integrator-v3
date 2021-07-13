@@ -1,15 +1,15 @@
 <template>
   <section>
     <Header />
-    <MenuHome />
-    <ContentOne />
+    <Menu />
+    <Homepage />
   </section>
 </template>
 
 <script>
 export default {
   name: "Home",
-  middleware: 'auth',
+  middleware: "auth",
   data: () => ({})
 };
 </script>

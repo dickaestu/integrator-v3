@@ -3,8 +3,12 @@
     <v-app-bar dark dense>
       <img :src="logo" :alt="logo" class="logo" />
       <v-spacer></v-spacer>
-      <span class="musa_grey mr-4">powered by</span>
-      <img class="power-musa mr-8" :src="musa" :alt="musa" />
+      <span class="musa_grey mr-4 d-none d-sm-none d-md-flex">powered by</span>
+      <img
+        class="power-musa mr-8 d-none d-sm-none d-md-flex"
+        :src="musa"
+        :alt="musa"
+      />
       <v-menu offset-y left bottom>
         <template v-slot:activator="{ attrs, on }">
           <v-btn class="btn-transparent" v-bind="attrs" dark v-on="on">
@@ -18,9 +22,6 @@
           </v-btn>
         </template>
         <v-list>
-          <!-- <v-list-item v-for="(item, index) in items" :key="index">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item> -->
           <v-list-item link>
             <v-list-item-title>
               Profile
@@ -44,12 +45,10 @@ export default {
     logo: require("~/assets/images/logo.png"),
     user: require("~/assets/images/user.jpg"),
     musa: require("~/assets/images/musa-white.png")
-    // items: [{ title: "Profile" }, { title: "Logout" }]
   }),
   methods: {
     async logout() {
       await this.$auth.logout();
-      // this.$router.push("/login");
       this.$router.replace("/login");
       console.log("keluar sekarang", this.logout());
     }
