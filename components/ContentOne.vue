@@ -142,7 +142,7 @@
             ></v-select>
           </v-col>
         </v-row>
-        <v-row>
+        <v-row v-if="!this.loadingSensors">
           <v-col cols="2" v-for="(i, index) in items" :key="index">
             <v-card
               class="pa-3 card-bottom"
@@ -159,6 +159,22 @@
               </div>
               <p class="size mb-0">{{ i.size }}</p>
             </v-card>
+          </v-col>
+        </v-row>
+        <v-row v-else>
+          <v-col cols="2">
+            <!-- <template> -->
+              <!-- <v-sheet
+                :color="`grey lighten-4`"
+                class="pa-3 card-bottom"
+              > -->
+                <v-skeleton-loader
+                  class="mx-auto"
+                  max-width="300"
+                  type="card"
+                ></v-skeleton-loader>
+              <!-- </v-sheet> -->
+            <!-- </template> -->
           </v-col>
         </v-row>
       </v-container>
@@ -413,7 +429,7 @@ export default {
         });
 
         if (res) {
-          this.loadingSensors = false
+          
           if(res.data.units.length > 0){
             const promises = res.data.units[0].sensors.map(async result => {
               const sensors = await this.getSensorMeasurements(result.parameter)
@@ -437,7 +453,7 @@ export default {
                 color: `${loopSensors[index] >= result.outputHigh ? `red` : loopSensors[index] >= result.thresholdHigh ? 'yellow' : ''}`,
               })
             })
-
+            this.loadingSensors = false
           }
           this.getGraphicSensors(this.items[0]);
         }

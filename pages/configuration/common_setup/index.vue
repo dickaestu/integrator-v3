@@ -137,7 +137,14 @@
                     </v-row>
                     <v-row class="mt-15">
                       <v-col offset="8">
-                        <v-btn class="mr-5 save" @click="save"> SAVE </v-btn>
+                        <v-btn 
+                          class="mr-5 save" 
+                          @click="save"
+                          :loading="loading"
+                          :disabled="loading"
+                        > 
+                          SAVE 
+                        </v-btn>
                         <v-btn> CANCEL </v-btn>
                       </v-col>
                     </v-row>
@@ -147,6 +154,20 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-snackbar
+          :timeout="-1"
+          :value="toast"
+          color="blue-grey"
+          fixed
+          rounded="pill"
+        >
+          {{ toastMsgAddUser }}
+          <template v-slot:action="{ attrs }">
+            <v-btn color="white" text v-bind="attrs" @click="toast = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
       </v-container>
     </section>
   </v-app>
@@ -161,7 +182,10 @@ export default {
     interval: "",
     allowMeasurement: false,
     allowEndpoint: false,
-    allowCloud: false
+    allowCloud: false,
+    loading: false,
+    toastMsgAddUser: "",
+    toast: false,
   }),
   computed: {
     likesAllFruit() {
@@ -216,7 +240,7 @@ export default {
     },
     async save(){
       try {
-
+        this.loading = true
         this.allowMeasurement = this.selectedConnectionDevice.includes('Device')
         this.allowEndpoint = this.selectedConnectionDevice.includes('KLHK API')
         this.allowCloud = this.selectedConnectionDevice.includes('MUSA Cloud')
@@ -233,9 +257,17 @@ export default {
             connectionDevice : toggle
           }
         )
-        console.log(res)
+        if (res.data.setCommonSetup.ok) {
+          this.toastMsgAddUser = "Data has been Saved";
+          this.toast = true;
+          this.loading = false
+        }else{
+          this.toastMsgAddUser = "Something went wrong";
+          this.toast = true;
+          this.loading = false
+        }
       } catch (error) {
-        
+        this.loading = false
       }
     }
   }

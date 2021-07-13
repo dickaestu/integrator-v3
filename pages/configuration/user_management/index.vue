@@ -231,7 +231,12 @@
                                 <v-btn text @click="close">
                                   Cancel
                                 </v-btn>
-                                <v-btn text @click="save">
+                                <v-btn 
+                                  text 
+                                  @click="save"
+                                  :loading="loadingAddUser"
+                                  :disabled="loadingAddUser"
+                                >
                                   Save
                                 </v-btn>
                               </v-card-actions>
@@ -638,30 +643,45 @@ export default {
     },
     async save() {
       if (this.editedIndex > -1) {
+        let param = null
+
+        if(this.editedItem.password !== null){
+          param = {
+            userID: this.editedItem.id,
+            user: {
+              name: this.editedItem.name,
+              email: this.editedItem.email,
+              roles: this.editedItem.roles,
+              notify: true,
+              position: this.editedItem.position,
+              password: this.editedItem.password
+            }
+          }
+        }else{
+          param = {
+            userID: this.editedItem.id,
+            user: {
+              name: this.editedItem.name,
+              email: this.editedItem.email,
+              roles: this.editedItem.roles,
+              notify: true,
+              position: this.editedItem.position,
+            }
+          }
+        }
+
         try {
           this.loadingAddUser = true;
           const res = await this.$apollo.mutate({
             mutation: EDIT_USERS,
-            variables: {
-              userID: this.editedItem.id,
-              user: {
-                name: this.editedItem.name,
-                email: this.editedItem.email,
-                roles: this.editedItem.roles,
-                notify: true,
-                position: this.editedItem.position,
-                password: false
-              }
-            }
+            variables: param
           });
 
-          if (res) {
+          if (res.data.editUser.ok) {
             this.loadingAddUser = false;
-            if (res.data.editUser.ok) {
-              Object.assign(this.users[this.editedIndex], this.editedItem);
-              this.toastMsgAddUser = "Data has been Edited";
-              this.toast = true;
-            }
+            Object.assign(this.users[this.editedIndex], this.editedItem);
+            this.toastMsgAddUser = "Data has been Edited";
+            this.toast = true;
           }
         } catch (err) {
           console.log(err);
@@ -685,19 +705,17 @@ export default {
             }
           });
 
-          if (res) {
+          if (res.data.addUser.ok) {
             this.loadingAddUser = false;
-            if (res.data.addUser.ok) {
-              this.users.push({
-                name: this.editedItem.name,
-                email: this.editedItem.email,
-                roles: this.editedItem.roles,
-                position: this.editedItem.position,
-                password: this.editedItem.password
-              });
-              this.toastMsgAddUser = "Success To Save";
-              this.toast = true;
-            }
+            this.users.push({
+              name: this.editedItem.name,
+              email: this.editedItem.email,
+              roles: this.editedItem.roles,
+              position: this.editedItem.position,
+              password: this.editedItem.password
+            });
+            this.toastMsgAddUser = "Success To Save";
+            this.toast = true;
           }
         } catch (err) {
           console.log(err);
