@@ -5,8 +5,8 @@
       <v-col cols="8">
         <v-select
           class="common_device"
-          v-model="selectedFruits"
-          :items="fruits"
+          v-model="selectedConnectionDevice"
+          :items="connectionDevice"
           placeholder="Select Connection Setup"
           multiple
           hide-details="auto"
@@ -16,7 +16,9 @@
             <v-list-item ripple @click="toggle">
               <v-list-item-action>
                 <v-icon
-                  :color="selectedFruits.length > 0 ? 'indigo darken-4' : ''"
+                  :color="
+                    selectedConnectionDevice.length > 0 ? 'indigo darken-4' : ''
+                  "
                 >
                   {{ icon }}
                 </v-icon>
@@ -39,19 +41,21 @@
 export default {
   name: "Connection",
   data: () => ({
-    fruits: [
+    connectionDevice: [
       "Device Connection",
       "KLHK API Connection",
       "MUSA Cloud Connection"
     ],
-    selectedFruits: []
+    selectedConnectionDevice: []
   }),
   computed: {
     likesAllFruit() {
-      return this.selectedFruits.length === this.fruits.length;
+      return (
+        this.selectedConnectionDevice.length === this.connectionDevice.length
+      );
     },
     likesSomeFruit() {
-      return this.selectedFruits.length > 0 && !this.likesAllFruit;
+      return this.selectedConnectionDevice.length > 0 && !this.likesAllFruit;
     },
     icon() {
       if (this.likesAllFruit) return "mdi-close-box";
@@ -63,9 +67,9 @@ export default {
     toggle() {
       this.$nextTick(() => {
         if (this.likesAllFruit) {
-          this.selectedFruits = [];
+          this.selectedConnectionDevice = [];
         } else {
-          this.selectedFruits = this.fruits.slice();
+          this.selectedConnectionDevice = this.connectionDevice.slice();
         }
       });
     }

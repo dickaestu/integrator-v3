@@ -254,7 +254,12 @@
                                   <v-btn text @click="close">
                                     Cancel
                                   </v-btn>
-                                  <v-btn text @click="save">
+                                  <v-btn
+                                    text
+                                    @click="save"
+                                    :loading="loadingAddUser"
+                                    :disabled="loadingAddUser"
+                                  >
                                     Save
                                   </v-btn>
                                 </v-card-actions>
@@ -296,9 +301,11 @@
                           </v-dialog>
                         </template>
                         <template v-slot:[`item.notifications`]>
-                          <v-icon small class="mr-2">
-                            mdi-bell
-                          </v-icon>
+                          <!-- <v-btn text icon @click="toggleBell">
+                            <v-icon v-if="bell">mdi-bell-off</v-icon>
+                            <v-icon v-else>mdi-bell</v-icon>
+                          </v-btn> -->
+                          <v-icon small class="mr-2"> mdi-bell </v-icon>
                         </template>
                         <template v-slot:[`item.actions`]="{ item }">
                           <v-menu>
@@ -416,6 +423,7 @@ export default {
     img_viewer: require("~/assets/images/img_viewer.png"),
     // img_editor: require("~/assets/images/img_editor.png"),
     // img_admin: require("~/assets/images/img_admin.png"),
+    bell: false,
     dialog: false,
     dialogDelete: false,
     dialogRoles: false,
@@ -506,6 +514,9 @@ export default {
   },
 
   methods: {
+    toggleBell() {
+      this.bell = !this.bell;
+    },
     onMouseEnterGenerateBtn() {
       this.generateText = "";
     },
@@ -610,30 +621,45 @@ export default {
     },
     async save() {
       if (this.editedIndex > -1) {
+        let param = null;
+
+        if (this.editedItem.password !== null) {
+          param = {
+            userID: this.editedItem.id,
+            user: {
+              name: this.editedItem.name,
+              email: this.editedItem.email,
+              roles: this.editedItem.roles,
+              notify: true,
+              position: this.editedItem.position,
+              password: this.editedItem.password
+            }
+          };
+        } else {
+          param = {
+            userID: this.editedItem.id,
+            user: {
+              name: this.editedItem.name,
+              email: this.editedItem.email,
+              roles: this.editedItem.roles,
+              notify: true,
+              position: this.editedItem.position
+            }
+          };
+        }
+
         try {
           this.loadingAddUser = true;
           const res = await this.$apollo.mutate({
             mutation: EDIT_USERS,
-            variables: {
-              userID: this.editedItem.id,
-              user: {
-                name: this.editedItem.name,
-                email: this.editedItem.email,
-                roles: this.editedItem.roles,
-                notify: true,
-                position: this.editedItem.position,
-                password: false
-              }
-            }
+            variables: param
           });
 
-          if (res) {
+          if (res.data.editUser.ok) {
             this.loadingAddUser = false;
-            if (res.data.editUser.ok) {
-              Object.assign(this.users[this.editedIndex], this.editedItem);
-              this.toastMsgAddUser = "Data has been Edited";
-              this.toast = true;
-            }
+            Object.assign(this.users[this.editedIndex], this.editedItem);
+            this.toastMsgAddUser = "Data has been Edited";
+            this.toast = true;
           }
         } catch (err) {
           console.log(err);
@@ -657,19 +683,17 @@ export default {
             }
           });
 
-          if (res) {
+          if (res.data.addUser.ok) {
             this.loadingAddUser = false;
-            if (res.data.addUser.ok) {
-              this.users.push({
-                name: this.editedItem.name,
-                email: this.editedItem.email,
-                roles: this.editedItem.roles,
-                position: this.editedItem.position,
-                password: this.editedItem.password
-              });
-              this.toastMsgAddUser = "Success To Save";
-              this.toast = true;
-            }
+            this.users.push({
+              name: this.editedItem.name,
+              email: this.editedItem.email,
+              roles: this.editedItem.roles,
+              position: this.editedItem.position,
+              password: this.editedItem.password
+            });
+            this.toastMsgAddUser = "Success To Save";
+            this.toast = true;
           }
         } catch (err) {
           console.log(err);

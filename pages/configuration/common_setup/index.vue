@@ -93,13 +93,88 @@
                         Common Setup
                       </h3>
                       <v-row class="mt-4 mb-4">
-                        <ConfigGeneralDevice />
-                        <ConfigGeneralConnection />
-                        <ConfigGeneralInterval />
+                        <v-col cols="12">
+                          <v-row>
+                            <v-col sm="3" cols="4" class="title"
+                              >Device UID</v-col
+                            >
+                            <v-col cols="8">
+                              <v-text-field
+                                solo
+                                readonly
+                                hide-details="auto"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-row>
+                            <v-col sm="3" cols="4" class="title"
+                              >Connection Setup</v-col
+                            >
+                            <v-col cols="8">
+                              <v-select
+                                class="common_device"
+                                v-model="selectedConnectionDevice"
+                                :items="connectionDevice"
+                                placeholder="Select Connection Setup"
+                                multiple
+                                hide-details="auto"
+                                chips
+                              >
+                                <template v-slot:prepend-item>
+                                  <v-list-item ripple @click="toggle">
+                                    <v-list-item-action>
+                                      <v-icon
+                                        :color="
+                                          selectedConnectionDevice.length > 0
+                                            ? 'indigo darken-4'
+                                            : ''
+                                        "
+                                      >
+                                        {{ icon }}
+                                      </v-icon>
+                                    </v-list-item-action>
+                                    <v-list-item-content>
+                                      <v-list-item-title>
+                                        Select All
+                                      </v-list-item-title>
+                                    </v-list-item-content>
+                                  </v-list-item>
+                                  <v-divider class="mt-2"></v-divider>
+                                </template>
+                              </v-select>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-row>
+                            <v-col sm="3" cols="4" class="title"
+                              >Data Interval</v-col
+                            >
+                            <v-col cols="8">
+                              <v-text-field
+                                v-model="interval"
+                                hide-details="auto"
+                                label="120"
+                                solo
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                        <!-- <ConfigGeneralDevice /> -->
+                        <!-- <ConfigGeneralConnection /> -->
+                        <!-- <ConfigGeneralInterval /> -->
                         <v-col cols="12">
                           <v-row class="mt-15">
                             <v-col cols="12">
-                              <v-btn class="mr-5 save"> SAVE </v-btn>
+                              <v-btn
+                                class="mr-5 save"
+                                @click="save"
+                                :loading="loading"
+                                :disabled="loading"
+                                >SAVE</v-btn
+                              >
                               <v-btn> CANCEL </v-btn>
                             </v-col>
                           </v-row>
@@ -112,6 +187,20 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-snackbar
+          :timeout="-1"
+          :value="toast"
+          color="blue-grey"
+          fixed
+          rounded="pill"
+        >
+          {{ toastMsgAddUser }}
+          <template v-slot:action="{ attrs }">
+            <v-btn color="white" text v-bind="attrs" @click="toast = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
       </v-container>
     </section>
   </v-app>
@@ -121,7 +210,108 @@
 export default {
   name: "common_setup",
   data: () => ({
-    sidebarMenu: false
-  })
+    sidebarMenu: false,
+    connectionDevice: ["Device", "KLHK API", "MUSA Cloud"],
+    selectedConnectionDevice: [],
+    interval: "",
+    allowMeasurement: false,
+    allowEndpoint: false,
+    allowCloud: false,
+    loading: false,
+    toastMsgAddUser: "",
+    toast: false
+  }),
+  computed: {
+    likesAllFruit() {
+      return (
+        this.selectedConnectionDevice.length === this.connectionDevice.length
+      );
+    },
+    likesSomeFruit() {
+      return this.selectedConnectionDevice.length > 0 && !this.likesAllFruit;
+    },
+    icon() {
+      if (this.likesAllFruit) return "mdi-close-box";
+      if (this.likesSomeFruit) return "mdi-minus-box";
+      return "mdi-checkbox-blank-outline";
+    }
+  },
+  mounted() {
+    this.getConnectionDevice();
+    this.getInterval();
+  },
+  methods: {
+    toggle() {
+      this.$nextTick(() => {
+        if (this.likesAllFruit) {
+          this.selectedConnectionDevice = [];
+        } else {
+          this.selectedConnectionDevice = this.connectionDevice.slice();
+        }
+      });
+    },
+    async getConnectionDevice() {
+      try {
+        const res = await this.$store.dispatch(
+          "configuration/common_setup/common_setup/getMeasurementDevice"
+        );
+        if (res.data.measurementToggle.allowMeasurement) {
+          this.selectedConnectionDevice.push("Device");
+        }
+        if (res.data.measurementToggle.allowEndpoint) {
+          this.selectedConnectionDevice.push("KLHK API");
+        }
+        if (res.data.measurementToggle.allowCloud) {
+          this.selectedConnectionDevice.push("MUSA Cloud");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getInterval() {
+      try {
+        const res = await this.$store.dispatch(
+          "configuration/common_setup/common_setup/getCommonSetup"
+        );
+        this.interval = res.data.commonSetup.interval;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async save() {
+      try {
+        this.loading = true;
+        this.allowMeasurement = this.selectedConnectionDevice.includes(
+          "Device"
+        );
+        this.allowEndpoint = this.selectedConnectionDevice.includes("KLHK API");
+        this.allowCloud = this.selectedConnectionDevice.includes("MUSA Cloud");
+
+        const toggle = {
+          allowMeasurement: this.allowMeasurement,
+          allowEndpoint: this.allowEndpoint,
+          allowCloud: this.allowCloud
+        };
+        const res = await this.$store.dispatch(
+          "configuration/common_setup/common_setup/saveCommonSetup",
+          {
+            interval: this.interval,
+            connectionDevice: toggle
+          }
+        );
+        if (res.data.setCommonSetup.ok) {
+          this.toastMsgAddUser = "Data has been Saved";
+          this.toast = true;
+          this.loading = false;
+        } else {
+          this.toastMsgAddUser = "Something went wrong";
+          this.toast = true;
+          this.loading = false;
+        }
+      } catch (error) {
+        this.loading = false;
+      }
+    }
+  }
 };
 </script>
