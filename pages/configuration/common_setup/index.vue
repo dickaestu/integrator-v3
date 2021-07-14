@@ -7,7 +7,8 @@
         <v-row>
           <v-col>
             <v-card class="mx-auto">
-              <v-navigation-drawer
+              <SideMenu :sideBar="sidebarMenu" />
+              <!-- <v-navigation-drawer
                 class="menu-left"
                 dark
                 v-model="sidebarMenu"
@@ -81,13 +82,14 @@
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
-              </v-navigation-drawer>
+              </v-navigation-drawer> -->
               <v-content class="menu-right">
                 <v-container class="px-4 py-0 fill-height" fluid>
                   <v-row class="fill-height">
                     <v-col>
                       <h3>
                         <v-app-bar-nav-icon
+                          class="d-inline-block d-sm-print-inline-block d-md-none"
                           @click.stop="sidebarMenu = !sidebarMenu"
                         ></v-app-bar-nav-icon>
                         Common Setup
@@ -95,10 +97,14 @@
                       <v-row class="mt-4 mb-4">
                         <v-col cols="12">
                           <v-row>
-                            <v-col sm="3" cols="4" class="title"
+                            <v-col
+                              sm="3"
+                              md="4"
+                              cols="12"
+                              class="title pb-0 pb-sm-3"
                               >Device UID</v-col
                             >
-                            <v-col cols="8">
+                            <v-col cols="12" sm="8">
                               <v-text-field
                                 solo
                                 readonly
@@ -109,10 +115,14 @@
                         </v-col>
                         <v-col cols="12">
                           <v-row>
-                            <v-col sm="3" cols="4" class="title"
+                            <v-col
+                              sm="3"
+                              md="4"
+                              cols="12"
+                              class="title pb-0 pb-sm-3"
                               >Connection Setup</v-col
                             >
-                            <v-col cols="8">
+                            <v-col cols="12" sm="8">
                               <v-select
                                 class="common_device"
                                 v-model="selectedConnectionDevice"
@@ -149,10 +159,14 @@
                         </v-col>
                         <v-col cols="12">
                           <v-row>
-                            <v-col sm="3" cols="4" class="title"
+                            <v-col
+                              sm="3"
+                              md="4"
+                              cols="12"
+                              class="title pb-0 pb-sm-3"
                               >Data Interval</v-col
                             >
-                            <v-col cols="8">
+                            <v-col cols="12" sm="8">
                               <v-text-field
                                 v-model="interval"
                                 hide-details="auto"
@@ -207,8 +221,12 @@
 </template>
 
 <script>
+import SideMenu from "../../../components/config/SideMenu.vue";
 export default {
   name: "common_setup",
+  components: {
+    SideMenu
+  },
   data: () => ({
     sidebarMenu: false,
     connectionDevice: ["Device", "KLHK API", "MUSA Cloud"],

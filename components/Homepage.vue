@@ -33,9 +33,9 @@
                     <p class="text mb-0">6.8</p>
                   </div>
                 </v-col>
-                <v-col cols="9">
+                <v-col cols="12" md="9">
                   <v-row>
-                    <v-col cols="5" offset="7">
+                    <v-col cols="9" md="5" offset-md="7" offset="3">
                       <v-menu
                         content-class="date_single_range"
                         ref="menu"
@@ -71,7 +71,7 @@
                             Cancel
                           </v-btn>
                           <v-btn text @click="$refs.menu.save(dates)">
-                          <!-- <v-btn text @click="getSensorMeasurements()"> -->
+                            <!-- <v-btn text @click="getSensorMeasurements()"> -->
                             OK
                           </v-btn>
                         </v-date-picker>
@@ -92,7 +92,7 @@
           </div>
         </v-row>
         <v-row class="d-flex justify-end">
-          <v-col cols="2">
+          <v-col cols="6" sm="4" md="3" lg="2">
             <v-select
               :items="Unit"
               label="All Unit"
@@ -101,7 +101,7 @@
               hide-details="auto"
             ></v-select>
           </v-col>
-          <v-col cols="2">
+          <v-col cols="6" sm="4" md="3" lg="2">
             <v-select
               :items="Device"
               label="All Device Type"
@@ -112,7 +112,16 @@
           </v-col>
         </v-row>
         <v-row v-if="!this.loadingSensors">
-          <v-col cols="12" xs="12" sm="6" md="2" lg="2" xl="2" v-for="(i, index) in items" :key="index">
+          <v-col
+            cols="12"
+            xs="12"
+            sm="6"
+            md="2"
+            lg="2"
+            xl="2"
+            v-for="(i, index) in items"
+            :key="index"
+          >
             <v-card
               class="pa-3 card-bottom"
               :class="i.color"
@@ -133,16 +142,16 @@
         <v-row v-else>
           <v-col cols="2">
             <!-- <template> -->
-              <!-- <v-sheet
+            <!-- <v-sheet
                 :color="`grey lighten-4`"
                 class="pa-3 card-bottom"
               > -->
-                <v-skeleton-loader
-                  class="mx-auto"
-                  max-width="300"
-                  type="card"
-                ></v-skeleton-loader>
-              <!-- </v-sheet> -->
+            <v-skeleton-loader
+              class="mx-auto"
+              max-width="300"
+              type="card"
+            ></v-skeleton-loader>
+            <!-- </v-sheet> -->
             <!-- </template> -->
           </v-col>
         </v-row>
@@ -152,7 +161,7 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 const UNITS_SENSORS = gql`
   query units($id: [ID!]) {
     units(id: $id) {
@@ -217,10 +226,7 @@ export default {
   data: () => ({
     // current_date: new Date().toISOString().substr(0, 10),
     // toggle_dateRange: true,
-    dates: [
-      '2021-06-16',
-      '2021-06-16'
-    ],
+    dates: ["2021-06-16", "2021-06-16"],
     menu: false,
     log: [],
     items: [],
@@ -355,8 +361,7 @@ export default {
     loadingGrafik: false,
     loadingLogsSummary: false,
     timestamps1: new Date().getTime(),
-    timestamps2: new Date().getTime(),
-
+    timestamps2: new Date().getTime()
   }),
   // apollo : {
   //   units : {
@@ -377,13 +382,20 @@ export default {
     this.getLogSummary();
     var arr1 = this.dates[0];
     arr1 = arr1.split("-");
-    var newDate = new Date( arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
-    this.timestamps1 = newDate
+    var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
+    this.timestamps1 = newDate;
 
     var arr2 = this.dates[1];
     arr2 = arr2.split("-");
-    var newDate2 = new Date( arr2[0], arr2[1] - 1, arr2[2], 23, 59, 59).getTime();
-    this.timestamps2 = newDate2
+    var newDate2 = new Date(
+      arr2[0],
+      arr2[1] - 1,
+      arr2[2],
+      23,
+      59,
+      59
+    ).getTime();
+    this.timestamps2 = newDate2;
   },
   methods: {
     async getSensors() {
@@ -397,31 +409,40 @@ export default {
         });
 
         if (res) {
-          
-          if(res.data.units.length > 0){
+          if (res.data.units.length > 0) {
             const promises = res.data.units[0].sensors.map(async result => {
-              const sensors = await this.getSensorMeasurements(result.parameter)
-              return sensors
-            })
+              const sensors = await this.getSensorMeasurements(
+                result.parameter
+              );
+              return sensors;
+            });
 
-            const dataSensors = await Promise.all(promises)
+            const dataSensors = await Promise.all(promises);
 
             const loopSensors = dataSensors.map(sensors => {
-              const val = sensors.data.sensorMeasurements[0].values
-              const lastVal = val[val.length - 1]
-              return lastVal
-            })
+              const val = sensors.data.sensorMeasurements[0].values;
+              const lastVal = val[val.length - 1];
+              return lastVal;
+            });
 
             res.data.units[0].sensors.map((result, index) => {
               this.items.push({
                 title: result.parameter,
                 unit: res.data.units[0].name,
                 desc: "",
-                size: `${loopSensors[index].toFixed(2)} ${result.measurementUnit !== null ? result.measurementUnit : ''}`,
-                color: `${loopSensors[index] >= result.outputHigh ? `red` : loopSensors[index] >= result.thresholdHigh ? 'yellow' : ''}`,
-              })
-            })
-            this.loadingSensors = false
+                size: `${loopSensors[index].toFixed(2)} ${
+                  result.measurementUnit !== null ? result.measurementUnit : ""
+                }`,
+                color: `${
+                  loopSensors[index] >= result.outputHigh
+                    ? `red`
+                    : loopSensors[index] >= result.thresholdHigh
+                    ? "yellow"
+                    : ""
+                }`
+              });
+            });
+            this.loadingSensors = false;
           }
           this.getGraphicSensors(this.items[0]);
         }
@@ -447,8 +468,8 @@ export default {
         });
 
         if (res) {
-          this.loadingGrafik = false
-          return res
+          this.loadingGrafik = false;
+          return res;
         }
       } catch (err) {
         console.log(err);
@@ -489,32 +510,47 @@ export default {
     dateChange(val) {
       var arr1 = val[0];
       arr1 = arr1.split("-");
-      var newDate = new Date( arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
-      this.timestamps1 = newDate
+      var newDate = new Date(
+        arr1[0],
+        arr1[1] - 1,
+        arr1[2],
+        0,
+        0,
+        1,
+        0
+      ).getTime();
+      this.timestamps1 = newDate;
 
       var arr2 = val[1];
       arr2 = arr2.split("-");
-      var newDate2 = new Date( arr2[0], arr2[1] - 1, arr2[2], 23, 59, 59).getTime();
-      this.timestamps2 = newDate2
+      var newDate2 = new Date(
+        arr2[0],
+        arr2[1] - 1,
+        arr2[2],
+        23,
+        59,
+        59
+      ).getTime();
+      this.timestamps2 = newDate2;
 
-      this.getGraphicSensors()
+      this.getGraphicSensors();
     },
-    async getGraphicSensors(params){
+    async getGraphicSensors(params) {
       if (params === undefined) {
-        params = this.dataGrafik
+        params = this.dataGrafik;
       }
-      let res = await this.getSensorMeasurements(params.title)
-      this.dataGrafik = params
+      let res = await this.getSensorMeasurements(params.title);
+      this.dataGrafik = params;
       // console.log(res.data.sensorMeasurements[0].values)
-      let value = res.data.sensorMeasurements[0].values
-      let time = res.data.sensorMeasurements[0].timestamps
-      let data = []
-      let day = []
-      let month = []
-      let year = []
-      var tanggal = []
+      let value = res.data.sensorMeasurements[0].values;
+      let time = res.data.sensorMeasurements[0].timestamps;
+      let data = [];
+      let day = [];
+      let month = [];
+      let year = [];
+      var tanggal = [];
       for (let i = 0; i < value.length; i++) {
-        day[i] = new Date(time[i] * 1000).toString()
+        day[i] = new Date(time[i] * 1000).toString();
         // month[i] = new Date(time[i] * 1000).getMonth()
         // year[i] = new Date(time[i] * 1000).getFullYear()
         // tanggal.push(
@@ -523,15 +559,15 @@ export default {
         data.push({
           x: day[i],
           y: value[i].toFixed(2)
-        })
+        });
       }
       this.series = [
         {
           name: "Values",
           data: data
         }
-      ]
-      this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps
+      ];
+      this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
     }
   }
 };

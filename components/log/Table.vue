@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-row class="d-flex justify-lg-end mb-5 mt-4 mt-lg-0">
-      <v-col cols="3" sm="3" md="2" lg="2">
+      <v-col cols="12" sm="3" md="2" lg="2">
         <p class="mb-0 mt-1 text-lg-right musa_green_dark_text">Select Date</p>
       </v-col>
-      <v-col cols="6" sm="3" md="3" lg="2">
+      <v-col cols="12" sm="3" md="3" lg="2">
         <v-menu
           content-class="date_single_range"
           ref="menu"

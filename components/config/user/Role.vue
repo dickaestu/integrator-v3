@@ -17,7 +17,7 @@
           </v-card-title>
           <v-container>
             <v-row>
-              <v-col v-for="(i, index) in data" :key="index" cols="4">
+              <v-col v-for="(i, index) in data" :key="index" cols="12" md="4">
                 <v-card class="card-img my-8">
                   <img :src="i.image" :alt="i.image" />
                 </v-card>

@@ -7,7 +7,7 @@
         <v-row>
           <v-col>
             <v-card class="mx-auto">
-              <v-navigation-drawer
+              <!-- <v-navigation-drawer
                 class="menu-left"
                 dark
                 v-model="sidebarMenu"
@@ -85,13 +85,15 @@
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
-              </v-navigation-drawer>
+              </v-navigation-drawer> -->
+              <SideMenu :sideBar="sidebarMenu" />
               <v-content class="menu-right">
                 <v-container class="px-4 py-0 fill-height" fluid>
                   <v-row class="fill-height">
                     <v-col>
                       <h3>
                         <v-app-bar-nav-icon
+                          class="d-inline-block d-sm-print-inline-block d-md-none"
                           @click.stop="sidebarMenu = !sidebarMenu"
                         ></v-app-bar-nav-icon>
                         User Management
@@ -282,12 +284,12 @@
                               </v-card-text>
                               <v-container fluid>
                                 <v-row class="pb-5 my-auto mx-auto">
-                                  <v-col cols="6">
+                                  <v-col cols="12" sm="6">
                                     <v-btn text @click="deleteItemConfirm"
                                       >Yes, DELETE USER</v-btn
                                     >
                                   </v-col>
-                                  <v-col cols="6">
+                                  <v-col cols="12" sm="6">
                                     <v-btn
                                       class="cancel_delete"
                                       text
@@ -300,12 +302,15 @@
                             </v-card>
                           </v-dialog>
                         </template>
-                        <template v-slot:[`item.notifications`]>
-                          <!-- <v-btn text icon @click="toggleBell">
-                            <v-icon v-if="bell">mdi-bell-off</v-icon>
-                            <v-icon v-else>mdi-bell</v-icon>
-                          </v-btn> -->
-                          <v-icon small class="mr-2"> mdi-bell </v-icon>
+                        <template v-slot:[`item.notify`]="{ item }">
+                          <span @click="toggleBell">
+                            <v-icon class="mr-2" small v-if="item.notify"
+                              >mdi-bell</v-icon
+                            >
+                            <v-icon class="mr-2" small v-else
+                              >mdi-bell-off</v-icon
+                            >
+                          </span>
                         </template>
                         <template v-slot:[`item.actions`]="{ item }">
                           <v-menu>
@@ -379,6 +384,7 @@
 
 <script>
 import gql from "graphql-tag";
+import SideMenu from "../../../components/config/SideMenu.vue";
 
 const GET_USERS = gql`
   query users($emails: [String!]) {
@@ -418,12 +424,15 @@ const DELETE_USERS = gql`
 
 export default {
   name: "user_management",
+  components: {
+    SideMenu
+  },
   data: () => ({
     sidebarMenu: false,
     img_viewer: require("~/assets/images/img_viewer.png"),
     // img_editor: require("~/assets/images/img_editor.png"),
     // img_admin: require("~/assets/images/img_admin.png"),
-    bell: false,
+    // bell: false,
     dialog: false,
     dialogDelete: false,
     dialogRoles: false,
@@ -455,7 +464,7 @@ export default {
       { text: "Email", value: "email" },
       { text: "Roles", value: "roles" },
       { text: "Position", value: "position" },
-      { text: "", value: "notifications", sortable: false },
+      { text: "", value: "notify", sortable: false },
       { text: "", value: "actions", sortable: false }
     ],
     users: [],
@@ -538,6 +547,7 @@ export default {
         });
 
         if (res) {
+          console.log(res.data.users);
           this.loadingGetUser = false;
           if (res.data.users.length > 0) {
             res.data.users.map(user => {
