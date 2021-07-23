@@ -18,9 +18,9 @@
           <v-container>
             <v-row>
               <v-col v-for="(i, index) in data" :key="index" cols="12" md="4">
-                <v-card class="card-img my-8">
-                  <img :src="i.image" :alt="i.image" />
-                </v-card>
+                <img :src="i.image" :alt="i.image" class="my-8 card-img" />
+                <!-- <v-card class="card-img my-8">
+                </v-card> -->
                 <v-btn :class="i.color" class="mb-5">{{ i.title }}</v-btn>
                 <v-card-text v-html="i.desc"> </v-card-text>
               </v-col>
@@ -38,23 +38,23 @@ export default {
   data: () => ({
     data: [
       {
-        image: require("~/assets/images/img_viewer.png"),
+        image: require("~/assets/images/img_viewer.svg"),
         title: "Viewer",
         desc: "View only<br />Change personal info",
         color: "btn__viewer"
       },
       {
-        image: require("~/assets/images/img_viewer.png"),
+        image: require("~/assets/images/img_editor.svg"),
         title: "Editor",
         desc:
           "Limited edit access<br /> Change personal info<br /> Add and edit user<br /> Add and edit device<br /> Add issue history<br /> Add calibration history",
         color: "btn__editor"
       },
       {
-        image: require("~/assets/images/img_viewer.png"),
+        image: require("~/assets/images/img_admin.svg"),
         title: "Admin",
         desc:
-          "Full edit access<br /> Change personal info<br /> Add and edit user<br /> Add and edit device<br /> Edit user roles<br /> Add issue history<br /> Add aclibration History",
+          "Full edit access<br /> Change personal info<br /> Add and edit user<br /> Add and edit device<br /> Edit user roles<br /> Add issue history<br /> Add calibration History",
         color: "btn__admin"
       }
     ],

@@ -11,7 +11,7 @@
               <v-row>
                 <v-col>
                   <p class="ph mb-0">{{ dataGrafik.title }}</p>
-                  <p class="unit mb-0">{{ dataGrafik.size }}</p>
+                  <p class="unit">{{ dataGrafik.size }}</p>
                   <div class="d-flex justify-space-between">
                     <p class="subtitle mb-0">{{ dataGrafik.unit }}</p>
                     <p class="text mb-0">01</p>
@@ -95,7 +95,7 @@
           <v-col cols="6" sm="4" md="3" lg="2">
             <v-select
               :items="Unit"
-              label="All Unit"
+              label="Unit"
               dense
               solo
               hide-details="auto"
@@ -104,7 +104,7 @@
           <v-col cols="6" sm="4" md="3" lg="2">
             <v-select
               :items="Device"
-              label="All Device Type"
+              label="Device Type"
               dense
               solo
               hide-details="auto"
@@ -230,8 +230,8 @@ export default {
     menu: false,
     log: [],
     items: [],
-    Unit: ["Unit 01", "Unit 02", "Unit 03"],
-    Device: ["Sensors", "Controllers", "Actuators"],
+    Unit: ["Unit 01"],
+    Device: ["Sensors"],
     options: {
       annotations: {
         position: "front",

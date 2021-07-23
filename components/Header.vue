@@ -13,7 +13,10 @@
         <template v-slot:activator="{ attrs, on }">
           <v-btn class="btn-transparent" v-bind="attrs" dark v-on="on">
             <v-avatar class="mr-3" size="36px">
-              <img :src="user" :alt="user" />
+              <!-- <img :src="user" :alt="user" /> -->
+              <v-icon>
+                mdi-account-circle
+              </v-icon>
             </v-avatar>
             paksiyudha
             <v-icon dark right>
@@ -24,7 +27,7 @@
         <v-list>
           <v-list-item link>
             <v-list-item-title>
-              Profile
+              My Account
             </v-list-item-title>
           </v-list-item>
           <v-list-item link>

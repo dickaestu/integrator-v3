@@ -32,6 +32,9 @@ $gotham-medium: "Gotham Medium", sans-serif;
 .musa_green_dark_text {
   color: $musa_green_dark_text;
 }
+.musa_green_light_text {
+  color: #386d7a !important;
+}
 
 body {
   font-family: "Inter", sans-serif;
@@ -317,8 +320,13 @@ body {
     background: $musa_green_button_light_green;
     color: $white;
     border-radius: 100px;
-    float: right;
+    // float: right;
     margin-top: 3em;
+    margin-left: auto;
+    a {
+      color: $white;
+      text-decoration: none;
+    }
   }
   .hover_card {
     .w-25 {
@@ -331,7 +339,9 @@ body {
         }
         width: 40%;
         .card-left {
-          height: 58vh;
+          height: auto;
+          // height: 58vh;
+          // height: 105vh;
           .title {
             font-size: 20px !important;
           }
@@ -406,6 +416,7 @@ body {
         }
         input {
           color: #a4aeb7;
+          padding: 3px 0;
         }
       }
       .v-input__append-inner {
@@ -414,17 +425,20 @@ body {
         background: #f0f3f5;
         padding-left: 0;
         .v-input__icon {
-          height: 32px;
+          // height: 32px;
+          height: 26px;
         }
       }
     }
     .ph {
-      font-size: 30px;
+      // font-size: 30px;
+      font-size: 26px;
       font-weight: 600;
       color: $musa_green_lighter_text;
     }
     .unit {
-      font-size: 40px;
+      // font-size: 40px;
+      font-size: 30px;
       font-weight: 600;
       color: $musa_green_dark_text;
     }
@@ -450,7 +464,8 @@ body {
       color: $musa_green_lighter_text;
     }
     .size {
-      font-size: 24px;
+      // font-size: 24px;
+      font-size: 20px;
       font-weight: 600;
       color: $musa_green_dark_text;
     }
@@ -760,6 +775,9 @@ body {
       // }
     }
   }
+  .notify {
+    cursor: pointer;
+  }
 }
 #config_common_setup {
   .v-card {
@@ -902,8 +920,11 @@ body {
   &.edit_user_dialog {
     border-radius: 24px;
     border: none;
-    label {
+    .title_field {
       font-weight: 600;
+    }
+    .theme--light.v-label {
+      color: rgba($color: #000000, $alpha: 0.4);
     }
     .v-btn {
       background: #456577;
@@ -1007,20 +1028,24 @@ body {
         color: $white;
       }
     }
+    // .card-img {
+    //   width: 100px;
+    //   height: 100px;
+    //   border-radius: 24px;
+    //   box-shadow: 0px 1px 4px 4px rgba(50, 50, 50, 0.05);
+    //   margin: 0 auto;
+    //   img {
+    //     margin: auto;
+    //     display: block;
+    //     width: 100%;
+    //     height: 100%;
+    //     object-fit: scale-down;
+    //     object-position: center;
+    //   }
+    // }
     .card-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 24px;
-      box-shadow: 0px 1px 4px 4px rgba(50, 50, 50, 0.05);
       margin: 0 auto;
-      img {
-        margin: auto;
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: scale-down;
-        object-position: center;
-      }
+      display: block;
     }
     .btn__viewer,
     .btn__editor,
@@ -1068,9 +1093,9 @@ body {
   #content-one .hover_card .w-25:hover {
     width: 100%;
   }
-  #content-one .hover_card .w-25:hover .card-left {
-    height: 68vh;
-  }
+  // #content-one .hover_card .w-25:hover .card-left {
+  //   height: 68vh;
+  // }
 }
 @media (min-width: 601px) and (max-width: 992px) {
   #login .jumbotron .centered,
@@ -1082,11 +1107,12 @@ body {
     width: 20%;
   }
   #content-one .w-75 {
-    width: 50%;
-    margin-left: 50%;
+    width: 100%;
+    margin-left: 0;
   }
   #content-one .w-25 {
-    width: 50%;
+    width: 100%;
+    position: relative;
   }
   #content-one .hover_card .w-25:hover {
     width: 100%;
@@ -1119,5 +1145,13 @@ body {
   }
   #config_common_setup .menu-right .btnSaveCancel {
     margin-left: 0;
+  }
+}
+@media (min-width: 1533px) {
+  #content-one .w-25 {
+    width: 17%;
+  }
+  #content-one .hover_card .w-25:hover {
+    width: 30%;
   }
 }

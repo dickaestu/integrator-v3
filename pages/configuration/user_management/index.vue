@@ -184,7 +184,7 @@
                                   <v-container>
                                     <v-row>
                                       <v-col cols="12">
-                                        <label>Name</label>
+                                        <label class="title_field">Name</label>
                                         <v-text-field
                                           ref="editedItem.name"
                                           class="form_edit"
@@ -197,7 +197,7 @@
                                         ></v-text-field>
                                       </v-col>
                                       <v-col cols="12">
-                                        <label>Email</label>
+                                        <label class="title_field">Email</label>
                                         <v-text-field
                                           ref="editedItem.email"
                                           class="form_edit"
@@ -210,7 +210,9 @@
                                         ></v-text-field>
                                       </v-col>
                                       <v-col cols="12">
-                                        <label>Password</label>
+                                        <label class="title_field"
+                                          >Password</label
+                                        >
                                         <v-text-field
                                           v-model="editedItem.password"
                                           class="form_edit"
@@ -224,7 +226,9 @@
                                         ></v-text-field>
                                       </v-col>
                                       <v-col cols="12">
-                                        <label>Select Roles</label>
+                                        <label class="title_field"
+                                          >Select Roles</label
+                                        >
                                         <v-select
                                           ref="editedItem.roles"
                                           class="form_edit_select"
@@ -236,7 +240,9 @@
                                         ></v-select>
                                       </v-col>
                                       <v-col cols="12">
-                                        <label>Position</label>
+                                        <label class="title_field"
+                                          >Position</label
+                                        >
                                         <v-text-field
                                           ref="editedItem.positions"
                                           class="form_edit"
@@ -303,8 +309,11 @@
                           </v-dialog>
                         </template>
                         <template v-slot:[`item.notify`]="{ item }">
-                          <span @click="toggleBell">
-                            <v-icon class="mr-2" small v-if="item.notify"
+                          <span class="notify" @click="toggleBell">
+                            <v-icon
+                              class="mr-2 musa_green_light_text"
+                              small
+                              v-if="item.notify"
                               >mdi-bell</v-icon
                             >
                             <v-icon class="mr-2" small v-else

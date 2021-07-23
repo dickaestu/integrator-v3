@@ -19,11 +19,11 @@
         </div>
       </div>
     </div>
-    <router-link to="/log">
-      <v-btn class="d-not-hover see_full">
+    <v-btn class="d-not-hover see_full">
+      <router-link to="/log">
         SEE FULL LOGS
-      </v-btn>
-    </router-link>
+      </router-link>
+    </v-btn>
   </v-card>
 </template>
 
@@ -80,7 +80,7 @@ export default {
         this.loadingLogsSummary = false;
         // this.searchResults = [];
       }
-    },
+    }
   }
 };
 </script>
