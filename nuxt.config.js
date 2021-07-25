@@ -88,6 +88,7 @@ export default {
         },
         endpoints: {
           login: { url: "login", method: "post", propertyName: "access_token" },
+          refresh: { url: "refresh", method: "get", propertyName: "access_token" },
           user: { url: "me", method: "get", propertyName: "email" }
           // logout : false,
         }
