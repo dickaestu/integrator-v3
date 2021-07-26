@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style>
-body {
+/* body {
   overflow-x: hidden;
-}
+} */
 </style>

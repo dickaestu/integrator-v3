@@ -149,8 +149,12 @@
                           <template>
                             <v-dialog v-model="dialog" max-width="500px">
                               <template v-slot:activator="{ on, attrs }">
-                                <v-btn v-bind="attrs" v-on="on">
-                                  <v-icon left dark>
+                                <v-btn
+                                  class="btnBgColor"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                >
+                                  <v-icon left>
                                     mdi-plus
                                   </v-icon>
                                   ADD USER
@@ -438,9 +442,6 @@ export default {
   },
   data: () => ({
     sidebarMenu: false,
-    img_viewer: require("~/assets/images/img_viewer.png"),
-    // img_editor: require("~/assets/images/img_editor.png"),
-    // img_admin: require("~/assets/images/img_admin.png"),
     // bell: false,
     dialog: false,
     dialogDelete: false,

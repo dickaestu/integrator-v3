@@ -26,7 +26,7 @@
         </template>
         <v-list>
           <v-list-item link>
-            <v-list-item-title>
+            <v-list-item-title @click="dialog = true">
               My Account
             </v-list-item-title>
           </v-list-item>
@@ -38,6 +38,234 @@
         </v-list>
       </v-menu>
     </v-app-bar>
+    <v-dialog
+      persistent
+      content-class="my-account"
+      v-model="dialog"
+      max-width="800"
+    >
+      <v-card>
+        <v-navigation-drawer
+          class="menu-left"
+          dark
+          app
+          floating
+          absolute
+          permanent
+        >
+          <v-list dense nav>
+            <v-list-item>
+              <v-list-item-content>
+                <h5>
+                  Settings
+                </h5>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider></v-divider>
+            <NuxtLink class="mb-7 link-route" to="">
+              <v-list-item-content>
+                <v-list-item-title>
+                  My Account
+                </v-list-item-title>
+              </v-list-item-content>
+            </NuxtLink>
+          </v-list>
+        </v-navigation-drawer>
+        <v-content class="menu-right">
+          <v-container class="px-4 py-0 fill-height" fluid>
+            <v-row class="fill-height">
+              <v-col>
+                <h3>
+                  My Account
+                </h3>
+              </v-col>
+              <v-col cols="12">
+                <h4>Account Details</h4>
+                <v-divider class="mt-2"></v-divider>
+              </v-col>
+              <v-col>
+                <div class="d-flex justify-space-between">
+                  <div class="left">
+                    <p>Name</p>
+                    <p>Email</p>
+                    <p>Roles</p>
+                    <p></p>
+                  </div>
+                  <div class="right">
+                    <p>Paksi Yudha Sasmita</p>
+                    <p>paksiyudhasasmita@gmail.com</p>
+                    <v-chip color="#386d7a" dark>
+                      Admin
+                    </v-chip>
+                    <br />
+                    <v-btn class="btnBgColor mt-10" @click="dialog2 = !dialog2"
+                      >Change Password</v-btn
+                    >
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-content>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      persistent
+      content-class="my-account"
+      v-model="dialog2"
+      max-width="800px"
+    >
+      <v-card>
+        <v-navigation-drawer
+          class="menu-left"
+          dark
+          app
+          floating
+          absolute
+          permanent
+        >
+          <v-list dense nav>
+            <v-list-item>
+              <v-list-item-content>
+                <h5>
+                  Settings
+                </h5>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider></v-divider>
+            <NuxtLink class="mb-7 link-route" to="">
+              <v-list-item-content>
+                <v-list-item-title>
+                  My Account
+                </v-list-item-title>
+              </v-list-item-content>
+            </NuxtLink>
+          </v-list>
+        </v-navigation-drawer>
+        <v-content class="menu-right">
+          <v-container class="px-4 py-0 fill-height" fluid>
+            <v-row class="fill-height">
+              <v-col>
+                <h3>
+                  My Account
+                </h3>
+              </v-col>
+              <v-col cols="12">
+                <h4>Change Password</h4>
+                <v-divider class="mt-2"></v-divider>
+              </v-col>
+              <v-col cols="12">
+                <p class="desc">
+                  Your new password must be different from previous password
+                </p>
+              </v-col>
+              <v-col cols="10">
+                <label class="title-texfield">Enter Previous Password</label>
+                <v-text-field
+                  class="textfield_musa_outline"
+                  :type="show2 ? 'text' : 'password'"
+                  value=""
+                  required
+                  outlined
+                  hide-details="true"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="10">
+                <label class="title-texfield">Enter New Password</label>
+                <v-text-field
+                  class="textfield_musa_outline"
+                  :rules="[rules.required, rules.min]"
+                  :type="show2 ? 'text' : 'password'"
+                  hint="At least 8 characters"
+                  value="musa2021"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="10">
+                <label class="title-texfield">Confirm New Password</label>
+                <v-text-field
+                  class="textfield_musa_outline"
+                  :rules="[rules.required, rules.passMatch]"
+                  :type="show2 ? 'text' : 'password'"
+                  hint="Both passwords must match."
+                  value="musa2020"
+                  error
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="10" class="d-flex justify-end">
+                <v-btn class="btnBgColor mr-5" @click="dialog3 = !dialog3"
+                  >Change Password</v-btn
+                >
+                <v-btn class="btnTransBgColor" @click="dialog2 = false"
+                  >Cancel</v-btn
+                >
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-content>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      persistent
+      content-class="my-account"
+      v-model="dialog3"
+      max-width="800px"
+    >
+      <v-card>
+        <v-navigation-drawer
+          class="menu-left"
+          dark
+          app
+          floating
+          absolute
+          permanent
+        >
+          <v-list dense nav>
+            <v-list-item>
+              <v-list-item-content>
+                <h5>
+                  Settings
+                </h5>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider></v-divider>
+            <NuxtLink class="mb-7 link-route" to="">
+              <v-list-item-content>
+                <v-list-item-title>
+                  My Account
+                </v-list-item-title>
+              </v-list-item-content>
+            </NuxtLink>
+          </v-list>
+        </v-navigation-drawer>
+        <v-content class="menu-right">
+          <v-container class="px-4 py-0 fill-height" fluid>
+            <v-row class="fill-height">
+              <v-col>
+                <h3>
+                  My Account
+                </h3>
+              </v-col>
+              <v-col cols="12">
+                <h4>Change Password</h4>
+                <v-divider class="mt-2"></v-divider>
+              </v-col>
+              <v-col>
+                <p class="desc">
+                  Your password has been changed successfully.
+                </p>
+              </v-col>
+              <v-col cols="12">
+                <NuxtLink to="/">
+                  <v-btn class="btnBgColor">RETURN TO MY ACCOUNT</v-btn>
+                </NuxtLink>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-content>
+      </v-card>
+    </v-dialog>
   </section>
 </template>
 
@@ -45,15 +273,25 @@
 export default {
   name: "Header",
   data: () => ({
-    logo: require("~/assets/images/logo.png"),
+    logo: require("~/assets/images/logo-white.svg"),
     user: require("~/assets/images/user.jpg"),
-    musa: require("~/assets/images/musa-white.png")
+    musa: require("~/assets/images/musa-white.svg"),
+    // sidebarAccount: false,
+    dialog: false,
+    dialog2: false,
+    dialog3: false,
+    show2: true,
+    password: "Password",
+    rules: {
+      required: value => !!value || "Required.",
+      min: v => v.length >= 8 || "Must be at least 8 characters.",
+      passMatch: () => `Your new password and it’s confirmation didn’t match.`
+    }
   }),
   methods: {
     async logout() {
       await this.$auth.logout();
       this.$router.replace("/login");
-      console.log("keluar sekarang", this.logout());
     }
   }
 };

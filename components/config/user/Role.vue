@@ -7,7 +7,7 @@
         max-width="800px"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on">
+          <v-btn class="btnTransBgColor" v-bind="attrs" v-on="on">
             SEE ROLES DESCRIPTION
           </v-btn>
         </template>
