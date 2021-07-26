@@ -11,7 +11,7 @@
 export default {
   name: "Home",
   middleware: "auth",
-  data: () => ({}),
+  data: () => ({})
 };
 </script>
 

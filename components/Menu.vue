@@ -3,69 +3,31 @@
     <v-container class="d-none d-sm-none d-md-flex">
       <v-row class="my-5">
         <v-col cols="2">
-          <h1>Home</h1>
+          <h1>Ngapasi</h1>
         </v-col>
         <v-col class="text-right">
-          <NuxtLink to="/" class="mr-5">
-            <v-btn class="btn">
-              <v-icon left>
-                mdi-home
-              </v-icon>
-              HOME
-            </v-btn>
-          </NuxtLink>
-          <NuxtLink to="/log" class="mr-5">
-            <v-btn class="btn" dark>
-              <v-icon dark left>
-                mdi-format-list-bulleted
-              </v-icon>
-              LOGS
-            </v-btn>
-          </NuxtLink>
-          <NuxtLink to="/configuration/user_management" class="mr-5">
-            <v-btn class="btn" dark>
-              <v-icon dark left>
-                mdi-cog
-              </v-icon>
-              CONFIGURATION
-            </v-btn>
-          </NuxtLink>
-          <NuxtLink to="#error">
-            <v-btn class="btn" dark>
-              <v-icon dark left>
-                mdi-folder
-              </v-icon>
-              SAVE FILES
-            </v-btn>
-          </NuxtLink>
+          <span v-for="(i, index) in menuNav" :key="index" class="ml-5">
+            <NuxtLink :to="i.link">
+              <v-btn class="btn">
+                <v-icon left>
+                  {{ i.icon }}
+                </v-icon>
+                {{ i.title }}
+              </v-btn>
+            </NuxtLink>
+          </span>
         </v-col>
       </v-row>
     </v-container>
     <v-bottom-navigation class="d-flex d-sm-flex d-md-none" grow fixed>
-      <NuxtLink to="/">
-        <v-btn>
-          <span>Home</span>
-          <v-icon>mdi-home</v-icon>
-        </v-btn>
-      </NuxtLink>
-      <NuxtLink to="/log">
-        <v-btn>
-          <span>Logs</span>
-          <v-icon>mdi-format-list-bulleted</v-icon>
-        </v-btn>
-      </NuxtLink>
-      <NuxtLink to="/configuration/user_management">
-        <v-btn>
-          <span>Configuration</span>
-          <v-icon>mdi-cog</v-icon>
-        </v-btn>
-      </NuxtLink>
-      <NuxtLink to="#error">
-        <v-btn>
-          <span>Save Files</span>
-          <v-icon>mdi-folder</v-icon>
-        </v-btn>
-      </NuxtLink>
+      <span v-for="(i, index) in menuNav" :key="index">
+        <NuxtLink :to="i.link">
+          <v-btn>
+            <span>{{ i.title }}</span>
+            <v-icon>{{ i.icon }}</v-icon>
+          </v-btn>
+        </NuxtLink>
+      </span>
     </v-bottom-navigation>
   </section>
 </template>
@@ -73,6 +35,29 @@
 <script>
 export default {
   name: "Menu",
-  data: () => ({})
+  data: () => ({
+    menuNav: [
+      {
+        link: "/",
+        title: "Home",
+        icon: "mdi-home"
+      },
+      {
+        link: "/log",
+        title: "Logs",
+        icon: "mdi-format-list-bulleted"
+      },
+      {
+        link: "/configuration/user_management",
+        title: "Configuration",
+        icon: "mdi-cog"
+      },
+      {
+        link: "#error",
+        title: "Save Files",
+        icon: "mdi-folder"
+      }
+    ]
+  })
 };
 </script>

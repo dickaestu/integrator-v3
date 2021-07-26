@@ -124,7 +124,7 @@ export default {
       { text: "Description", value: "desc" }
     ],
     Type: ["Api"],
-    Level: ["Info", "Error"],
+    level: ["Info", "Error"],
     loading: false
   }),
   mounted() {
@@ -166,8 +166,7 @@ export default {
     },
     getColor(level) {
       if (level == "Info") return "#D45757";
-      else if (roles == "Error") return "#d45757";
-      // else return "#399F4F";
+      else return "#399F4F";
     },
     dateChange(val) {
       console.log(val);

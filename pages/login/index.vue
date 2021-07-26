@@ -40,14 +40,14 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" class="pb-0">
-                <v-btn 
-                  class="btn" 
-                  type="submit" 
+                <v-btn
+                  class="btn"
+                  type="submit"
                   :loading="loading"
                   :disabled="loading"
-                  depressed 
-                  raised 
-                  rounded 
+                  depressed
+                  raised
+                  rounded
                   text
                 >
                   Login
@@ -74,7 +74,6 @@
 </template>
 
 <script>
-
 export default {
   name: "Login",
   auth: false,
@@ -84,39 +83,39 @@ export default {
     email: "",
     password: "",
     bg: require("~/assets/images/bg-login.jpg"),
-    logo: require("~/assets/images/logo.png"),
-    musa: require("~/assets/images/musa.png"),
-    loading: false,
+    logo: require("~/assets/images/logo-black.svg"),
+    musa: require("~/assets/images/musa.svg"),
+    loading: false
   }),
   watch: {},
   mounted() {},
   methods: {
     async login() {
       try {
-        this.loading = true
-        let response = await this.$auth.loginWith('local', {
+        this.loading = true;
+        let response = await this.$auth.loginWith("local", {
           data: {
             email: this.email,
-            password: this.password,
-          },
-        })
-        this.loading = false
-        localStorage.setItem('token_musa', response.data.access_token)
+            password: this.password
+          }
+        });
+        this.loading = false;
+        localStorage.setItem("token_musa", response.data.access_token);
         // window.console.log('test login with', this.$auth.loginWith)
         // window.console.log('test login user', this.$auth.user)
-        this.$router.push('/')
+        this.$router.push("/");
         // this.$router.push(this.localePath('/'))
       } catch (e) {
-        this.loading = false
-        this.error = e.response.data.message
+        this.loading = false;
+        this.error = e.response.data.message;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style>
-body {
+/* body {
   overflow-x: hidden;
-}
+} */
 </style>
