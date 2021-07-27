@@ -38,12 +38,7 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-dialog
-      persistent
-      content-class="my-account"
-      v-model="dialog"
-      max-width="800"
-    >
+    <v-dialog content-class="my-account" v-model="dialog" max-width="800">
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -98,7 +93,7 @@
                       Admin
                     </v-chip>
                     <br />
-                    <v-btn class="btnBgColor mt-10" @click="dialog2 = !dialog2"
+                    <v-btn class="btnBgColor mt-10" @click="openChangePass()"
                       >Change Password</v-btn
                     >
                   </div>
@@ -109,12 +104,7 @@
         </v-content>
       </v-card>
     </v-dialog>
-    <v-dialog
-      persistent
-      content-class="my-account"
-      v-model="dialog2"
-      max-width="800px"
-    >
+    <v-dialog content-class="my-account" v-model="dialog2" max-width="800px">
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -194,10 +184,10 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="10" class="d-flex justify-end">
-                <v-btn class="btnBgColor mr-5" @click="dialog3 = !dialog3"
+                <v-btn class="btnBgColor mr-5" @click="confirmChangePass()"
                   >Change Password</v-btn
                 >
-                <v-btn class="btnTransBgColor" @click="dialog2 = false"
+                <v-btn class="btnTransBgColor" @click="cancelPass()"
                   >Cancel</v-btn
                 >
               </v-col>
@@ -206,12 +196,7 @@
         </v-content>
       </v-card>
     </v-dialog>
-    <v-dialog
-      persistent
-      content-class="my-account"
-      v-model="dialog3"
-      max-width="800px"
-    >
+    <v-dialog content-class="my-account" v-model="dialog3" max-width="800px">
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -257,9 +242,11 @@
                 </p>
               </v-col>
               <v-col cols="12">
-                <NuxtLink to="/">
-                  <v-btn class="btnBgColor">RETURN TO MY ACCOUNT</v-btn>
-                </NuxtLink>
+                <!-- <NuxtLink to="/"> -->
+                <v-btn class="btnBgColor" @click="returnAccount()"
+                  >RETURN TO MY ACCOUNT</v-btn
+                >
+                <!-- </NuxtLink> -->
               </v-col>
             </v-row>
           </v-container>
@@ -292,6 +279,19 @@ export default {
     async logout() {
       await this.$auth.logout();
       this.$router.replace("/login");
+    },
+    openChangePass() {
+      (this.dialog2 = true), (this.dialog = false);
+    },
+    confirmChangePass() {
+      this.dialog3 = true;
+    },
+    cancelPass() {
+      (this.dialog = true), (this.dialog2 = false);
+    },
+    returnAccount() {
+      (this.dialog = true), (this.dialog2 = false);
+      this.dialog3 = false;
     }
   }
 };
