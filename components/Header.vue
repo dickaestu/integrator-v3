@@ -38,12 +38,7 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-dialog
-      persistent
-      content-class="my-account"
-      v-model="dialog"
-      max-width="800"
-    >
+    <v-dialog content-class="my-account" v-model="dialog" max-width="800">
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -98,7 +93,7 @@
                       Admin
                     </v-chip>
                     <br />
-                    <v-btn class="btnBgColor mt-10" @click="dialog2 = !dialog2"
+                    <v-btn class="btnBgColor mt-10" @click="openChangePass()"
                       >Change Password</v-btn
                     >
                   </div>
@@ -109,12 +104,7 @@
         </v-content>
       </v-card>
     </v-dialog>
-    <v-dialog
-      persistent
-      content-class="my-account"
-      v-model="dialog2"
-      max-width="800px"
-    >
+    <v-dialog content-class="my-account" v-model="dialog2" max-width="800px">
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -163,6 +153,7 @@
                 <label class="title-texfield">Enter Previous Password</label>
                 <v-text-field
                   class="textfield_musa_outline"
+                  v-model="oldPassword"
                   :type="show2 ? 'text' : 'password'"
                   value=""
                   required
@@ -174,10 +165,10 @@
                 <label class="title-texfield">Enter New Password</label>
                 <v-text-field
                   class="textfield_musa_outline"
+                  v-model="newPassword"
                   :rules="[rules.required, rules.min]"
                   :type="show2 ? 'text' : 'password'"
                   hint="At least 8 characters"
-                  value="musa2021"
                   outlined
                 ></v-text-field>
               </v-col>
@@ -185,19 +176,24 @@
                 <label class="title-texfield">Confirm New Password</label>
                 <v-text-field
                   class="textfield_musa_outline"
+                  v-model="confirmPassword"
                   :rules="[rules.required, rules.passMatch]"
                   :type="show2 ? 'text' : 'password'"
                   hint="Both passwords must match."
-                  value="musa2020"
                   error
                   outlined
                 ></v-text-field>
               </v-col>
               <v-col cols="10" class="d-flex justify-end">
-                <v-btn class="btnBgColor mr-5" @click="dialog3 = !dialog3"
-                  >Change Password</v-btn
+                <v-btn 
+                  class="btnBgColor mr-5" 
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="doChangePassword()"
                 >
-                <v-btn class="btnTransBgColor" @click="dialog2 = false"
+                  Change Password
+                </v-btn>
+                <v-btn class="btnTransBgColor" @click="cancelPass()"
                   >Cancel</v-btn
                 >
               </v-col>
@@ -206,12 +202,7 @@
         </v-content>
       </v-card>
     </v-dialog>
-    <v-dialog
-      persistent
-      content-class="my-account"
-      v-model="dialog3"
-      max-width="800px"
-    >
+    <v-dialog content-class="my-account" v-model="dialog3" max-width="800px">
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -257,15 +248,31 @@
                 </p>
               </v-col>
               <v-col cols="12">
-                <NuxtLink to="/">
-                  <v-btn class="btnBgColor">RETURN TO MY ACCOUNT</v-btn>
-                </NuxtLink>
+                <!-- <NuxtLink to="/"> -->
+                <v-btn class="btnBgColor" @click="returnAccount()"
+                  >RETURN TO MY ACCOUNT</v-btn
+                >
+                <!-- </NuxtLink> -->
               </v-col>
             </v-row>
           </v-container>
         </v-content>
       </v-card>
     </v-dialog>
+    <v-snackbar
+      :timeout="-1"
+      :value="toast"
+      color="blue-grey"
+      fixed
+      rounded="pill"
+    >
+      {{ toastMsgAddUser }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="toast = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </section>
 </template>
 
@@ -280,18 +287,59 @@ export default {
     dialog: false,
     dialog2: false,
     dialog3: false,
-    show2: true,
+    show2: false,
     password: "Password",
     rules: {
       required: value => !!value || "Required.",
       min: v => v.length >= 8 || "Must be at least 8 characters.",
       passMatch: () => `Your new password and it’s confirmation didn’t match.`
-    }
+    },
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+    loading: false,
+    toastMsgAddUser: "",
+    toast: false
   }),
   methods: {
     async logout() {
       await this.$auth.logout();
       this.$router.replace("/login");
+    },
+    openChangePass() {
+      (this.dialog2 = true), (this.dialog = false);
+    },
+    cancelPass() {
+      (this.dialog = true), (this.dialog2 = false);
+    },
+    returnAccount() {
+      (this.dialog = true), (this.dialog2 = false);
+      this.dialog3 = false;
+    },
+    async doChangePassword(){
+      try {
+        this.loading = true
+        const res = await this.$store.dispatch(
+          "changePassword/setPassword",
+          {
+            oldPassword: this.oldPassword,
+            newPassword: this.newPassword,
+          }
+        );
+        // console.log(res)
+        if(res.check === 'fail'){
+          this.toastMsgAddUser = "Something went wrong";
+          this.toast = true;
+          this.loading = false;
+        }else{
+          this.toastMsgAddUser = "Data has been Saved";
+          this.toast = true;
+          this.loading = false;
+          this.dialog3 = true;
+        }
+      } catch (error) {
+        
+      }
     }
   }
 };

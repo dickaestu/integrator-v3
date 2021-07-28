@@ -359,6 +359,8 @@ body {
       overflow: auto;
     }
     .menu-left {
+      transform: translateX(0) !important;
+      visibility: visible !important;
       background: #456577;
       &.v-navigation-drawer {
         top: unset !important;
@@ -408,7 +410,8 @@ body {
     }
     .menu-right {
       // &.grow {
-      padding: 20px 22px;
+      // padding: 20px 22px;
+      padding: 0px 0px 0px 256px !important;
       .v-text-field.v-text-field--solo .v-input__control {
         min-height: 36px;
       }
