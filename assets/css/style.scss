@@ -1599,6 +1599,14 @@ body {
     width: 100%;
   }
 }
+@media (min-width: 960px) {
+  #user_management .v-card .menu-right,
+  #config_common_setup .v-card .menu-right,
+  #device_list .v-card .menu-right,
+  #unit_list .v-card .menu-right {
+    padding: 0px 0px 0px 256px !important;
+  }
+}
 @media (max-width: 959px) {
   #user_management .container--fluid,
   #device_list .container--fluid,

@@ -109,7 +109,10 @@
                           <v-row>
                             <v-col>
                               <template>
-                                <v-dialog v-model="dialog" max-width="500px">
+                                <v-dialog
+                                  v-model="dialogAddEditDevice"
+                                  max-width="500px"
+                                >
                                   <template v-slot:activator="{ on, attrs }">
                                     <v-btn
                                       class="btnBgColor"
@@ -172,7 +175,7 @@
                       </v-row>
                       <v-dialog
                         content-class="edit_user_dialog"
-                        v-model="dialog"
+                        v-model="dialogAddEditDevice"
                         persistent
                         max-width="80%"
                       >
@@ -928,7 +931,7 @@ export default {
   data: () => ({
     sidebarMenu: false,
     // bell: false,
-    dialog: false,
+    dialogAddEditDevice: false,
     dialogDelete: false,
     dialogRoles: false,
     toastMsgAddUser: "",

@@ -26,7 +26,7 @@
         </template>
         <v-list>
           <v-list-item link>
-            <v-list-item-title @click="dialog = true">
+            <v-list-item-title @click="dialogAccount = true">
               My Account
             </v-list-item-title>
           </v-list-item>
@@ -38,7 +38,11 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-dialog content-class="my-account" v-model="dialog" max-width="800">
+    <v-dialog
+      content-class="my-account"
+      v-model="dialogAccount"
+      max-width="800"
+    >
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -104,7 +108,11 @@
         </v-content>
       </v-card>
     </v-dialog>
-    <v-dialog content-class="my-account" v-model="dialog2" max-width="800px">
+    <v-dialog
+      content-class="my-account"
+      v-model="dialogAccount2"
+      max-width="800px"
+    >
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -185,8 +193,8 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="10" class="d-flex justify-end">
-                <v-btn 
-                  class="btnBgColor mr-5" 
+                <v-btn
+                  class="btnBgColor mr-5"
                   :loading="loading"
                   :disabled="loading"
                   @click="doChangePassword()"
@@ -202,7 +210,11 @@
         </v-content>
       </v-card>
     </v-dialog>
-    <v-dialog content-class="my-account" v-model="dialog3" max-width="800px">
+    <v-dialog
+      content-class="my-account"
+      v-model="dialogAccount3"
+      max-width="800px"
+    >
       <v-card>
         <v-navigation-drawer
           class="menu-left"
@@ -283,10 +295,9 @@ export default {
     logo: require("~/assets/images/logo-white.svg"),
     user: require("~/assets/images/user.jpg"),
     musa: require("~/assets/images/musa-white.svg"),
-    // sidebarAccount: false,
-    dialog: false,
-    dialog2: false,
-    dialog3: false,
+    dialogAccount: false,
+    dialogAccount2: false,
+    dialogAccount3: false,
     show2: false,
     password: "Password",
     rules: {
@@ -294,9 +305,9 @@ export default {
       min: v => v.length >= 8 || "Must be at least 8 characters.",
       passMatch: () => `Your new password and it’s confirmation didn’t match.`
     },
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
     loading: false,
     toastMsgAddUser: "",
     toast: false
@@ -307,39 +318,34 @@ export default {
       this.$router.replace("/login");
     },
     openChangePass() {
-      (this.dialog2 = true), (this.dialog = false);
+      (this.dialogAccount2 = true), (this.dialogAccount = false);
     },
     cancelPass() {
-      (this.dialog = true), (this.dialog2 = false);
+      (this.dialogAccount = true), (this.dialogAccount2 = false);
     },
     returnAccount() {
-      (this.dialog = true), (this.dialog2 = false);
-      this.dialog3 = false;
+      (this.dialogAccount = true), (this.dialogAccount2 = false);
+      this.dialogAccount3 = false;
     },
-    async doChangePassword(){
+    async doChangePassword() {
       try {
-        this.loading = true
-        const res = await this.$store.dispatch(
-          "changePassword/setPassword",
-          {
-            oldPassword: this.oldPassword,
-            newPassword: this.newPassword,
-          }
-        );
+        this.loading = true;
+        const res = await this.$store.dispatch("changePassword/setPassword", {
+          oldPassword: this.oldPassword,
+          newPassword: this.newPassword
+        });
         // console.log(res)
-        if(res.check === 'fail'){
+        if (res.check === "fail") {
           this.toastMsgAddUser = "Something went wrong";
           this.toast = true;
           this.loading = false;
-        }else{
+        } else {
           this.toastMsgAddUser = "Data has been Saved";
           this.toast = true;
           this.loading = false;
-          this.dialog3 = true;
+          this.dialogAccount3 = true;
         }
-      } catch (error) {
-        
-      }
+      } catch (error) {}
     }
   }
 };

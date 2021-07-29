@@ -147,7 +147,7 @@
                         </v-col>
                         <v-col cols="12" lg="2" offset-lg="4">
                           <template>
-                            <v-dialog v-model="dialog" max-width="500px">
+                            <v-dialog v-model="dialogCRUD" max-width="500px">
                               <template v-slot:activator="{ on, attrs }">
                                 <v-btn
                                   class="btnBgColor"
@@ -175,7 +175,7 @@
                         <template v-slot:top>
                           <v-dialog
                             content-class="edit_user_dialog"
-                            v-model="dialog"
+                            v-model="dialogCRUD"
                             persistent
                             max-width="500px"
                           >
@@ -184,11 +184,11 @@
                                 <v-card-title class="justify-space-between">
                                   <span class="text-h5">{{ formTitle }}</span>
                                   <v-icon
-                                  class="close_dialog white--text"
-                                  @click="dialog = false"
-                                >
-                                  mdi-close-thick
-                                </v-icon>
+                                    class="close_dialog white--text"
+                                    @click="dialog = false"
+                                  >
+                                    mdi-close-thick
+                                  </v-icon>
                                 </v-card-title>
                                 <v-card-text>
                                   <v-container>
@@ -456,7 +456,7 @@ export default {
   data: () => ({
     sidebarMenu: false,
     // bell: false,
-    dialog: false,
+    dialogCRUD: false,
     dialogDelete: false,
     dialogRoles: false,
     toastMsgAddUser: "",
