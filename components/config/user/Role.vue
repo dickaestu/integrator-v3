@@ -12,8 +12,14 @@
           </v-btn>
         </template>
         <v-card>
-          <v-card-title class="text-h5">
+          <v-card-title class="text-h5 justify-space-between">
             Roles Description
+            <v-icon
+              class="close_dialog white--text"
+              @click="dialogRoles = false"
+            >
+              mdi-close-thick
+            </v-icon>
           </v-card-title>
           <v-container>
             <v-row>

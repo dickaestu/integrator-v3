@@ -181,8 +181,14 @@
                           >
                             <v-form method="POST" @submit.prevent="save">
                               <v-card>
-                                <v-card-title>
+                                <v-card-title class="justify-space-between">
                                   <span class="text-h5">{{ formTitle }}</span>
+                                  <v-icon
+                                  class="close_dialog white--text"
+                                  @click="dialog = false"
+                                >
+                                  mdi-close-thick
+                                </v-icon>
                                 </v-card-title>
                                 <v-card-text>
                                   <v-container>
@@ -285,9 +291,16 @@
                             max-width="500px"
                           >
                             <v-card>
-                              <v-card-title class="text-h5"
-                                >Delete User?</v-card-title
-                              >
+                              <v-card-title
+                                class="text-h5 justify-space-between"
+                                >Delete User?
+                                <v-icon
+                                  class="close_dialog white--text"
+                                  @click="dialogDelete = false"
+                                >
+                                  mdi-close-thick
+                                </v-icon>
+                              </v-card-title>
                               <v-card-text>
                                 Deleting a user will permanently remove them
                                 from the system.
