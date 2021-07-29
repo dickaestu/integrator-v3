@@ -17,6 +17,7 @@ $musa_green_card_dark_text_healthy: #5a7a8b;
 $musa_green_card_title_healthy: #5990ae;
 $musa_green_headings_2: #617281;
 $musa_green_card_value_identifier_healthy: #87a2b1;
+$musa_green_card_column: #eff3f4;
 
 ::-webkit-scrollbar {
   width: 7px;
@@ -67,6 +68,10 @@ body {
   font-family: "Inter", sans-serif;
   a {
     text-decoration: none;
+  }
+  .close_dialog {
+    color: $musa_green_button_subdued_icon_text;
+    font-size: 20px;
   }
   .btnBgColor {
     box-shadow: none;
@@ -423,7 +428,7 @@ body {
           border-radius: 100px;
         }
         span {
-          color: #939fa9;
+          color: $musa_green_button_subdued_icon_text;
         }
       }
       h3 {
@@ -777,7 +782,7 @@ body {
         border-bottom-right-radius: 2px;
       }
       .v-icon {
-        color: #939fa9;
+        color: $musa_green_button_subdued_icon_text;
       }
     }
   }
@@ -893,7 +898,7 @@ body {
         border-bottom-right-radius: 2px;
       }
       .v-icon {
-        color: #939fa9;
+        color: $musa_green_button_subdued_icon_text;
       }
     }
   }
@@ -909,7 +914,8 @@ body {
 
 #user_management,
 #config_common_setup,
-#device_list {
+#device_list,
+#unit_list {
   background: #f0f2f4;
   min-height: 100vh;
   .v-divider {
@@ -982,7 +988,7 @@ body {
           border-radius: 100px;
         }
         span {
-          color: #939fa9;
+          color: $musa_green_button_subdued_icon_text;
         }
       }
       h3 {
@@ -1059,6 +1065,93 @@ body {
     cursor: pointer;
   }
 }
+
+#unit_list {
+  .custom-scroll {
+    height: 50vh;
+    overflow-y: auto;
+    max-width: 99%;
+    &::-webkit-scrollbar {
+      width: 7px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $musa_green_light_text;
+      border-radius: 100px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $musa_green_dark_text;
+      border-radius: 100px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: $musa_green_dark_text;
+    }
+  }
+  .v-card {
+    .menu-right {
+      h3 {
+        font-size: 36px;
+        font-family: $gotham-medium;
+        color: $musa_green_headings;
+      }
+      .desc {
+        font-size: 12px;
+        color: $musa_green_lighter_text;
+      }
+    }
+  }
+  .title_head {
+    color: $musa_green_headings_2;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .list_unit_detail {
+    font-family: "Inter", sans-serif;
+    background: linear-gradient(107.92deg, #fdfdfd 8.54%, #f7f9fb 130.61%);
+    box-shadow: 0px 1px 4px 4px rgba(50, 50, 50, 0.05);
+    border-radius: 10px;
+    padding: 14px;
+    .title-card {
+      font-size: 24px;
+      font-weight: 600;
+      color: $musa_green_card_dark_text_healthy;
+    }
+    .desc_unit {
+      font-size: 12px;
+      color: $musa_green_lighter_text;
+      font-style: italic;
+    }
+    .attach_device {
+      background: $musa_green_card_column;
+      border-radius: 10px;
+      padding: 12px;
+      .btnBgColor {
+        text-align: center;
+        width: 100%;
+        text-transform: unset;
+        font-size: 12px;
+        user-select: none;
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+    }
+    .attach,
+    .loc {
+      font-size: 12px;
+      color: $musa_green_card_value_identifier_healthy;
+    }
+    .more {
+      font-size: 11px;
+      color: $musa_green_card_dark_text_healthy;
+      cursor: pointer;
+    }
+    .site {
+      font-size: 13px;
+      color: $musa_green_card_dark_text_healthy;
+      font-weight: 600;
+    }
+  }
+}
+
 #device_list {
   .custom-scroll {
     height: 50vh;
@@ -1147,7 +1240,7 @@ body {
         border-radius: 100px;
       }
       span {
-        color: #939fa9;
+        color: $musa_green_button_subdued_icon_text;
       }
     }
     h3 {
@@ -1332,7 +1425,7 @@ body {
                 border-bottom-right-radius: 2px;
               }
               .v-icon {
-                color: #939fa9;
+                color: $musa_green_button_subdued_icon_text;
               }
             }
           }
@@ -1429,6 +1522,30 @@ body {
       background-color: #386d7a !important;
     }
   }
+  &.see_more_unit_list {
+    border-radius: 10px;
+    overflow-x: hidden;
+    .title_attach {
+      font-size: 24px;
+      font-family: $gotham-medium;
+      color: $musa_green_headings;
+      .text_active {
+        color: $musa_green_card_title_healthy;
+      }
+    }
+    p {
+      font-size: 18px;
+      font-weight: 600;
+      color: $musa_green_headings_2;
+    }
+    .btnBgColor {
+      text-transform: unset;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      font-size: 12px;
+      text-align: center;
+    }
+  }
 }
 
 @media (max-width: 600px) {
@@ -1439,6 +1556,7 @@ body {
   }
   #user_management .v-card .menu-right h3,
   #device_list .v-card .menu-right h3,
+  #unit_list .v-card .menu-right h3,
   #config_common_setup .v-card .menu-right h3 {
     font-size: 26px;
   }
@@ -1484,6 +1602,7 @@ body {
 @media (max-width: 959px) {
   #user_management .container--fluid,
   #device_list .container--fluid,
+  #unit_list .container--fluid,
   #config_common_setup .container--fluid {
     margin-top: 2em;
     margin-bottom: 5em;

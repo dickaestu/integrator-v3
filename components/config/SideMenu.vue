@@ -39,7 +39,7 @@
           </v-list-item-title>
         </v-list-item-content>
       </NuxtLink>
-      <NuxtLink to="#error" class="link-route">
+      <NuxtLink to="/configuration/unit_list" class="link-route">
         <v-list-item-content>
           <v-list-item-title>
             Unit List
