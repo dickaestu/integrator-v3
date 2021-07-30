@@ -114,11 +114,9 @@
         <v-row v-if="!this.loadingSensors">
           <v-col
             cols="12"
-            xs="12"
             sm="6"
             md="2"
             lg="2"
-            xl="2"
             v-for="(i, index) in items"
             :key="index"
           >

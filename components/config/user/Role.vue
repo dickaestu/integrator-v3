@@ -1,6 +1,7 @@
 <template>
   <v-row class="pt-10 mb-5">
-    <v-col cols="12" lg="2" offset-lg="9">
+    <!-- <v-col cols="12" lg="2" offset-lg="9"> -->
+    <v-col class="d-flex justify-end">
       <v-dialog
         content-class="roles_description"
         v-model="dialogRoles"

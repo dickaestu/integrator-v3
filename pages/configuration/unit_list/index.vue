@@ -3,7 +3,7 @@
     <section id="unit_list">
       <Header />
       <Menu />
-      <v-container fluid>
+      <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
             <v-card class="mx-auto">
@@ -485,7 +485,7 @@
                           <v-row class="mb-5">
                             <v-col cols="12">
                               <v-row>
-                                <v-col lg="4" md="6" sm="12">
+                                <v-col xl="4" lg="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-end">
                                       <v-menu>
@@ -531,7 +531,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">BOD5</div>
@@ -539,7 +540,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">TSS</div>
@@ -547,7 +549,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">pH</div>
@@ -555,7 +558,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">NH3N</div>
@@ -563,7 +567,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">NO3N</div>
@@ -571,7 +576,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">Debit</div>
@@ -588,7 +594,7 @@
                                     <p class="site">Site A (SPARING Plant)</p>
                                   </v-card>
                                 </v-col>
-                                <v-col lg="4" md="6" sm="12">
+                                <v-col xl="4" lg="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-end">
                                       <v-menu>
@@ -634,7 +640,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">BOD5</div>
@@ -642,7 +649,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">TSS</div>
@@ -650,7 +658,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">pH</div>
@@ -658,7 +667,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">NH3N</div>
@@ -666,7 +676,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">NO3N</div>
@@ -674,7 +685,8 @@
                                         <v-col
                                           lg="4"
                                           md="6"
-                                          sm="12"
+                                          sm="6"
+                                          cols="12"
                                           class="pt-0"
                                         >
                                           <div class="btnBgColor">Debit</div>

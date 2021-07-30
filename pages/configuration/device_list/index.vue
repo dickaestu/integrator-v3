@@ -3,7 +3,7 @@
     <section id="device_list">
       <Header />
       <Menu />
-      <v-container fluid>
+      <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
             <v-card class="mx-auto">
@@ -495,7 +495,7 @@
                             <v-col cols="12">
                               <p class="title_head">Controllers</p>
                               <v-row>
-                                <v-col lg="3" md="6" sm="12">
+                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">
@@ -544,7 +544,7 @@
                                     </div>
                                   </v-card>
                                 </v-col>
-                                <v-col lg="3" md="6" sm="12">
+                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">
@@ -600,7 +600,7 @@
                             <v-col cols="12">
                               <p class="title_head">Sensors</p>
                               <v-row>
-                                <v-col lg="3" md="6" sm="12">
+                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">
@@ -649,7 +649,7 @@
                                     </div>
                                   </v-card>
                                 </v-col>
-                                <v-col lg="3" md="6" sm="12">
+                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">
@@ -698,7 +698,7 @@
                                     </div>
                                   </v-card>
                                 </v-col>
-                                <v-col lg="3" md="6" sm="12">
+                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">
@@ -754,7 +754,7 @@
                             <v-col cols="12">
                               <p class="title_head">Actuators</p>
                               <v-row>
-                                <v-col lg="3" md="6" sm="12">
+                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">
@@ -803,7 +803,7 @@
                                     </div>
                                   </v-card>
                                 </v-col>
-                                <v-col lg="3" md="6" sm="12">
+                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">

@@ -3,7 +3,7 @@
     <section id="config_common_setup">
       <Header />
       <Menu />
-      <v-container fluid>
+      <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
             <v-card class="mx-auto">
@@ -98,8 +98,10 @@
                         <v-col cols="12">
                           <v-row>
                             <v-col
-                              sm="3"
+                              xl="3"
+                              lg="3"
                               md="4"
+                              sm="3"
                               cols="12"
                               class="title pb-0 pb-sm-3"
                               >Device UID</v-col
@@ -116,8 +118,10 @@
                         <v-col cols="12">
                           <v-row>
                             <v-col
-                              sm="3"
+                              xl="3"
+                              lg="3"
                               md="4"
+                              sm="3"
                               cols="12"
                               class="title pb-0 pb-sm-3"
                               >Connection Setup</v-col
@@ -160,8 +164,10 @@
                         <v-col cols="12">
                           <v-row>
                             <v-col
-                              sm="3"
+                              xl="3"
+                              lg="3"
                               md="4"
+                              sm="3"
                               cols="12"
                               class="title pb-0 pb-sm-3"
                               >Data Interval</v-col
@@ -180,7 +186,7 @@
                         <!-- <ConfigGeneralConnection /> -->
                         <!-- <ConfigGeneralInterval /> -->
                         <v-col cols="12">
-                          <v-row class="mt-15">
+                          <v-row class="mt-5">
                             <v-col cols="12">
                               <v-btn
                                 class="mr-5 save"

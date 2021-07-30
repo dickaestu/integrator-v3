@@ -17,8 +17,8 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <NuxtLink to="/configuration/common_setup" class="mb-7 link-route">
-        <v-list-item-content>
+      <NuxtLink to="/configuration/common_setup" class="link-route">
+        <v-list-item-content class="mb-5">
           <v-list-item-title>
             Common Setup
           </v-list-item-title>
@@ -46,8 +46,8 @@
           </v-list-item-title>
         </v-list-item-content>
       </NuxtLink>
-      <NuxtLink to="#error" class="mb-7 link-route">
-        <v-list-item-content>
+      <NuxtLink to="#error" class="link-route">
+        <v-list-item-content class="mb-5">
           <v-list-item-title>
             Device Calibration
           </v-list-item-title>
