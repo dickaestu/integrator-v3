@@ -185,7 +185,7 @@
                                   <span class="text-h5">{{ formTitle }}</span>
                                   <v-icon
                                     class="close_dialog white--text"
-                                    @click="dialog = false"
+                                    @click="dialogCRUD = false"
                                   >
                                     mdi-close-thick
                                   </v-icon>
@@ -269,7 +269,7 @@
                                 </v-card-text>
                                 <v-card-actions>
                                   <v-spacer></v-spacer>
-                                  <v-btn text @click="close">
+                                  <v-btn text @click="dialogCRUD = false">
                                     Cancel
                                   </v-btn>
                                   <v-btn
@@ -530,7 +530,7 @@ export default {
   },
 
   watch: {
-    dialog(val) {
+    dialogCRUD(val) {
       val || this.close();
     },
     dialogDelete(val) {
@@ -609,7 +609,7 @@ export default {
     editItem(item) {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+      this.dialogCRUD = true;
     },
     deleteItem(item) {
       this.editedIndex = this.users.indexOf(item);
@@ -639,7 +639,7 @@ export default {
       this.closeDelete();
     },
     close() {
-      this.dialog = false;
+      this.dialogCRUD = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;

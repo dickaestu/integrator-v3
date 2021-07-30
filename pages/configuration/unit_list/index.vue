@@ -108,7 +108,10 @@
                           <v-row>
                             <v-col>
                               <template>
-                                <v-dialog v-model="dialogAddEditUnit" max-width="500px">
+                                <v-dialog
+                                  v-model="dialogAddEditUnit"
+                                  max-width="500px"
+                                >
                                   <template v-slot:activator="{ on, attrs }">
                                     <v-btn
                                       class="btnBgColor"
@@ -138,11 +141,11 @@
                             <v-card-title class="justify-space-between">
                               <span class="text-h5">{{ formTitle }}</span>
                               <v-icon
-                                  class="close_dialog white--text"
-                                  @click="dialog = false"
-                                >
-                                  mdi-close-thick
-                                </v-icon>
+                                class="close_dialog white--text"
+                                @click="dialogAddEditUnit = false"
+                              >
+                                mdi-close-thick
+                              </v-icon>
                             </v-card-title>
                             <v-card-text>
                               <v-container>
@@ -272,7 +275,7 @@
                                     <v-btn
                                       text
                                       class="btnTransBgColor"
-                                      @click="close"
+                                      @click="dialogAddEditUnit = false"
                                     >
                                       Cancel
                                     </v-btn>
@@ -829,7 +832,7 @@ export default {
   },
 
   watch: {
-    dialog(val) {
+    dialogAddEditUnit(val) {
       val || this.close();
     },
     dialogDelete(val) {
@@ -899,7 +902,7 @@ export default {
     editItem(item) {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+      this.dialogAddEditUnit = true;
     },
     deleteItem(item) {
       this.editedIndex = this.users.indexOf(item);
@@ -929,7 +932,7 @@ export default {
       this.closeDelete();
     },
     close() {
-      this.dialog = false;
+      this.dialogAddEditUnit = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
