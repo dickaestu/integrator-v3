@@ -1645,4 +1645,23 @@ body {
   #content-one .hover_card .w-25:hover {
     width: 30%;
   }
+  #content-one .w-75 .card-right {
+    max-height: 33vh;
+    overflow: hidden;
+    overflow-y: auto;
+  }
 }
+@media (min-width: 1260px) and (max-width: 1536px) {
+  #content-one .w-75 .card-right {
+    max-height: 53vh;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}
+// @media (min-width: 1260px) {
+//   #content-one .w-75 .card-right {
+//     max-height: 33vh;
+//     overflow: hidden;
+//     overflow-y: auto;
+//   }
+// }

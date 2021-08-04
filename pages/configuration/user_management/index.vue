@@ -3,7 +3,7 @@
     <section id="user_management">
       <Header />
       <Menu />
-      <v-container fluid>
+      <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
             <v-card class="mx-auto">
@@ -145,7 +145,7 @@
                             </template>
                           </v-select>
                         </v-col>
-                        <v-col cols="12" lg="2" offset-lg="4">
+                        <v-col class="d-flex justify-end">
                           <template>
                             <v-dialog v-model="dialogCRUD" max-width="500px">
                               <template v-slot:activator="{ on, attrs }">

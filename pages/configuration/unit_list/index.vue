@@ -3,7 +3,7 @@
     <section id="unit_list">
       <Header />
       <Menu />
-      <v-container fluid>
+      <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
             <v-card class="mx-auto">
