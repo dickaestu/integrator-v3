@@ -7,85 +7,6 @@
         <v-row>
           <v-col>
             <v-card class="mx-auto">
-              <!-- <v-navigation-drawer
-                class="menu-left"
-                dark
-                v-model="sidebarMenu"
-                app
-                floating
-                absolute
-                :permanent="$vuetify.breakpoint.mdAndUp"
-              >
-                <v-list dense nav>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <h5>
-                        General Configuration
-                      </h5>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider></v-divider>
-                  <v-list-item
-                    link
-                    to="/configuration/common_setup"
-                    class="mb-7"
-                  >
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Common Setup
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <h5>
-                        Device Configuration
-                      </h5>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider></v-divider>
-                  <v-list-item link to="/">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Device List
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item link to="/">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Unit List
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item link class="mb-7" to="/">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Device Calibration
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <h5>
-                        User Configuration
-                      </h5>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider></v-divider>
-                  <v-list-item
-                    link
-                    class="active"
-                    to="/configuration/user_management"
-                  >
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        User Management
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-navigation-drawer> -->
               <SideMenu :sideBar="sidebarMenu" />
               <v-content class="menu-right">
                 <v-container fluid class="pa-7">
@@ -150,7 +71,7 @@
                             <v-card-text>
                               <v-container>
                                 <v-row>
-                                  <v-col cols="12" md="6">
+                                  <v-col cols="12" md="4">
                                     <p class="title_head_newDevice">
                                       Unit Information
                                     </p>
@@ -241,7 +162,7 @@
                                       </v-col>
                                     </v-row>
                                   </v-col>
-                                  <v-col cols="12" md="6">
+                                  <v-col cols="12" md="4">
                                     <p class="title_head_newDevice">
                                       Protocol Variables
                                     </p>
@@ -325,167 +246,20 @@
                           </v-container>
                         </v-card>
                       </v-dialog>
-                      <v-dialog
-                        content-class="see_more_unit_list"
-                        v-model="dialogSeeMore"
-                        persistent
-                        max-width="50%"
-                      >
-                        <v-card>
-                          <span class="d-flex justify-end pt-2 pr-2">
-                            <v-icon
-                              class="close_dialog"
-                              @click="dialogSeeMore = false"
-                            >
-                              mdi-close-thick
-                            </v-icon>
-                          </span>
-                          <v-card-title class="justify-space-between">
-                            <h4 class="title_attach mb-0">
-                              Attached Devices
-                              <span class="text_active">Inlet SPARING</span>
-                            </h4>
-                            <!-- <span> -->
-                            <NuxtLink to="/configuration/device_list">
-                              <v-btn class="btnTransBgColor">See Details</v-btn>
-                            </NuxtLink>
-                            <!-- </span> -->
-                          </v-card-title>
-                          <v-card-text>
-                            <v-container fluid>
-                              <v-row>
-                                <v-col cols="12">
-                                  <p class="mb-0">Sensors</p>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                              </v-row>
-                              <v-row>
-                                <v-col cols="12">
-                                  <p class="mb-0">Controllers</p>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                              </v-row>
-                              <v-row>
-                                <v-col cols="12">
-                                  <p class="mb-0">Actuators</p>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                                <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                </v-col>
-                              </v-row>
-                            </v-container>
-                          </v-card-text>
-                        </v-card>
-                      </v-dialog>
+                      
                       <v-row>
                         <v-col cols="12" class="custom-scroll">
                           <v-row class="mb-5">
                             <v-col cols="12">
                               <v-row>
-                                <v-col lg="4" md="6" sm="12">
+
+                                <v-col 
+                                  lg="4" 
+                                  md="4" 
+                                  sm="6" 
+                                  v-for="(i, index) in unit_list"
+                                  :key="index"
+                                >
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-end">
                                       <v-menu>
@@ -519,62 +293,23 @@
                                       </v-menu>
                                     </div>
                                     <p class="title-card">
-                                      Inlet SPARING
+                                      {{ i.name }}
                                     </p>
                                     <p class="desc_unit">
-                                      Set of devices used to monitor the inlet
-                                      of the water treatment site.
+                                      {{ i.description }}
                                     </p>
                                     <p class="attach mb-2">Attached Devices</p>
                                     <div class="attach_device">
                                       <v-row class="pt-3">
                                         <v-col
                                           lg="4"
-                                          md="6"
-                                          sm="12"
+                                          md="4"
+                                          sm="6"
                                           class="pt-0"
+                                          v-for="(device, index2) in i.sensors"
+                                          :key="index2"
                                         >
-                                          <div class="btnBgColor">BOD5</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">TSS</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">pH</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">NH3N</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">NO3N</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">Debit</div>
+                                          <div class="btnBgColor">{{ device.parameter }}</div>
                                         </v-col>
                                       </v-row>
                                     </div>
@@ -585,110 +320,7 @@
                                       see more
                                     </p>
                                     <p class="loc mb-0">Location</p>
-                                    <p class="site">Site A (SPARING Plant)</p>
-                                  </v-card>
-                                </v-col>
-                                <v-col lg="4" md="6" sm="12">
-                                  <v-card class="list_unit_detail">
-                                    <div class="d-flex justify-end">
-                                      <v-menu>
-                                        <template
-                                          v-slot:activator="{ on, attrs }"
-                                        >
-                                          <v-icon v-bind="attrs" v-on="on">
-                                            mdi-dots-horizontal
-                                          </v-icon>
-                                        </template>
-                                        <v-list class="py-0">
-                                          <v-list-item @click="editItem(item)">
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-pencil
-                                              </v-icon>
-                                              Edit
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                          <v-list-item
-                                            @click="deleteItem(item)"
-                                          >
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-delete
-                                              </v-icon>
-                                              Delete
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                        </v-list>
-                                      </v-menu>
-                                    </div>
-                                    <p class="title-card">
-                                      Outlet SPARING
-                                    </p>
-                                    <p class="desc_unit">
-                                      Set of devices used to monitor the outlet
-                                      of the water treatment site.
-                                    </p>
-                                    <p class="attach mb-2">Attached Devices</p>
-                                    <div class="attach_device">
-                                      <v-row class="pt-3">
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">BOD5</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">TSS</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">pH</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">NH3N</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">NO3N</div>
-                                        </v-col>
-                                        <v-col
-                                          lg="4"
-                                          md="6"
-                                          sm="12"
-                                          class="pt-0"
-                                        >
-                                          <div class="btnBgColor">Debit</div>
-                                        </v-col>
-                                      </v-row>
-                                    </div>
-                                    <p
-                                      class="text-right more mt-3"
-                                      @click="dialogSeeMore = true"
-                                    >
-                                      see more
-                                    </p>
-                                    <p class="loc mb-0">Location</p>
-                                    <p class="site">Site A (SPARING Plant)</p>
+                                    <p class="site">{{ i.location }}</p>
                                   </v-card>
                                 </v-col>
                               </v-row>
@@ -703,6 +335,9 @@
             </v-card>
           </v-col>
         </v-row>
+        <popupSeeMoreUnit
+          :dialogSeeMore="dialogSeeMore"
+        />
         <v-snackbar
           :timeout="-1"
           :value="toast"
@@ -723,52 +358,16 @@
 </template>
 
 <script>
-import gql from "graphql-tag";
+import popupSeeMoreUnit from "./popupSeeMoreUnit.vue";
 import SideMenu from "../../../components/config/SideMenu.vue";
-
-const GET_USERS = gql`
-  query users($emails: [String!]) {
-    users(emails: $emails) {
-      id
-      name
-      email
-      roles
-      position
-      notify
-    }
-  }
-`;
-const ADD_USERS = gql`
-  mutation addUser($user: InputUser!, $password: String!) {
-    addUser(user: $user, password: $password) {
-      ok
-    }
-  }
-`;
-
-const EDIT_USERS = gql`
-  mutation editUser($userID: ID!, $user: InputUser!) {
-    editUser(userID: $userID, user: $user) {
-      ok
-    }
-  }
-`;
-
-const DELETE_USERS = gql`
-  mutation deleteUser($userID: ID!) {
-    deleteUser(userID: $userID) {
-      ok
-    }
-  }
-`;
 
 export default {
   name: "unit_list",
   components: {
-    SideMenu
+    SideMenu,
+    popupSeeMoreUnit
   },
   data: () => ({
-    sidebarMenu: false,
     // bell: false,
     dialogAddEditUnit: false,
     dialogSeeMore: false,
@@ -777,14 +376,6 @@ export default {
     toastMsgAddUser: "",
     toast: false,
     errorMessages: "",
-    search: "",
-    characters: {
-      value: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-      checked: true
-    },
-    password: "",
-    generateText: "",
-    gLength: 6,
     items: [
       { title: "Home", icon: "mdi-view-dashboard" },
       { title: "About", icon: "mdi-forum" }
@@ -803,7 +394,7 @@ export default {
       { text: "", value: "notify", sortable: false },
       { text: "", value: "actions", sortable: false }
     ],
-    users: [],
+    unit_list: [],
     editedIndex: -1,
     editedItem: {
       name: null,
@@ -823,9 +414,6 @@ export default {
   }),
 
   computed: {
-    // mini() {
-    //   return this.$vuetify.breakpoint.smAndDown;
-    // },
     formTitle() {
       return this.editedIndex === -1 ? "Add New Unit" : "Edit Unit";
     }
@@ -844,49 +432,31 @@ export default {
   },
 
   created() {
-    this.getUsers();
+    this.getUnitList();
   },
 
   methods: {
-    toggleBell() {
-      this.bell = !this.bell;
-    },
-    onMouseEnterGenerateBtn() {
-      this.generateText = "";
-    },
-    onGenerate() {
-      var randomstring = Math.random()
-        .toString(36)
-        .slice(-8);
-      this.editedItem.password = randomstring;
-      console.log("test password 1", randomstring);
-    },
-    async getUsers() {
+    async getUnitList() {
       try {
         this.loadingGetUser = true;
-        const res = await this.$apollo.query({
-          query: GET_USERS,
-          variables: {
-            emails: []
-          }
-        });
+        const res = await this.$store.dispatch(
+          "configuration/unit_list/getUnitList"
+        );
+        console.log(res)
 
-        if (res) {
-          console.log(res.data.users);
-          this.loadingGetUser = false;
-          if (res.data.users.length > 0) {
-            res.data.users.map(user => {
-              this.users.push({
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                roles: user.roles,
-                position: user.position,
-                password: user.password,
-                notify: user.notify
-              });
+        this.loadingGetUser = false;
+        if (res.units.length > 0) {
+          res.units.map(unit => {
+            this.unit_list.push({
+              id: unit.id,
+              name: unit.name,
+              description: unit.description,
+              location: unit.location,
+              longitude: unit.longitude,
+              latitude: unit.latitude,
+              sensors: unit.sensors
             });
-          }
+          });
         }
       } catch (err) {
         console.log(err);
@@ -900,19 +470,19 @@ export default {
       else return "#71C7DC";
     },
     editItem(item) {
-      this.editedIndex = this.users.indexOf(item);
+      this.editedIndex = this.unit_list.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogAddEditUnit = true;
     },
     deleteItem(item) {
-      this.editedIndex = this.users.indexOf(item);
+      this.editedIndex = this.unit_list.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
     async deleteItemConfirm() {
       try {
         const res = await this.$apollo.mutate({
-          mutation: DELETE_USERS,
+          mutation: DELETE_unit_list,
           variables: {
             userID: this.editedItem.id
           }
@@ -920,7 +490,7 @@ export default {
 
         if (res) {
           if (res.data.deleteUser.ok) {
-            this.users.splice(this.editedIndex, 1);
+            this.unit_list.splice(this.editedIndex, 1);
             this.toastMsgAddUser = "Data has been Deleted";
             this.toast = true;
           }
@@ -945,90 +515,6 @@ export default {
         this.editedIndex = -1;
       });
     },
-    async save() {
-      if (this.editedIndex > -1) {
-        let param = null;
-
-        if (this.editedItem.password !== null) {
-          param = {
-            userID: this.editedItem.id,
-            user: {
-              name: this.editedItem.name,
-              email: this.editedItem.email,
-              roles: this.editedItem.roles,
-              notify: true,
-              position: this.editedItem.position,
-              password: this.editedItem.password
-            }
-          };
-        } else {
-          param = {
-            userID: this.editedItem.id,
-            user: {
-              name: this.editedItem.name,
-              email: this.editedItem.email,
-              roles: this.editedItem.roles,
-              notify: true,
-              position: this.editedItem.position
-            }
-          };
-        }
-
-        try {
-          this.loadingAddUser = true;
-          const res = await this.$apollo.mutate({
-            mutation: EDIT_USERS,
-            variables: param
-          });
-
-          if (res.data.editUser.ok) {
-            this.loadingAddUser = false;
-            Object.assign(this.users[this.editedIndex], this.editedItem);
-            this.toastMsgAddUser = "Data has been Edited";
-            this.toast = true;
-          }
-        } catch (err) {
-          console.log(err);
-          this.loadingAddUser = false;
-          // this.searchResults = [];
-        }
-      } else {
-        try {
-          this.loadingAddUser = true;
-          const res = await this.$apollo.mutate({
-            mutation: ADD_USERS,
-            variables: {
-              user: {
-                name: this.editedItem.name,
-                email: this.editedItem.email,
-                roles: this.editedItem.roles,
-                notify: true,
-                position: this.editedItem.position
-              },
-              password: this.editedItem.password
-            }
-          });
-
-          if (res.data.addUser.ok) {
-            this.loadingAddUser = false;
-            this.users.push({
-              name: this.editedItem.name,
-              email: this.editedItem.email,
-              roles: this.editedItem.roles,
-              position: this.editedItem.position,
-              password: this.editedItem.password
-            });
-            this.toastMsgAddUser = "Success To Save";
-            this.toast = true;
-          }
-        } catch (err) {
-          console.log(err);
-          this.loadingAddUser = false;
-          // this.searchResults = [];
-        }
-      }
-      this.close();
-    }
   }
 };
 </script>

@@ -560,6 +560,7 @@ export default {
           x: day[i],
           y: value[i].toFixed(2)
         });
+        console.log(data)
       }
       this.series = [
         {
