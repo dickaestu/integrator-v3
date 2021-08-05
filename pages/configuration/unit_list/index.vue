@@ -246,6 +246,7 @@
                           </v-container>
                         </v-card>
                       </v-dialog>
+                      <!-- Detail Unit List Dialog -->
                       <v-dialog
                           content-class="see_more_unit_list"
                           v-model="dialogSeeMore"
@@ -264,7 +265,7 @@
                           <v-card-title class="justify-space-between">
                               <h4 class="title_attach mb-0">
                               Attached Devices
-                              <span class="text_active">Inlet SPARING</span>
+                              <span class="text_active">{{ dataDialogSeeMore !== null ? dataDialogSeeMore.name : '' }}</span>
                               </h4>
                               <!-- <span> -->
                               <NuxtLink to="/configuration/device_list">
@@ -274,66 +275,23 @@
                           </v-card-title>
                           <v-card-text>
                               <v-container fluid>
-                              <v-row>
+                              <v-row v-if="dataDialogSeeMore !== null">
                                   <v-col cols="12">
-                                  <p class="mb-0">Sensors</p>
+                                    <p class="mb-0">Sensors</p>
                                   </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
+                                  <v-col
+                                    lg="4"
+                                    md="4"
+                                    sm="6" 
+                                    xs="12"
+                                    class="pt-0" 
+                                    
+                                    v-for="(i, index) in dataDialogSeeMore.sensors" :key="index"
+                                  >
+                                    <div class="btnBgColor">{{ i.parameter }}</div>
                                   </v-col>
                               </v-row>
-                              <v-row>
+                              <!-- <v-row>
                                   <v-col cols="12">
                                   <p class="mb-0">Controllers</p>
                                   </v-col>
@@ -396,11 +354,12 @@
                                   <v-col cols="2" class="pt-0">
                                   <div class="btnBgColor">BOD5</div>
                                   </v-col>
-                              </v-row>
+                              </v-row> -->
                               </v-container>
                           </v-card-text>
                           </v-card>
                       </v-dialog>
+                      <!-- End -->
                       <v-row>
                         <v-col cols="12" class="custom-scroll">
                           <v-row class="mb-5">
@@ -469,7 +428,7 @@
                                     </div>
                                     <p
                                       class="text-right more mt-3"
-                                      @click="dialogSeeMore = true"
+                                      @click="handleDialogSeeMore(i)"
                                     >
                                       see more
                                     </p>
@@ -510,14 +469,12 @@
 </template>
 
 <script>
-// import popupSeeMoreUnit from "./popupSeeMoreUnit.vue";
 import SideMenu from "../../../components/config/SideMenu.vue";
 
 export default {
   name: "unit_list",
   components: {
     SideMenu,
-    // popupSeeMoreUnit
   },
   data: () => ({
     // bell: false,
@@ -525,6 +482,7 @@ export default {
     dialogSeeMore: false,
     dialogDelete: false,
     dialogRoles: false,
+    dataDialogSeeMore: null,
     toastMsgAddUser: "",
     toast: false,
     errorMessages: "",
@@ -594,7 +552,6 @@ export default {
         const res = await this.$store.dispatch(
           "configuration/unit_list/getUnitList"
         );
-        console.log(res)
 
         this.loadingGetUser = false;
         if (res.units.length > 0) {
@@ -615,6 +572,11 @@ export default {
         this.loadingGetUser = false;
         // this.searchResults = [];
       }
+    },
+    handleDialogSeeMore(params){
+      this.dialogSeeMore = true
+      console.log(params)
+      this.dataDialogSeeMore = params
     },
     getColor(roles) {
       if (roles == "Admin") return "#386D7A";
