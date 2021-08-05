@@ -94,9 +94,9 @@
                                           >Location</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.name"
+                                          ref="editedItem.location"
                                           class="form_edit"
-                                          v-model="editedItem.name"
+                                          v-model="editedItem.location"
                                           label="Enter unit location"
                                           solo
                                           hide-details="auto"
@@ -109,9 +109,9 @@
                                           >Latitude</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.name"
+                                          ref="editedItem.latitude"
                                           class="form_edit"
-                                          v-model="editedItem.name"
+                                          v-model="editedItem.latitude"
                                           label="Enter unit latitude"
                                           solo
                                           hide-details="auto"
@@ -124,9 +124,9 @@
                                           >Longitude</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.name"
+                                          ref="editedItem.longitude"
                                           class="form_edit"
-                                          v-model="editedItem.name"
+                                          v-model="editedItem.longitude"
                                           label="Enter unit longitude"
                                           solo
                                           hide-details="auto"
@@ -140,10 +140,10 @@
                                           Date</label
                                         >
                                         <v-select
-                                          ref="editedItem.roles"
+                                          ref="editedItem.expired"
                                           class="form_edit_select"
-                                          v-model="editedItem.roles"
-                                          :items="roles"
+                                          v-model="editedItem.expired"
+                                          :items="expired"
                                           label="Enter unit certification expiration date"
                                           solo
                                           hide-details="auto"
@@ -154,6 +154,8 @@
                                           >Description</label
                                         >
                                         <v-textarea
+                                          ref="editedItem.desc"
+                                          v-model="editedItem.desc"
                                           solo
                                           class="form_edit"
                                           label="Enter unit description"
@@ -172,10 +174,10 @@
                                           >Select Protocol</label
                                         >
                                         <v-select
-                                          ref="editedItem.roles"
+                                          ref="editedItem.protocol"
                                           class="form_edit_select"
-                                          v-model="editedItem.roles"
-                                          :items="roles"
+                                          v-model="editedItem.protocol"
+                                          :items="protocol"
                                           label="Select Protocol"
                                           solo
                                           hide-details="auto"
@@ -248,48 +250,55 @@
                       </v-dialog>
                       <!-- Detail Unit List Dialog -->
                       <v-dialog
-                          content-class="see_more_unit_list"
-                          v-model="dialogSeeMore"
-                          persistent
-                          max-width="50%"
+                        content-class="see_more_unit_list"
+                        v-model="dialogSeeMore"
+                        persistent
+                        max-width="50%"
                       >
-                          <v-card>
+                        <v-card>
                           <span class="d-flex justify-end pt-2 pr-2">
-                              <v-icon
+                            <v-icon
                               class="close_dialog"
                               @click="dialogSeeMore = false"
-                              >
+                            >
                               mdi-close-thick
-                              </v-icon>
+                            </v-icon>
                           </span>
                           <v-card-title class="justify-space-between">
-                              <h4 class="title_attach mb-0">
+                            <h4 class="title_attach mb-0">
                               Attached Devices
-                              <span class="text_active">{{ dataDialogSeeMore !== null ? dataDialogSeeMore.name : '' }}</span>
-                              </h4>
-                              <!-- <span> -->
-                              <NuxtLink to="/configuration/device_list">
+                              <span class="text_active">{{
+                                dataDialogSeeMore !== null
+                                  ? dataDialogSeeMore.name
+                                  : ""
+                              }}</span>
+                            </h4>
+                            <!-- <span> -->
+                            <NuxtLink to="/configuration/device_list">
                               <v-btn class="btnTransBgColor">See Details</v-btn>
-                              </NuxtLink>
-                              <!-- </span> -->
+                            </NuxtLink>
+                            <!-- </span> -->
                           </v-card-title>
                           <v-card-text>
-                              <v-container fluid>
+                            <v-container fluid>
                               <v-row v-if="dataDialogSeeMore !== null">
-                                  <v-col cols="12">
-                                    <p class="mb-0">Sensors</p>
-                                  </v-col>
-                                  <v-col
-                                    lg="4"
-                                    md="4"
-                                    sm="6" 
-                                    xs="12"
-                                    class="pt-0" 
-                                    
-                                    v-for="(i, index) in dataDialogSeeMore.sensors" :key="index"
-                                  >
-                                    <div class="btnBgColor">{{ i.parameter }}</div>
-                                  </v-col>
+                                <v-col cols="12">
+                                  <p class="mb-0">Sensors</p>
+                                </v-col>
+                                <v-col
+                                  lg="4"
+                                  md="4"
+                                  sm="6"
+                                  xs="12"
+                                  class="pt-0"
+                                  v-for="(i,
+                                  index) in dataDialogSeeMore.sensors"
+                                  :key="index"
+                                >
+                                  <div class="btnBgColor">
+                                    {{ i.parameter }}
+                                  </div>
+                                </v-col>
                               </v-row>
                               <!-- <v-row>
                                   <v-col cols="12">
@@ -355,9 +364,9 @@
                                   <div class="btnBgColor">BOD5</div>
                                   </v-col>
                               </v-row> -->
-                              </v-container>
+                            </v-container>
                           </v-card-text>
-                          </v-card>
+                        </v-card>
                       </v-dialog>
                       <!-- End -->
                       <v-row>
@@ -365,11 +374,10 @@
                           <v-row class="mb-5">
                             <v-col cols="12">
                               <v-row>
-
-                                <v-col 
-                                  lg="4" 
-                                  md="4" 
-                                  sm="6" 
+                                <v-col
+                                  lg="4"
+                                  md="4"
+                                  sm="6"
                                   v-for="(i, index) in unit_list"
                                   :key="index"
                                 >
@@ -422,7 +430,9 @@
                                           v-for="(device, index2) in i.sensors"
                                           :key="index2"
                                         >
-                                          <div class="btnBgColor">{{ device.parameter }}</div>
+                                          <div class="btnBgColor">
+                                            {{ device.parameter }}
+                                          </div>
                                         </v-col>
                                       </v-row>
                                     </div>
@@ -448,7 +458,7 @@
             </v-card>
           </v-col>
         </v-row>
-        
+
         <v-snackbar
           :timeout="-1"
           :value="toast"
@@ -492,7 +502,8 @@ export default {
       { title: "Home", icon: "mdi-view-dashboard" },
       { title: "About", icon: "mdi-forum" }
     ],
-    roles: ["Admin", "Editor", "Viewer"],
+    expired: ["Test1", "Test2", "Test3"],
+    protocol: ["Test1", "Test2", "Test3"],
     links: ["Home", "Contacts", "Settings"],
     headers: [
       {
@@ -500,9 +511,12 @@ export default {
         align: "start",
         value: "name"
       },
-      { text: "Email", value: "email" },
-      { text: "Roles", value: "roles" },
-      { text: "Position", value: "position" },
+      { text: "Location", value: "location" },
+      { text: "Latitude", value: "latitude" },
+      { text: "Longitude", value: "longitude" },
+      { text: "Expired", value: "expired" },
+      { text: "Desc", value: "desc" },
+      { text: "Protocol", value: "protocol" },
       { text: "", value: "notify", sortable: false },
       { text: "", value: "actions", sortable: false }
     ],
@@ -513,13 +527,18 @@ export default {
       location: null,
       latitude: null,
       longitude: null,
-      password: null
+      expired: null,
+      desc: null,
+      protocol: null
     },
     defaultItem: {
       name: null,
-      email: null,
-      roles: null,
-      position: null
+      location: null,
+      latitude: null,
+      longitude: null,
+      expired: null,
+      desc: null,
+      protocol: null
     },
     loadingAddUser: false,
     loadingGetUser: false
@@ -575,15 +594,10 @@ export default {
         // this.searchResults = [];
       }
     },
-    handleDialogSeeMore(params){
-      this.dialogSeeMore = true
-      console.log(params)
-      this.dataDialogSeeMore = params
-    },
-    getColor(roles) {
-      if (roles == "Admin") return "#386D7A";
-      else if (roles == "Editor") return "#4593BF";
-      else return "#71C7DC";
+    handleDialogSeeMore(params) {
+      this.dialogSeeMore = true;
+      console.log(params);
+      this.dataDialogSeeMore = params;
     },
     editItem(item) {
       this.editedIndex = this.unit_list.indexOf(item);
@@ -630,7 +644,7 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
-    },
+    }
   }
 };
 </script>
