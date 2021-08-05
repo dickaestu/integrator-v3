@@ -2,7 +2,7 @@
   <v-app>
     <section id="unit_list">
       <Header />
-      <Menu />
+      <Menu title="Unit List" />
       <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
@@ -470,11 +470,13 @@
 
 <script>
 import SideMenu from "../../../components/config/SideMenu.vue";
+import Menu from "../../../components/Menu.vue";
 
 export default {
   name: "unit_list",
   components: {
     SideMenu,
+    Menu
   },
   data: () => ({
     // bell: false,
@@ -508,9 +510,9 @@ export default {
     editedIndex: -1,
     editedItem: {
       name: null,
-      email: null,
-      roles: null,
-      position: null,
+      location: null,
+      latitude: null,
+      longitude: null,
       password: null
     },
     defaultItem: {

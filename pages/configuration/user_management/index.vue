@@ -2,7 +2,7 @@
   <v-app>
     <section id="user_management">
       <Header />
-      <Menu />
+      <Menu title="User Management"/>
       <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
@@ -411,6 +411,7 @@
 <script>
 import gql from "graphql-tag";
 import SideMenu from "../../../components/config/SideMenu.vue";
+import Menu from '../../../components/Menu.vue'
 
 const GET_USERS = gql`
   query users($emails: [String!]) {
@@ -451,7 +452,8 @@ const DELETE_USERS = gql`
 export default {
   name: "user_management",
   components: {
-    SideMenu
+    SideMenu,
+    Menu
   },
   data: () => ({
     sidebarMenu: false,

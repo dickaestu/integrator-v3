@@ -3,7 +3,7 @@
     <v-container class="d-none d-sm-none d-md-flex">
       <v-row class="my-5">
         <v-col cols="3">
-          <h1>Test Home</h1>
+          <h1>{{ title }}</h1>
         </v-col>
         <v-col class="text-right">
           <span v-for="(i, index) in menuNav" :key="index" class="ml-5">
@@ -35,6 +35,9 @@
 <script>
 export default {
   name: "Menu",
+  props: {
+    title: String
+  },
   data: () => ({
     menuNav: [
       {
