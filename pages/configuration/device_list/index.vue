@@ -2,7 +2,7 @@
   <v-app>
     <section id="device_list">
       <Header />
-      <Menu />
+      <Menu title="Device List" />
       <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
@@ -203,10 +203,10 @@
                                           >Device Type</label
                                         >
                                         <v-select
-                                          ref="editedItem.roles"
+                                          ref="editedItem.device_type"
                                           class="form_edit_select"
-                                          v-model="editedItem.roles"
-                                          :items="roles"
+                                          v-model="editedItem.device_type"
+                                          :items="device_type"
                                           label="Select Device Type"
                                           solo
                                           hide-details="auto"
@@ -217,9 +217,9 @@
                                           >Device Brand and Series/Name</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.name"
+                                          ref="editedItem.brand"
                                           class="form_edit"
-                                          v-model="editedItem.name"
+                                          v-model="editedItem.brand"
                                           label="Enter device brand and series"
                                           solo
                                           hide-details="auto"
@@ -232,10 +232,10 @@
                                           >Select Unit</label
                                         >
                                         <v-select
-                                          ref="editedItem.roles"
+                                          ref="editedItem.unit"
                                           class="form_edit_select"
-                                          v-model="editedItem.roles"
-                                          :items="roles"
+                                          v-model="editedItem.unit"
+                                          :items="unit"
                                           label="Select Unit"
                                           solo
                                           hide-details="auto"
@@ -253,9 +253,9 @@
                                           >Parameter Name</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.name"
+                                          ref="editedItem.parameter"
                                           class="form_edit"
-                                          v-model="editedItem.name"
+                                          v-model="editedItem.parameter"
                                           label="Enter Parameter"
                                           solo
                                           hide-details="auto"
@@ -266,9 +266,9 @@
                                       <v-col cols="6">
                                         <label class="title_field">Port</label>
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.port"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.port"
                                           label="Enter Port"
                                           solo
                                           hide-details="auto"
@@ -281,9 +281,9 @@
                                           >Data Length</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.data_length"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.data_length"
                                           label="Enter array"
                                           solo
                                           hide-details="auto"
@@ -296,9 +296,9 @@
                                           >Input Low</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.input_low"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.input_low"
                                           label="Enter Input Low"
                                           solo
                                           hide-details="auto"
@@ -311,9 +311,9 @@
                                           >Input High</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.input_high"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.input_high"
                                           label="Enter Input High"
                                           solo
                                           hide-details="auto"
@@ -326,9 +326,9 @@
                                           >Output Low</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.output_low"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.output_low"
                                           label="Enter Output Low"
                                           solo
                                           hide-details="auto"
@@ -341,9 +341,9 @@
                                           >Output High</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.output_high"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.output_high"
                                           label="Enter Output High"
                                           solo
                                           hide-details="auto"
@@ -356,9 +356,9 @@
                                           >Threshold Low</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.threshold_low"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.threshold_low"
                                           label="Enter Threshold Low"
                                           solo
                                           hide-details="auto"
@@ -371,9 +371,9 @@
                                           >Threshold High</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.threshold_high"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.threshold_high"
                                           label="Enter Threshold High"
                                           solo
                                           hide-details="auto"
@@ -386,9 +386,9 @@
                                           >Measurement Unit</label
                                         >
                                         <v-text-field
-                                          ref="editedItem.email"
+                                          ref="editedItem.measurement"
                                           class="form_edit"
-                                          v-model="editedItem.email"
+                                          v-model="editedItem.measurement"
                                           label="Enter Measurement Unit"
                                           solo
                                           hide-details="auto"
@@ -401,10 +401,10 @@
                                           >Register Type</label
                                         >
                                         <v-select
-                                          ref="editedItem.roles"
+                                          ref="editedItem.register_type"
                                           class="form_edit_select"
-                                          v-model="editedItem.roles"
-                                          :items="roles"
+                                          v-model="editedItem.register_type"
+                                          :items="register_type"
                                           label="Enter Register Type"
                                           solo
                                           hide-details="auto"
@@ -415,11 +415,23 @@
                                           >Calibration Formula</label
                                         >
                                         <v-textarea
+                                          ref="editedItem.calibration"
+                                          v-model="editedItem.calibration"
                                           solo
                                           class="form_edit"
                                           label="Insert calibration equation here"
                                           placeholder="Insert calibration equation here"
                                         ></v-textarea>
+                                      </v-col>
+                                      <v-col cols="12">
+                                        <p>
+                                          Setting up
+                                          <span
+                                            >Device UUID
+                                            <br />
+                                            498232-sdwqey-129102
+                                          </span>
+                                        </p>
                                       </v-col>
                                       <v-col
                                         cols="12"
@@ -886,51 +898,16 @@
 <script>
 import gql from "graphql-tag";
 import SideMenu from "../../../components/config/SideMenu.vue";
-
-const GET_USERS = gql`
-  query users($emails: [String!]) {
-    users(emails: $emails) {
-      id
-      name
-      email
-      roles
-      position
-      notify
-    }
-  }
-`;
-const ADD_USERS = gql`
-  mutation addUser($user: InputUser!, $password: String!) {
-    addUser(user: $user, password: $password) {
-      ok
-    }
-  }
-`;
-
-const EDIT_USERS = gql`
-  mutation editUser($userID: ID!, $user: InputUser!) {
-    editUser(userID: $userID, user: $user) {
-      ok
-    }
-  }
-`;
-
-const DELETE_USERS = gql`
-  mutation deleteUser($userID: ID!) {
-    deleteUser(userID: $userID) {
-      ok
-    }
-  }
-`;
+import Menu from "../../../components/Menu.vue";
 
 export default {
   name: "device_list",
   components: {
-    SideMenu
+    SideMenu,
+    Menu
   },
   data: () => ({
     sidebarMenu: false,
-    // bell: false,
     dialogAddEditDevice: false,
     dialogDelete: false,
     dialogRoles: false,
@@ -938,19 +915,13 @@ export default {
     toast: false,
     errorMessages: "",
     search: "",
-    characters: {
-      value: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-      checked: true
-    },
-    password: "",
-    generateText: "",
-    gLength: 6,
     items: [
       { title: "Home", icon: "mdi-view-dashboard" },
       { title: "About", icon: "mdi-forum" }
     ],
-    roles: ["Admin", "Editor", "Viewer"],
-    links: ["Home", "Contacts", "Settings"],
+    device_type: ["Sensor", "Controller", "Actuator", "Others"],
+    unit: ["Inlet SPARING", "Outlet SPARING"],
+    register_type: ["Holding Register", "Input Register"],
     filters: ["Admin", "Editor", "Viewer"],
     selectedFilters: [],
     headers: [
@@ -959,26 +930,58 @@ export default {
         align: "start",
         value: "name"
       },
-      { text: "Email", value: "email" },
-      { text: "Roles", value: "roles" },
-      { text: "Position", value: "position" },
-      { text: "", value: "notify", sortable: false },
+      { text: "Device Type", value: "device_type" },
+      { text: "Brand", value: "brand" },
+      { text: "Unit", value: "unit" },
+      { text: "Parameter", value: "parameter" },
+      { text: "Port", value: "port" },
+      { text: "Data Length", value: "data_length" },
+      { text: "Input Low", value: "input_low" },
+      { text: "Input High", value: "input_high" },
+      { text: "Output Low", value: "output_low" },
+      { text: "Output High", value: "output_high" },
+      { text: "Threshold Low", value: "threshold_low" },
+      { text: "Threshold High", value: "threshold_high" },
+      { text: "Measurement", value: "measurement" },
+      { text: "Register Type", value: "register_type" },
+      { text: "Calibration Formula", value: "calibration" },
       { text: "", value: "actions", sortable: false }
     ],
     users: [],
     editedIndex: -1,
     editedItem: {
-      name: null,
-      email: null,
-      roles: null,
-      position: null,
-      password: null
+      device_type: null,
+      brand: null,
+      unit: null,
+      parameter: null,
+      port: null,
+      data_length: null,
+      input_low: null,
+      input_high: null,
+      output_low: null,
+      output_high: null,
+      threshold_low: null,
+      threshold_high: null,
+      measurement: null,
+      register_type: null,
+      calibration: null
     },
     defaultItem: {
-      name: null,
-      email: null,
-      roles: null,
-      position: null
+      device_type: null,
+      brand: null,
+      unit: null,
+      parameter: null,
+      port: null,
+      data_length: null,
+      input_low: null,
+      input_high: null,
+      output_low: null,
+      output_high: null,
+      threshold_low: null,
+      threshold_high: null,
+      measurement: null,
+      register_type: null,
+      calibration: null
     },
     loadingAddUser: false,
     loadingGetUser: false
@@ -1021,19 +1024,6 @@ export default {
   },
 
   methods: {
-    toggleBell() {
-      this.bell = !this.bell;
-    },
-    onMouseEnterGenerateBtn() {
-      this.generateText = "";
-    },
-    onGenerate() {
-      var randomstring = Math.random()
-        .toString(36)
-        .slice(-8);
-      this.editedItem.password = randomstring;
-      console.log("test password 1", randomstring);
-    },
     async getUsers() {
       try {
         this.loadingGetUser = true;
@@ -1075,11 +1065,6 @@ export default {
           this.selectedFilters = this.filters.slice();
         }
       });
-    },
-    getColor(roles) {
-      if (roles == "Admin") return "#386D7A";
-      else if (roles == "Editor") return "#4593BF";
-      else return "#71C7DC";
     },
     editItem(item) {
       this.editedIndex = this.users.indexOf(item);

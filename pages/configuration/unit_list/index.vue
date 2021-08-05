@@ -653,8 +653,8 @@ export default {
       { title: "About", icon: "mdi-forum" }
     ],
     // expired: ["Test1", "Test2", "Test3"],
-    protocol: ["Test1", "Test2", "Test3"],
-    parity: ["Test1", "Test2", "Test3"],
+    protocol: ["Modbus RTU", "Modbus TCP"],
+    parity: ["Even", "Odd"],
     headers: [
       {
         text: "Name",
