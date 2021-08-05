@@ -71,7 +71,7 @@
                             <v-card-text>
                               <v-container>
                                 <v-row>
-                                  <v-col cols="12" md="4">
+                                  <v-col cols="12" md="6">
                                     <p class="title_head_newDevice">
                                       Unit Information
                                     </p>
@@ -139,15 +139,48 @@
                                           >Unit Certification Expiration
                                           Date</label
                                         >
-                                        <v-select
-                                          ref="editedItem.expired"
-                                          class="form_edit_select"
-                                          v-model="editedItem.expired"
-                                          :items="expired"
-                                          label="Enter unit certification expiration date"
-                                          solo
-                                          hide-details="auto"
-                                        ></v-select>
+                                        <v-menu
+                                          content-class="date_single_range"
+                                          ref="menu"
+                                          v-model="menu"
+                                          :close-on-content-click="false"
+                                          :return-value.sync="expired"
+                                          transition="scale-transition"
+                                          min-width="auto"
+                                        >
+                                          <template
+                                            v-slot:activator="{ on, attrs }"
+                                          >
+                                            <v-text-field
+                                              class="form_edit single_date"
+                                              v-model="expired"
+                                              readonly
+                                              v-bind="attrs"
+                                              v-on="on"
+                                              hide-details="auto"
+                                              outlined
+                                              append-icon="mdi-menu-down"
+                                            ></v-text-field>
+                                          </template>
+                                          <v-date-picker
+                                            v-model="expired"
+                                            @change="dateChange(expired)"
+                                            no-title
+                                            scrollable
+                                            color="color_current_date"
+                                          >
+                                            <v-spacer></v-spacer>
+                                            <v-btn text @click="menu = false">
+                                              Cancel
+                                            </v-btn>
+                                            <v-btn
+                                              text
+                                              @click="$refs.menu.save(expired)"
+                                            >
+                                              OK
+                                            </v-btn>
+                                          </v-date-picker>
+                                        </v-menu>
                                       </v-col>
                                       <v-col cols="12">
                                         <label class="title_field"
@@ -164,7 +197,7 @@
                                       </v-col>
                                     </v-row>
                                   </v-col>
-                                  <v-col cols="12" md="4">
+                                  <v-col cols="12" md="6">
                                     <p class="title_head_newDevice">
                                       Protocol Variables
                                     </p>
@@ -182,6 +215,119 @@
                                           solo
                                           hide-details="auto"
                                         ></v-select>
+                                      </v-col>
+                                      <!-- ModBus RTU -->
+                                      <v-col cols="12">
+                                        <label class="title_field">Port</label>
+                                        <v-text-field
+                                          ref="editedItem.port_rtu"
+                                          class="form_edit"
+                                          v-model="editedItem.port_rtu"
+                                          label="0"
+                                          solo
+                                          hide-details="auto"
+                                          placeholder="0"
+                                          required
+                                        ></v-text-field>
+                                      </v-col>
+                                      <v-col cols="6">
+                                        <label class="title_field"
+                                          >Baud Rate</label
+                                        >
+                                        <v-text-field
+                                          ref="editedItem.baud_rate"
+                                          class="form_edit"
+                                          v-model="editedItem.baud_rate"
+                                          label="0"
+                                          solo
+                                          hide-details="auto"
+                                          placeholder="0"
+                                          required
+                                        ></v-text-field>
+                                      </v-col>
+                                      <v-col cols="6">
+                                        <label class="title_field"
+                                          >Data Bits</label
+                                        >
+                                        <v-text-field
+                                          ref="editedItem.data_bits"
+                                          class="form_edit"
+                                          v-model="editedItem.data_bits"
+                                          label="1"
+                                          solo
+                                          hide-details="auto"
+                                          placeholder="1"
+                                          required
+                                        ></v-text-field>
+                                      </v-col>
+                                      <v-col cols="6">
+                                        <label class="title_field"
+                                          >Parity</label
+                                        >
+                                        <v-select
+                                          ref="editedItem.parity"
+                                          class="form_edit_select"
+                                          v-model="editedItem.parity"
+                                          :items="parity"
+                                          label="None"
+                                          solo
+                                          hide-details="auto"
+                                        ></v-select>
+                                      </v-col>
+                                      <v-col cols="6">
+                                        <label class="title_field"
+                                          >Stop Bits</label
+                                        >
+                                        <v-text-field
+                                          ref="editedItem.stop_bits"
+                                          class="form_edit"
+                                          v-model="editedItem.stop_bits"
+                                          label="2"
+                                          solo
+                                          hide-details="auto"
+                                          placeholder="2"
+                                          required
+                                        ></v-text-field>
+                                      </v-col>
+                                      <!-- End ModBus RTU -->
+
+                                      <!-- ModBusTCP -->
+                                      <v-col cols="12">
+                                        <label class="title_field">Host</label>
+                                        <v-text-field
+                                          ref="editedItem.host"
+                                          class="form_edit"
+                                          v-model="editedItem.host"
+                                          label="192.168.0.1"
+                                          solo
+                                          hide-details="auto"
+                                          placeholder="192.168.0.1"
+                                          required
+                                        ></v-text-field>
+                                      </v-col>
+                                      <v-col cols="12">
+                                        <label class="title_field">Port</label>
+                                        <v-text-field
+                                          ref="editedItem.port_tcp"
+                                          class="form_edit"
+                                          v-model="editedItem.port_tcp"
+                                          label="1"
+                                          solo
+                                          hide-details="auto"
+                                          placeholder="1"
+                                          required
+                                        ></v-text-field>
+                                      </v-col>
+                                      <!-- End ModBus TCP -->
+                                      <v-col cols="12">
+                                        <p>
+                                          Setting up
+                                          <span
+                                            >Unit
+                                            <br />
+                                            498232-sdwqey-129102
+                                          </span>
+                                        </p>
                                       </v-col>
                                     </v-row>
                                   </v-col>
@@ -490,6 +636,10 @@ export default {
   },
   data: () => ({
     // bell: false,
+    expired: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .substr(0, 10),
+    // expired: new Date().toISOString().substr(0, 10),
     dialogAddEditUnit: false,
     dialogSeeMore: false,
     dialogDelete: false,
@@ -502,9 +652,9 @@ export default {
       { title: "Home", icon: "mdi-view-dashboard" },
       { title: "About", icon: "mdi-forum" }
     ],
-    expired: ["Test1", "Test2", "Test3"],
+    // expired: ["Test1", "Test2", "Test3"],
     protocol: ["Test1", "Test2", "Test3"],
-    links: ["Home", "Contacts", "Settings"],
+    parity: ["Test1", "Test2", "Test3"],
     headers: [
       {
         text: "Name",
@@ -517,7 +667,6 @@ export default {
       { text: "Expired", value: "expired" },
       { text: "Desc", value: "desc" },
       { text: "Protocol", value: "protocol" },
-      { text: "", value: "notify", sortable: false },
       { text: "", value: "actions", sortable: false }
     ],
     unit_list: [],
@@ -529,7 +678,14 @@ export default {
       longitude: null,
       expired: null,
       desc: null,
-      protocol: null
+      protocol: null,
+      port_rtu: null,
+      port_tcp: null,
+      baud_rate: null,
+      data_bits: null,
+      parity: null,
+      stop_bits: null,
+      host: null
     },
     defaultItem: {
       name: null,
@@ -538,7 +694,14 @@ export default {
       longitude: null,
       expired: null,
       desc: null,
-      protocol: null
+      protocol: null,
+      port_rtu: null,
+      port_tcp: null,
+      baud_rate: null,
+      data_bits: null,
+      parity: null,
+      stop_bits: null,
+      host: null
     },
     loadingAddUser: false,
     loadingGetUser: false
@@ -644,6 +807,9 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+    dateChange(val) {
+      console.log(val);
     }
   }
 };
