@@ -71,19 +71,25 @@
                             Cancel
                           </v-btn>
                           <v-btn text @click="$refs.menu.save(dates)">
-                            <!-- <v-btn text @click="getSensorMeasurements()"> -->
                             OK
                           </v-btn>
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-col cols="12">
+                    <v-col cols="12" v-if="!this.loadingGrafik">
                       <apexchart
                         id="vuechart-example"
                         type="area"
                         :options="options"
                         :series="series"
                       ></apexchart>
+                    </v-col>
+                    <v-col cols="12" v-else>
+                      <v-skeleton-loader
+                        class="mx-auto"
+                        max-width="auto"
+                        type="card"
+                      ></v-skeleton-loader>
                     </v-col>
                   </v-row>
                 </v-col>
@@ -222,12 +228,17 @@ export default {
   name: "Homepage",
   middleware: "auth",
   data: () => ({
-    // current_date: new Date().toISOString().substr(0, 10),
-    // toggle_dateRange: true,
-    dates: ["2021-06-16", "2021-06-16"],
+    dates: [
+      // new Date().toISOString().split('T')[0], 
+      // new Date().toISOString().split('T')[0]
+      "2021-06-16",
+      "2021-06-16"
+    ],
+    dateRangeText: null,
     menu: false,
     log: [],
     items: [],
+    parameter: null,
     Unit: ["Unit 01"],
     Device: ["Sensors"],
     options: {
@@ -327,7 +338,7 @@ export default {
         enabled: false
       },
       xaxis: {
-        type: "numeric",
+        type: "string",
         categories: [""],
         labels: {
           show: true
@@ -361,21 +372,8 @@ export default {
     timestamps1: new Date().getTime(),
     timestamps2: new Date().getTime()
   }),
-  // apollo : {
-  //   units : {
-  //     query : SENSOR_MEASUREMENTS_QUERY,
-  //     variables: {
-  //       "id": []
-  //     }
-  //   }
-
-  // },
-  computed: {
-    dateRangeText() {
-      return this.dates.join(" ~ ");
-    }
-  },
   mounted() {
+    this.dateRangeText = this.dates.join(' ~ ')
     this.getSensors();
     this.getLogSummary();
     var arr1 = this.dates[0];
@@ -423,26 +421,54 @@ export default {
               return lastVal;
             });
 
-            res.data.units[0].sensors.map((result, index) => {
-              this.items.push({
-                title: result.parameter,
-                unit: res.data.units[0].name,
-                desc: "",
-                size: `${loopSensors[index].toFixed(2)} ${
-                  result.measurementUnit !== null ? result.measurementUnit : ""
-                }`,
-                color: `${
-                  loopSensors[index] >= result.outputHigh
-                    ? `red`
-                    : loopSensors[index] >= result.thresholdHigh
-                    ? "yellow"
-                    : ""
-                }`
+            if (this.items.length > 0) {
+              this.items = []
+              res.data.units[0].sensors.map((result, index) => {
+                this.items.push({
+                  title: result.parameter,
+                  unit: res.data.units[0].name,
+                  desc: "",
+                  size: `${loopSensors[index].toFixed(0)} ${
+                    result.measurementUnit !== null ? result.measurementUnit : ""
+                  }`,
+                  color: `${
+                    loopSensors[index] >= result.outputHigh
+                      ? `red`
+                      : loopSensors[index] >= result.thresholdHigh
+                      ? "yellow"
+                      : ""
+                  }`
+                });
               });
-            });
+            } else {
+              res.data.units[0].sensors.map((result, index) => {
+                this.items.push({
+                  title: result.parameter,
+                  unit: res.data.units[0].name,
+                  desc: "",
+                  size: `${loopSensors[index].toFixed(0)} ${
+                    result.measurementUnit !== null ? result.measurementUnit : ""
+                  }`,
+                  color: `${
+                    loopSensors[index] >= result.outputHigh
+                      ? `red`
+                      : loopSensors[index] >= result.thresholdHigh
+                      ? "yellow"
+                      : ""
+                  }`
+                });
+              });
+            }
             this.loadingSensors = false;
           }
-          this.getGraphicSensors(this.items[0]);
+          if (this.parameter !== null) {
+            this.items.filter(e => e.title === this.parameter.title).map(result => {
+              this.parameter = result
+            })
+          }else{
+            this.parameter = this.items[0]
+          }
+          this.getGraphicSensors(this.parameter);
         }
       } catch (err) {
         console.log(err);
@@ -451,6 +477,7 @@ export default {
       }
     },
     onClickSensors(params) {
+      this.parameter = params
       this.getGraphicSensors(params);
     },
     async getSensorMeasurements(params) {
@@ -464,7 +491,6 @@ export default {
             parameters: [params]
           }
         });
-
         if (res) {
           this.loadingGrafik = false;
           return res;
@@ -506,6 +532,7 @@ export default {
       }
     },
     dateChange(val) {
+      // this.menu = false
       var arr1 = val[0];
       arr1 = arr1.split("-");
       var newDate = new Date(
@@ -529,44 +556,48 @@ export default {
         59,
         59
       ).getTime();
-      this.timestamps2 = newDate2;
-
-      this.getGraphicSensors();
+      this.timestamps2 = newDate2
+      this.dates = [
+        `${arr1[0]}-${arr1[1]}-${arr1[2]}`,
+        `${arr2[0]}-${arr2[1]}-${arr2[2]}`
+      ]
+      this.dateRangeText = this.dates.join(' ~ ')
+      this.getGraphicSensors(this.parameter)
+      this.dataGrafik = this.parameter
+      this.getSensors()
     },
     async getGraphicSensors(params) {
       if (params === undefined) {
         params = this.dataGrafik;
       }
-      let res = await this.getSensorMeasurements(params.title);
-      this.dataGrafik = params;
-      // console.log(res.data.sensorMeasurements[0].values)
-      let value = res.data.sensorMeasurements[0].values;
-      let time = res.data.sensorMeasurements[0].timestamps;
-      let data = [];
-      let day = [];
-      let month = [];
-      let year = [];
-      var tanggal = [];
-      for (let i = 0; i < value.length; i++) {
-        day[i] = new Date(time[i] * 1000).toString();
-        // month[i] = new Date(time[i] * 1000).getMonth()
-        // year[i] = new Date(time[i] * 1000).getFullYear()
-        // tanggal.push(
-        //   day[i]+'-'+month[i]+'-'+year[i]
-        // )
-        data.push({
-          x: day[i],
-          y: value[i].toFixed(2)
-        });
-        console.log(data)
-      }
-      this.series = [
-        {
-          name: "Values",
-          data: data
+      try {
+        this.loadingGrafik = true
+        let res = await this.getSensorMeasurements(params.title);
+        this.dataGrafik = params;
+        // console.log(res.data.sensorMeasurements[0].values)
+        let value = res.data.sensorMeasurements[0].values;
+        let time = res.data.sensorMeasurements[0].timestamps;
+        let data = [];
+        let day = [];
+        for (let i = 0; i < value.length; i++) {
+          day[i] = new Date(time[i] * 1000);
+          data.push({
+            x: new Intl.DateTimeFormat(['ban', 'id']).format(day[i]),
+            y: value[i].toFixed(2)
+          });
         }
-      ];
-      this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
+        this.series = [
+          {
+            name: "Values",
+            data: data
+          }
+        ];
+        this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
+        this.loadingGrafik = false
+      } catch (error) {
+        console.log(error)
+        this.loadingGrafik = false;
+      }
     }
   }
 };
