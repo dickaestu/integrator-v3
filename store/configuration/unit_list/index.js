@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { ModbusTCPCore, ModbusRTUCore } from './fragments'
 
 export const state = () => ({
     unitList : null,
@@ -6,6 +7,8 @@ export const state = () => ({
 })
 
 const GET_UNIT_LIST = gql`
+    ${ModbusTCPCore}
+    ${ModbusRTUCore}
     query units ($id: [ID!]) {
         units (id: $id) {
             id
@@ -31,6 +34,10 @@ const GET_UNIT_LIST = gql`
                 thresholdLow
                 thresholdHigh
                 customCalibration
+            }
+            config {
+              ...ModbusRTUCore
+              ...ModbusTCPCore
             }
         }
     }
