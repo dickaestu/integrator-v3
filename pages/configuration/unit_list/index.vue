@@ -446,70 +446,6 @@
                                   </div>
                                 </v-col>
                               </v-row>
-                              <!-- <v-row>
-                                  <v-col cols="12">
-                                  <p class="mb-0">Controllers</p>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                              </v-row>
-                              <v-row>
-                                  <v-col cols="12">
-                                  <p class="mb-0">Actuators</p>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                                  <v-col cols="2" class="pt-0">
-                                  <div class="btnBgColor">BOD5</div>
-                                  </v-col>
-                              </v-row> -->
                             </v-container>
                           </v-card-text>
                         </v-card>
@@ -759,7 +695,6 @@ export default {
     },
     handleDialogSeeMore(params) {
       this.dialogSeeMore = true;
-      console.log(params);
       this.dataDialogSeeMore = params;
     },
     editItem(item) {
