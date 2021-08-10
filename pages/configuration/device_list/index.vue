@@ -421,15 +421,15 @@
                                           class="form_edit"
                                           label="Insert calibration equation here"
                                           placeholder="Insert calibration equation here"
+                                          hide-details="auto"
                                         ></v-textarea>
                                       </v-col>
                                       <v-col cols="12">
-                                        <p>
-                                          Setting up
-                                          <span
-                                            >Device UUID
-                                            <br />
-                                            498232-sdwqey-129102
+                                        <p class="uuid">
+                                          Setting up Device UUID
+                                          <br />
+                                          <span>
+                                            fc78835c-ad79-41ad-8a4f-20a725ae012e
                                           </span>
                                         </p>
                                       </v-col>

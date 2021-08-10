@@ -66,6 +66,13 @@ body {
 
 .v-application {
   font-family: "Inter", sans-serif;
+  .uuid {
+    color: $musa_green_dark_text;
+    font-weight: 400;
+    span {
+      font-weight: 600;
+    }
+  }
   a {
     text-decoration: none;
   }

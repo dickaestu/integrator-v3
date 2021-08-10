@@ -214,118 +214,133 @@
                                           label="Select Protocol"
                                           solo
                                           hide-details="auto"
+                                          v-on:change="ShowHideProtocol()"
                                         ></v-select>
                                       </v-col>
                                       <!-- ModBus RTU -->
-                                      <v-col cols="12">
-                                        <label class="title_field">Port</label>
-                                        <v-text-field
-                                          ref="editedItem.port_rtu"
-                                          class="form_edit"
-                                          v-model="editedItem.port_rtu"
-                                          label="0"
-                                          solo
-                                          hide-details="auto"
-                                          placeholder="0"
-                                          required
-                                        ></v-text-field>
-                                      </v-col>
-                                      <v-col cols="6">
-                                        <label class="title_field"
-                                          >Baud Rate</label
-                                        >
-                                        <v-text-field
-                                          ref="editedItem.baud_rate"
-                                          class="form_edit"
-                                          v-model="editedItem.baud_rate"
-                                          label="0"
-                                          solo
-                                          hide-details="auto"
-                                          placeholder="0"
-                                          required
-                                        ></v-text-field>
-                                      </v-col>
-                                      <v-col cols="6">
-                                        <label class="title_field"
-                                          >Data Bits</label
-                                        >
-                                        <v-text-field
-                                          ref="editedItem.data_bits"
-                                          class="form_edit"
-                                          v-model="editedItem.data_bits"
-                                          label="1"
-                                          solo
-                                          hide-details="auto"
-                                          placeholder="1"
-                                          required
-                                        ></v-text-field>
-                                      </v-col>
-                                      <v-col cols="6">
-                                        <label class="title_field"
-                                          >Parity</label
-                                        >
-                                        <v-select
-                                          ref="editedItem.parity"
-                                          class="form_edit_select"
-                                          v-model="editedItem.parity"
-                                          :items="parity"
-                                          label="None"
-                                          solo
-                                          hide-details="auto"
-                                        ></v-select>
-                                      </v-col>
-                                      <v-col cols="6">
-                                        <label class="title_field"
-                                          >Stop Bits</label
-                                        >
-                                        <v-text-field
-                                          ref="editedItem.stop_bits"
-                                          class="form_edit"
-                                          v-model="editedItem.stop_bits"
-                                          label="2"
-                                          solo
-                                          hide-details="auto"
-                                          placeholder="2"
-                                          required
-                                        ></v-text-field>
+                                      <v-col cols="12" v-if="modbusRTU">
+                                        <v-row>
+                                          <v-col cols="12">
+                                            <label class="title_field"
+                                              >Port</label
+                                            >
+                                            <v-text-field
+                                              ref="editedItem.port_rtu"
+                                              class="form_edit"
+                                              v-model="editedItem.port_rtu"
+                                              label="0"
+                                              solo
+                                              hide-details="auto"
+                                              placeholder="0"
+                                              required
+                                            ></v-text-field>
+                                          </v-col>
+                                          <v-col cols="6">
+                                            <label class="title_field"
+                                              >Baud Rate</label
+                                            >
+                                            <v-text-field
+                                              ref="editedItem.baud_rate"
+                                              class="form_edit"
+                                              v-model="editedItem.baud_rate"
+                                              label="0"
+                                              solo
+                                              hide-details="auto"
+                                              placeholder="0"
+                                              required
+                                            ></v-text-field>
+                                          </v-col>
+                                          <v-col cols="6">
+                                            <label class="title_field"
+                                              >Data Bits</label
+                                            >
+                                            <v-text-field
+                                              ref="editedItem.data_bits"
+                                              class="form_edit"
+                                              v-model="editedItem.data_bits"
+                                              label="1"
+                                              solo
+                                              hide-details="auto"
+                                              placeholder="1"
+                                              required
+                                            ></v-text-field>
+                                          </v-col>
+                                          <v-col cols="6">
+                                            <label class="title_field"
+                                              >Parity</label
+                                            >
+                                            <v-select
+                                              ref="editedItem.parity"
+                                              class="form_edit_select"
+                                              v-model="editedItem.parity"
+                                              :items="parity"
+                                              label="None"
+                                              solo
+                                              hide-details="auto"
+                                            ></v-select>
+                                          </v-col>
+                                          <v-col cols="6">
+                                            <label class="title_field"
+                                              >Stop Bits</label
+                                            >
+                                            <v-text-field
+                                              ref="editedItem.stop_bits"
+                                              class="form_edit"
+                                              v-model="editedItem.stop_bits"
+                                              label="2"
+                                              solo
+                                              hide-details="auto"
+                                              placeholder="2"
+                                              required
+                                            ></v-text-field>
+                                          </v-col>
+                                        </v-row>
                                       </v-col>
                                       <!-- End ModBus RTU -->
 
                                       <!-- ModBusTCP -->
-                                      <v-col cols="12">
-                                        <label class="title_field">Host</label>
-                                        <v-text-field
-                                          ref="editedItem.host"
-                                          class="form_edit"
-                                          v-model="editedItem.host"
-                                          label="192.168.0.1"
-                                          solo
-                                          hide-details="auto"
-                                          placeholder="192.168.0.1"
-                                          required
-                                        ></v-text-field>
-                                      </v-col>
-                                      <v-col cols="12">
-                                        <label class="title_field">Port</label>
-                                        <v-text-field
-                                          ref="editedItem.port_tcp"
-                                          class="form_edit"
-                                          v-model="editedItem.port_tcp"
-                                          label="1"
-                                          solo
-                                          hide-details="auto"
-                                          placeholder="1"
-                                          required
-                                        ></v-text-field>
+                                      <v-col cols="12" v-else-if="modbusTCP">
+                                        <v-row>
+                                          <v-col cols="12">
+                                            <label class="title_field"
+                                              >Host</label
+                                            >
+                                            <v-text-field
+                                              ref="editedItem.host"
+                                              class="form_edit"
+                                              v-model="editedItem.host"
+                                              label="192.168.0.1"
+                                              solo
+                                              hide-details="auto"
+                                              placeholder="192.168.0.1"
+                                              required
+                                            ></v-text-field>
+                                          </v-col>
+                                          <v-col cols="12">
+                                            <label class="title_field"
+                                              >Port</label
+                                            >
+                                            <v-text-field
+                                              ref="editedItem.port_tcp"
+                                              class="form_edit"
+                                              v-model="editedItem.port_tcp"
+                                              label="1"
+                                              solo
+                                              hide-details="auto"
+                                              placeholder="1"
+                                              required
+                                            ></v-text-field>
+                                          </v-col>
+                                        </v-row>
                                       </v-col>
                                       <!-- End ModBus TCP -->
                                       <v-col cols="12">
-                                        <p>
+                                        <p class="uuid">
                                           Setting up
                                           <span
                                             >Unit
                                             <br />
-                                            498232-sdwqey-129102
+                                            fc78835c-ad79-41ad-8a4f-20a725ae012e
                                           </span>
                                         </p>
                                       </v-col>
@@ -584,12 +599,17 @@ export default {
     toastMsgAddUser: "",
     toast: false,
     errorMessages: "",
+    modbusRTU: false,
+    modbusTCP: false,
     items: [
       { title: "Home", icon: "mdi-view-dashboard" },
       { title: "About", icon: "mdi-forum" }
     ],
     // expired: ["Test1", "Test2", "Test3"],
-    protocol: ["Modbus RTU", "Modbus TCP"],
+    protocol: [
+      { text: "Modbus RTU", value: "rtu" },
+      { text: "Modbus TCP", value: "tcp" }
+    ],
     parity: ["Even", "Odd"],
     headers: [
       {
@@ -660,6 +680,15 @@ export default {
       this.errorMessages = "";
     }
   },
+
+  // mounted() {
+  //   // ShowHideDiv(i) {
+  //   var modbusRTU = document.getElementById("modbusRTU");
+  //   var modbusTCP = document.getElementById("modbusTCP");
+  //   modbusTCP.hide();
+  //   modbusRTU.hide();
+  //   // }
+  // },
 
   created() {
     this.getUnitList();
@@ -745,6 +774,15 @@ export default {
     },
     dateChange(val) {
       console.log(val);
+    },
+    ShowHideProtocol() {
+      if (this.editedItem.protocol === "rtu") {
+        this.modbusTCP = false;
+        this.modbusRTU = true;
+      } else {
+        this.modbusTCP = true;
+        this.modbusRTU = false;
+      }
     }
   }
 };
