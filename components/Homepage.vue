@@ -3,8 +3,15 @@
     <section id="content-one">
       <v-container>
         <v-row class="mb-5 hover_card">
-          <div class="pa-3 w-25">
-            <HomeLog />
+          <div class="pa-3 w-25" v-if="!this.loading">
+            <HomeLog :summaryLogTime="summaryLogTime" />
+          </div>
+          <div class="pa-3 w-25" v-else>
+            <v-skeleton-loader
+              class="mx-auto"
+              max-width="auto"
+              type="card"
+            ></v-skeleton-loader>
           </div>
           <div class="pa-3 w-75">
             <v-card class="pa-5 card-right">
@@ -13,24 +20,26 @@
                   <p class="ph mb-0">{{ dataGrafik.title }}</p>
                   <p class="unit">{{ dataGrafik.size }}</p>
                   <div class="d-flex justify-space-between">
-                    <p class="subtitle mb-0">{{ dataGrafik.unit }}</p>
-                    <p class="text mb-0">01</p>
+                    <p class="subtitle mb-0">Unit Name</p>
+                    <!-- ambil dari unit name -->
+                    <p class="text mb-0">{{ dataGrafik.unit }}</p>
                   </div>
                   <div class="d-flex justify-space-between">
                     <p class="subtitle">Device ID</p>
-                    <p class="text">SW-02</p>
+                    <!-- ambil dari parameter -->
+                    <p class="text">{{ dataGrafik.parameter}}</p> 
                   </div>
                   <div class="d-flex justify-space-between">
                     <p class="subtitle mb-0">Min</p>
-                    <p class="text mb-0">4</p>
+                    <p class="text mb-0">{{ dataGrafik.minValue }}</p>
                   </div>
                   <div class="d-flex justify-space-between">
                     <p class="subtitle mb-0">Max</p>
-                    <p class="text mb-0">9</p>
+                    <p class="text mb-0">{{ dataGrafik.maxValue }}</p>
                   </div>
                   <div class="d-flex justify-space-between">
                     <p class="subtitle mb-0">Median</p>
-                    <p class="text mb-0">6.8</p>
+                    <p class="text mb-0">{{ dataGrafik.medianValue }}</p>
                   </div>
                 </v-col>
                 <v-col cols="12" md="9">
@@ -76,7 +85,7 @@
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-col cols="12" v-if="!this.loadingGrafik">
+                    <v-col cols="12" v-if="!this.loading">
                       <apexchart
                         id="vuechart-example"
                         type="area"
@@ -117,7 +126,7 @@
             ></v-select>
           </v-col>
         </v-row>
-        <v-row v-if="!this.loadingSensors">
+        <v-row v-if="!this.loading">
           <v-col
             cols="12"
             sm="6"
@@ -165,6 +174,7 @@
 </template>
 
 <script>
+import HomeLog from './home/Log.vue'
 import gql from "graphql-tag";
 const UNITS_SENSORS = gql`
   query units($id: [ID!]) {
@@ -226,6 +236,9 @@ const LOGS_SUMMARY = gql`
 `;
 export default {
   name: "Homepage",
+  components: {
+    HomeLog
+  },
   middleware: "auth",
   data: () => ({
     dates: [
@@ -366,15 +379,18 @@ export default {
     series: [],
     yAxisGrafik: [],
     dataGrafik: {},
-    loadingSensors: false,
-    loadingGrafik: false,
-    loadingLogsSummary: false,
+    loading: false,
     timestamps1: new Date().getTime(),
-    timestamps2: new Date().getTime()
+    timestamps2: new Date().getTime(),
+    minValueGraphic: 0,
+    maxValueGraphic: 0,
+    medianValueGraphic: 0,
+    summaryLogTime: null
   }),
   mounted() {
     this.dateRangeText = this.dates.join(' ~ ')
     this.getSensors();
+    this.getLastMeasurementTime();
     this.getLogSummary();
     var arr1 = this.dates[0];
     arr1 = arr1.split("-");
@@ -396,7 +412,7 @@ export default {
   methods: {
     async getSensors() {
       try {
-        this.loadingSensors = true;
+        this.loading = true;
         const res = await this.$apollo.query({
           query: UNITS_SENSORS,
           variables: {
@@ -418,6 +434,9 @@ export default {
             const loopSensors = dataSensors.map(sensors => {
               const val = sensors.data.sensorMeasurements[0].values;
               const lastVal = val[val.length - 1];
+              this.minValueGraphic = Math.min(...val)
+              this.maxValueGraphic = Math.max(...val)
+              this.medianValueGraphic = this.medianof2Arr(val)
               return lastVal;
             });
 
@@ -425,41 +444,57 @@ export default {
               this.items = []
               res.data.units[0].sensors.map((result, index) => {
                 this.items.push({
-                  title: result.parameter,
+                  title: result.name,
+                  parameter: result.parameter,
                   unit: res.data.units[0].name,
                   desc: "",
                   size: `${loopSensors[index].toFixed(0)} ${
                     result.measurementUnit !== null ? result.measurementUnit : ""
                   }`,
                   color: `${
-                    loopSensors[index] >= result.outputHigh
-                      ? `red`
-                      : loopSensors[index] >= result.thresholdHigh
-                      ? "yellow"
-                      : ""
-                  }`
+                    result.outputHigh !== null ?
+                      loopSensors[index] >= result.outputHigh
+                        ? `red`
+                        : loopSensors[index] >= result.thresholdHigh
+                        ? "yellow"
+                        : ""
+                    :
+                      ""
+                  }`,
+                  minValue: this.minValueGraphic.toFixed(0),
+                  maxValue: this.maxValueGraphic.toFixed(0),
+                  medianValue: this.medianValueGraphic.toFixed(0)
                 });
               });
             } else {
               res.data.units[0].sensors.map((result, index) => {
                 this.items.push({
-                  title: result.parameter,
+                  title: result.name,
+                  parameter: result.parameter,
                   unit: res.data.units[0].name,
                   desc: "",
                   size: `${loopSensors[index].toFixed(0)} ${
                     result.measurementUnit !== null ? result.measurementUnit : ""
                   }`,
                   color: `${
-                    loopSensors[index] >= result.outputHigh
-                      ? `red`
-                      : loopSensors[index] >= result.thresholdHigh
-                      ? "yellow"
-                      : ""
-                  }`
+                    result.thresholdHigh !== null ?
+                      loopSensors[index] >= result.outputHigh
+                        ? `red`
+                        : loopSensors[index] >= result.thresholdHigh
+                        ? "yellow"
+                        : ""
+                    :
+                      loopSensors[index] >= result.outputHigh
+                        ? `red`
+                        : ""
+                  }`,
+                  minValue: this.minValueGraphic.toFixed(0),
+                  maxValue: this.maxValueGraphic.toFixed(0),
+                  medianValue: this.medianValueGraphic.toFixed(0)
                 });
               });
             }
-            this.loadingSensors = false;
+            this.loading = false;
           }
           if (this.parameter !== null) {
             this.items.filter(e => e.title === this.parameter.title).map(result => {
@@ -472,7 +507,7 @@ export default {
         }
       } catch (err) {
         console.log(err);
-        this.loadingSensors = false;
+        this.loading = false;
         // this.searchResults = [];
       }
     },
@@ -482,7 +517,7 @@ export default {
     },
     async getSensorMeasurements(params) {
       try {
-        this.loadingGrafik = true;
+        this.loading = true;
         const res = await this.$apollo.query({
           query: SENSORS_MEASUREMENTS,
           variables: {
@@ -492,25 +527,25 @@ export default {
           }
         });
         if (res) {
-          this.loadingGrafik = false;
+          this.loading = false;
           return res;
         }
       } catch (err) {
         console.log(err);
-        this.loadingGrafik = false;
+        this.loading = false;
         // this.searchResults = [];
       }
     },
     async getLogSummary() {
       try {
-        this.loadingLogsSummary = true;
+        this.loading = true;
         const res = await this.$apollo.query({
           query: LOGS_SUMMARY,
           variables: {}
         });
 
         if (res) {
-          this.loadingLogsSummary = false;
+          this.loading = false;
           let result = res.data.todayLogSummary;
           result.map(items => {
             this.log.push({
@@ -527,7 +562,7 @@ export default {
         }
       } catch (err) {
         console.log(err);
-        this.loadingLogsSummary = false;
+        this.loading = false;
         // this.searchResults = [];
       }
     },
@@ -571,8 +606,8 @@ export default {
         params = this.dataGrafik;
       }
       try {
-        this.loadingGrafik = true
-        let res = await this.getSensorMeasurements(params.title);
+        this.loading = true
+        let res = await this.getSensorMeasurements(params.parameter);
         this.dataGrafik = params;
         // console.log(res.data.sensorMeasurements[0].values)
         let value = res.data.sensorMeasurements[0].values;
@@ -593,10 +628,46 @@ export default {
           }
         ];
         this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
-        this.loadingGrafik = false
+        this.loading = false
       } catch (error) {
         console.log(error)
-        this.loadingGrafik = false;
+        this.loading = false;
+      }
+    },
+    medianof2Arr(arr1) {
+        var concat = arr1;
+        concat = concat.sort(
+            function (a, b) { return a - b });
+  
+        // console.log(concat);
+        var length = concat.length;
+  
+        if (length % 2 == 1) {
+  
+            // If length is odd
+            // console.log(concat[(length / 2) - .5])
+            return concat[(length / 2) - .5]
+  
+        }
+        else {
+            // console.log((concat[length / 2] 
+            //     + concat[(length / 2) - 1]) / 2);
+                  
+            return (concat[length / 2] 
+                + concat[(length / 2) - 1]) / 2;
+        }
+    },
+    async getLastMeasurementTime(){
+      try {
+        this.loading = true
+        const res = await this.$store.dispatch(
+          "home/getLastMeasurementTime"
+        );
+        this.summaryLogTime = res.lastMeasurementTime
+        this.loading = false
+      } catch (error) {
+        this.loading = false
+        console.log(error)
       }
     }
   }

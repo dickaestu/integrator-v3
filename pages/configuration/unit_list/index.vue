@@ -38,6 +38,7 @@
                                       class="btnBgColor"
                                       v-bind="attrs"
                                       v-on="on"
+                                      disabled
                                     >
                                       <v-icon left>
                                         mdi-plus
@@ -51,6 +52,7 @@
                           </v-row>
                         </v-col>
                       </v-row>
+                      <!-- Create or Updaate Unit List -->
                       <v-dialog
                         content-class="edit_user_dialog"
                         v-model="dialogAddEditUnit"
@@ -370,6 +372,8 @@
                           </v-card>
                         </v-form>
                       </v-dialog>
+                      <!-- End -->
+                      <!-- Delete Unit List -->
                       <v-dialog
                         content-class="delete_user_dialog"
                         persistent
@@ -409,6 +413,7 @@
                           </v-container>
                         </v-card>
                       </v-dialog>
+                      <!-- End -->
                       <!-- Detail Unit List Dialog -->
                       <v-dialog
                         content-class="see_more_unit_list"
@@ -480,7 +485,7 @@
                                 >
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-end">
-                                      <v-menu>
+                                      <!-- <v-menu>
                                         <template
                                           v-slot:activator="{ on, attrs }"
                                         >
@@ -508,7 +513,7 @@
                                             </v-list-item-title>
                                           </v-list-item>
                                         </v-list>
-                                      </v-menu>
+                                      </v-menu> -->
                                     </div>
                                     <p class="title-card">
                                       {{ i.name }}

@@ -18,7 +18,7 @@
                 mdi-account-circle
               </v-icon>
             </v-avatar>
-            paksiyudha
+            {{ dataUser !== null ? dataUser.name : 'loading' }}
             <v-icon dark right>
               mdi-chevron-down
             </v-icon>
@@ -91,10 +91,10 @@
                     <p></p>
                   </div>
                   <div class="right">
-                    <p>Paksi Yudha Sasmita</p>
-                    <p>paksiyudhasasmita@gmail.com</p>
+                    <p>{{ dataUser !== null ? dataUser.name : 'loading' }}</p>
+                    <p>{{ dataUser !== null ? dataUser.email : 'loading' }}</p>
                     <v-chip color="#386d7a" dark>
-                      Admin
+                      {{ dataUser !== null ? dataUser.roles : 'loading' }}
                     </v-chip>
                     <br />
                     <v-btn class="btnBgColor mt-10" @click="openChangePass()"
@@ -295,6 +295,7 @@ export default {
     logo: require("~/assets/images/logo-white.svg"),
     user: require("~/assets/images/user.jpg"),
     musa: require("~/assets/images/musa-white.svg"),
+    dataUser: null,
     dialogAccount: false,
     dialogAccount2: false,
     dialogAccount3: false,
@@ -312,6 +313,13 @@ export default {
     toastMsgAddUser: "",
     toast: false
   }),
+  mounted(){
+    this.dataUser = {
+      name: this.$auth.user.name,
+      email: this.$auth.user.email,
+      roles: this.$auth.user.roles
+    }
+  },
   methods: {
     async logout() {
       await this.$auth.logout();

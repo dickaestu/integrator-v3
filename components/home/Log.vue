@@ -1,7 +1,7 @@
 <template>
   <v-card class="pa-5 card-left">
     <p class="subtitle mb-0">Last Update</p>
-    <p class="title mb-0">14-05-2020 08:00 AM</p>
+    <p class="title mb-0">{{ dateFormatSummary }}</p>
     <v-divider></v-divider>
     <p class="subtitle mb-0 mt-2">Log Summary</p>
     <p class="title mb-3">Last 24 Hours</p>
@@ -41,14 +41,30 @@ const LOGS_SUMMARY = gql`
 `;
 export default {
   name: "Log",
+  props: {
+    summaryLogTime : Number
+  },
   middleware: "auth",
   data: () => ({
     log: [],
     items: [],
-    loadingLogsSummary: false
+    loadingLogsSummary: false,
+    dateFormatSummary: null
   }),
   mounted() {
     this.getLogSummary();
+    const date = new Date(this.summaryLogTime*1000)
+    var options = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric', 
+      hour: 'numeric', 
+      minute: 'numeric', 
+      second: 'numeric', 
+      timeZone: 'Asia/Jakarta',
+    };
+    this.dateFormatSummary = new Intl.DateTimeFormat('ban-ID', options).format(date)
   },
   methods: {
     async getLogSummary() {

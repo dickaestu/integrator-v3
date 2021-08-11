@@ -32,7 +32,8 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <NuxtLink to="/configuration/device_list" class="link-route">
+      <!-- <NuxtLink to="/configuration/device_list" class="link-route"> -->
+      <NuxtLink to="#" class="link-route">
         <v-list-item-content>
           <v-list-item-title>
             Device List
@@ -46,7 +47,7 @@
           </v-list-item-title>
         </v-list-item-content>
       </NuxtLink>
-      <NuxtLink to="#error" class="link-route">
+      <NuxtLink to="#" class="link-route">
         <v-list-item-content class="mb-5">
           <v-list-item-title>
             Device Calibration

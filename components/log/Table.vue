@@ -58,7 +58,7 @@
         <v-col cols="6" sm="4" md="3" lg="2">
           <v-select
             hide-details="auto"
-            :items="Level"
+            :items="level"
             label="All Level"
             dense
             solo
@@ -114,7 +114,7 @@ const QUERY_LOGS = gql`
 export default {
   name: "Log",
   data: () => ({
-    date: new Date().toISOString().substr(0, 10),
+    date: new Date().toISOString().split('T')[0],
     menu: false,
     items: [],
     headers: [
@@ -125,11 +125,12 @@ export default {
     ],
     Type: ["Api"],
     level: ["Info", "Error"],
-    loading: false
+    loading: false,
+    timestamps1: null,
+    timestamps2: null,
   }),
   mounted() {
     this.getLogs();
-    console.log(this.date);
   },
   methods: {
     async getLogs() {
@@ -138,9 +139,14 @@ export default {
         const res = await this.$apollo.query({
           query: QUERY_LOGS,
           variables: {
-            startTime: null,
-            endTime: null,
-            type: [],
+            startTime: this.timestamps1 / 1000,
+            endTime: this.timestamps2 / 1000,
+            type: [
+              "measurement",
+              "data_transfer",
+              "iot",
+              "operation"
+            ],
             level: []
           }
         });
@@ -170,6 +176,32 @@ export default {
     },
     dateChange(val) {
       console.log(val);
+      // this.menu = false
+      var arr1 = val;
+      arr1 = arr1.split("-");
+      var newDate = new Date(
+        arr1[0],
+        arr1[1] - 1,
+        arr1[2],
+        0,
+        0,
+        1,
+        0
+      ).getTime();
+      this.timestamps1 = newDate;
+
+      var arr2 = val;
+      arr2 = arr2.split("-");
+      var newDate2 = new Date(
+        arr2[0],
+        arr2[1] - 1,
+        arr2[2],
+        23,
+        59,
+        59
+      ).getTime();
+      this.timestamps2 = newDate2
+      this.getLogs()
     }
   }
 };

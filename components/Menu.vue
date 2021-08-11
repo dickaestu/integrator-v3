@@ -55,11 +55,11 @@ export default {
         title: "Configuration",
         icon: "mdi-cog"
       },
-      {
-        link: "#error",
-        title: "Save Files",
-        icon: "mdi-folder"
-      }
+      // {
+      //   link: "#error",
+      //   title: "Save Files",
+      //   icon: "mdi-folder"
+      // }
     ]
   })
 };
