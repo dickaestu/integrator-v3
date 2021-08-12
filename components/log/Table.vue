@@ -126,8 +126,8 @@ export default {
     Type: ["Api"],
     level: ["Info", "Error"],
     loading: false,
-    timestamps1: new Date().getTime(),
-    timestamps2: new Date().getTime(),
+    timestamps1: null,
+    timestamps2: null,
   }),
   mounted() {
     this.getLogs();

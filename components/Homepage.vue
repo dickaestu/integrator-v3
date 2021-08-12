@@ -354,7 +354,7 @@ export default {
         type: "string",
         categories: [""],
         labels: {
-          show: true
+          show: false
         },
         axisBorder: {
           show: true
@@ -435,9 +435,24 @@ export default {
             const loopSensors = dataSensors.map(sensors => {
               const val = sensors.data.sensorMeasurements[0].values;
               const lastVal = val[val.length - 1];
-              this.minValueGraphic = Math.min(...val)
-              this.maxValueGraphic = Math.max(...val)
-              this.medianValueGraphic = this.medianof2Arr(val)
+              return lastVal;
+            });
+
+            const dataMin = dataSensors.map(sensors => {
+              const val = sensors.data.sensorMeasurements[0].values;
+              const lastVal = Math.min(...val).toFixed(0)
+              return lastVal;
+            });
+
+            const dataMax = dataSensors.map(sensors => {
+              const val = sensors.data.sensorMeasurements[0].values;
+              const lastVal = Math.max(...val).toFixed(0)
+              return lastVal;
+            });
+
+            const dataMedian = dataSensors.map(sensors => {
+              const val = sensors.data.sensorMeasurements[0].values;
+              const lastVal = this.medianof2Arr(val).toFixed(0)
               return lastVal;
             });
 
@@ -453,18 +468,20 @@ export default {
                     result.measurementUnit !== null ? result.measurementUnit : ""
                   }`,
                   color: `${
-                    result.outputHigh !== null ?
+                    result.thresholdHigh !== null ?
                       loopSensors[index] >= result.outputHigh
                         ? `red`
                         : loopSensors[index] >= result.thresholdHigh
                         ? "yellow"
                         : ""
                     :
-                      ""
+                      loopSensors[index] >= result.outputHigh
+                        ? `red`
+                        : ""
                   }`,
-                  minValue: this.minValueGraphic.toFixed(0),
-                  maxValue: this.maxValueGraphic.toFixed(0),
-                  medianValue: this.medianValueGraphic.toFixed(0)
+                  minValue: dataMin[index],
+                  maxValue: dataMax[index],
+                  medianValue: dataMedian[index]
                 });
               });
             } else {
@@ -489,9 +506,9 @@ export default {
                         ? `red`
                         : ""
                   }`,
-                  minValue: this.minValueGraphic.toFixed(0),
-                  maxValue: this.maxValueGraphic.toFixed(0),
-                  medianValue: this.medianValueGraphic.toFixed(0)
+                  minValue: dataMin[index],
+                  maxValue: dataMax[index],
+                  medianValue: dataMedian[index]
                 });
               });
             }
@@ -513,6 +530,7 @@ export default {
       }
     },
     onClickSensors(params) {
+      console.log(params)
       this.parameter = params
       this.getGraphicSensors(params);
     },
@@ -615,10 +633,19 @@ export default {
         let time = res.data.sensorMeasurements[0].timestamps;
         let data = [];
         let day = [];
+        var options = { 
+          year: 'numeric', 
+          month: 'numeric', 
+          day: 'numeric', 
+          hour: 'numeric', 
+          minute: 'numeric', 
+          timeZone: 'Asia/Jakarta',
+        };
         for (let i = 0; i < value.length; i++) {
+          // day[i] = new Intl.DateTimeFormat('ban-ID', options).format(new Date(time[i] * 1000));
           day[i] = new Date(time[i] * 1000);
           data.push({
-            x: new Intl.DateTimeFormat(['ban', 'id']).format(day[i]),
+            x: new Intl.DateTimeFormat('ban-ID', options).format(day[i]),
             y: value[i].toFixed(2)
           });
         }
@@ -677,7 +704,26 @@ export default {
   },
   created(){
     this.dataInterval = setInterval(() => {
-			this.getSensors()
+			this.dateRangeText = this.dates.join(' ~ ')
+      this.getSensors();
+      this.getLastMeasurementTime();
+      this.getLogSummary();
+      var arr1 = this.dates[0];
+      arr1 = arr1.split("-");
+      var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
+      this.timestamps1 = newDate;
+
+      var arr2 = this.dates[1];
+      arr2 = arr2.split("-");
+      var newDate2 = new Date(
+        arr2[0],
+        arr2[1] - 1,
+        arr2[2],
+        23,
+        59,
+        59
+      ).getTime();
+      this.timestamps2 = newDate2;
 		}, 60000)
   }
 };
