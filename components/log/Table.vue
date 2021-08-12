@@ -126,8 +126,8 @@ export default {
     Type: ["Api"],
     level: ["Info", "Error"],
     loading: false,
-    timestamps1: null,
-    timestamps2: null,
+    timestamps1: new Date().getTime(),
+    timestamps2: new Date().getTime(),
   }),
   mounted() {
     this.getLogs();
@@ -154,10 +154,20 @@ export default {
         if (res) {
           this.loading = false;
           let result = res.data.logs;
-
+          var options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: 'numeric', 
+                minute: 'numeric', 
+                second: 'numeric', 
+                timeZone: 'Asia/Jakarta',
+          };
           result.map(items => {
             this.items.push({
-              date: new Date(items.timestamp * 1000),
+              // date: new Date(items.timestamp * 1000),
+              date: new Intl.DateTimeFormat('ban-ID', options).format(new Date(items.timestamp * 1000)),
               type: items.type.toUpperCase(),
               level: items.level.toUpperCase(),
               desc: items.message
