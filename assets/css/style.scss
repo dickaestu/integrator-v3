@@ -1684,7 +1684,7 @@ body {
 }
 @media (min-width: 1260px) and (max-width: 1536px) {
   #content-one .w-75 .card-right {
-    max-height: 53vh;
+    max-height: 100%;
     overflow: hidden;
     overflow-y: auto;
   }

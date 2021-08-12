@@ -635,17 +635,19 @@ export default {
         let day = [];
         var options = { 
           year: 'numeric', 
-          month: 'numeric', 
+          month: 'long', 
           day: 'numeric', 
           hour: 'numeric', 
           minute: 'numeric', 
+          second: 'numeric',
           timeZone: 'Asia/Jakarta',
+          hour12: false,
         };
         for (let i = 0; i < value.length; i++) {
           // day[i] = new Intl.DateTimeFormat('ban-ID', options).format(new Date(time[i] * 1000));
           day[i] = new Date(time[i] * 1000);
           data.push({
-            x: new Intl.DateTimeFormat('ban-ID', options).format(day[i]),
+            x: new Intl.DateTimeFormat('ban-ID', options).format(day[i])+' WIB',
             y: value[i].toFixed(2)
           });
         }
