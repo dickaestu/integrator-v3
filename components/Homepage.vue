@@ -242,10 +242,10 @@ export default {
   middleware: "auth",
   data: () => ({
     dates: [
-      // new Date().toISOString().split('T')[0], 
-      // new Date().toISOString().split('T')[0]
-      "2021-06-16",
-      "2021-06-16"
+      new Date().toISOString().split('T')[0], 
+      new Date().toISOString().split('T')[0]
+      // "2021-06-16",
+      // "2021-06-16"
     ],
     dateRangeText: null,
     menu: false,
@@ -268,33 +268,33 @@ export default {
             offsetY: 0,
             width: "100%",
             yAxisIndex: 0,
-            label: {
-              borderWidth: 0,
-              borderRadius: 6,
-              text: "lower threshold: 6",
-              textAnchor: "center",
-              position: "left",
-              offsetX: 0,
-              offsetY: -15,
-              style: {
-                opacity: 0.5,
-                background: "#F0F2F4",
-                color: "#69747E;",
-                fontSize: "12px",
-                fontWeight: 400,
-                fontFamily: undefined,
-                cssClass: "apexcharts-yaxis-annotation-label",
-                padding: {
-                  left: 7,
-                  right: 7,
-                  top: 7,
-                  bottom: 7
-                }
-              }
-            }
+            // label: {
+            //   borderWidth: 0,
+            //   borderRadius: 6,
+            //   text: "lower threshold: ",
+            //   textAnchor: "center",
+            //   position: "left",
+            //   offsetX: 0,
+            //   offsetY: -15,
+            //   style: {
+            //     opacity: 0.5,
+            //     background: "#F0F2F4",
+            //     color: "#69747E;",
+            //     fontSize: "12px",
+            //     fontWeight: 400,
+            //     fontFamily: undefined,
+            //     cssClass: "apexcharts-yaxis-annotation-label",
+            //     padding: {
+            //       left: 7,
+            //       right: 7,
+            //       top: 7,
+            //       bottom: 7
+            //     }
+            //   }
+            // }
           },
           {
-            y: 100,
+            y: null,
             y2: null,
             strokeDashArray: 7,
             borderColor: "#FFD4A2",
@@ -303,30 +303,30 @@ export default {
             offsetY: 0,
             width: "100%",
             yAxisIndex: 0,
-            label: {
-              borderWidth: 0,
-              borderRadius: 6,
-              text: "upper threshold: 100",
-              textAnchor: "center",
-              position: "left",
-              offsetX: 0,
-              offsetY: -15,
-              style: {
-                opacity: 0.5,
-                background: "#F0F2F4",
-                color: "#69747E;",
-                fontSize: "12px",
-                fontWeight: 400,
-                fontFamily: undefined,
-                cssClass: "apexcharts-yaxis-annotation-label",
-                padding: {
-                  left: 7,
-                  right: 7,
-                  top: 7,
-                  bottom: 7
-                }
-              }
-            }
+            // label: {
+            //   borderWidth: 0,
+            //   borderRadius: 6,
+            //   text: "upper threshold:",
+            //   textAnchor: "center",
+            //   position: "left",
+            //   offsetX: 0,
+            //   offsetY: -15,
+            //   style: {
+            //     opacity: 0.5,
+            //     background: "#F0F2F4",
+            //     color: "#69747E;",
+            //     fontSize: "12px",
+            //     fontWeight: 400,
+            //     fontFamily: undefined,
+            //     cssClass: "apexcharts-yaxis-annotation-label",
+            //     padding: {
+            //       left: 7,
+            //       right: 7,
+            //       top: 7,
+            //       bottom: 7
+            //     }
+            //   }
+            // }
           }
         ]
       },
@@ -385,7 +385,8 @@ export default {
     minValueGraphic: 0,
     maxValueGraphic: 0,
     medianValueGraphic: 0,
-    summaryLogTime: null
+    summaryLogTime: null,
+    dataInterval: null
   }),
   mounted() {
     this.dateRangeText = this.dates.join(' ~ ')
@@ -448,7 +449,7 @@ export default {
                   parameter: result.parameter,
                   unit: res.data.units[0].name,
                   desc: "",
-                  size: `${loopSensors[index].toFixed(0)} ${
+                  size: `${loopSensors[index].toFixed(2)} ${
                     result.measurementUnit !== null ? result.measurementUnit : ""
                   }`,
                   color: `${
@@ -473,7 +474,7 @@ export default {
                   parameter: result.parameter,
                   unit: res.data.units[0].name,
                   desc: "",
-                  size: `${loopSensors[index].toFixed(0)} ${
+                  size: `${loopSensors[index].toFixed(2)} ${
                     result.measurementUnit !== null ? result.measurementUnit : ""
                   }`,
                   color: `${
@@ -636,8 +637,8 @@ export default {
     },
     medianof2Arr(arr1) {
         var concat = arr1;
-        concat = concat.sort(
-            function (a, b) { return a - b });
+        // concat = concat.sort(
+        //     function (a, b) { return a - b });
   
         // console.log(concat);
         var length = concat.length;
@@ -670,6 +671,14 @@ export default {
         console.log(error)
       }
     }
-  }
+  },
+  // beforeDestroy () {
+  //   clearInterval(this.dataInterval)
+  // },
+  // created(){
+  //   this.dataInterval = setInterval(() => {
+	// 		this.getSensors()
+	// 	}, 5000)
+  // }
 };
 </script>

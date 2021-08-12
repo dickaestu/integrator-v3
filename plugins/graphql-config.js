@@ -1,6 +1,6 @@
 export default () => {
     return {
-      httpEndpoint: 'https://musa-integrator-v3-sandbox-production.up.railway.app/api/graphql',
+      httpEndpoint: "http://34.101.78.75.nip.io/api/graphql",
   
       /*
        * For permanent authentication provide `getAuth` function.
