@@ -440,19 +440,19 @@ export default {
 
             const dataMin = dataSensors.map(sensors => {
               const val = sensors.data.sensorMeasurements[0].values;
-              const lastVal = Math.min(...val).toFixed(0)
+              const lastVal = Math.min(...val).toFixed(2)
               return lastVal;
             });
 
             const dataMax = dataSensors.map(sensors => {
               const val = sensors.data.sensorMeasurements[0].values;
-              const lastVal = Math.max(...val).toFixed(0)
+              const lastVal = Math.max(...val).toFixed(2)
               return lastVal;
             });
 
             const dataMedian = dataSensors.map(sensors => {
               const val = sensors.data.sensorMeasurements[0].values;
-              const lastVal = this.medianof2Arr(val).toFixed(0)
+              const lastVal = this.medianof2Arr(val).toFixed(2)
               return lastVal;
             });
 
