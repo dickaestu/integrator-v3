@@ -139,8 +139,8 @@ export default {
         const res = await this.$apollo.query({
           query: QUERY_LOGS,
           variables: {
-            startTime: this.timestamps1 / 1000,
-            endTime: this.timestamps2 / 1000,
+            startTime: this.timestamps1 !== null ? this.timestamps1 / 1000 : null,
+            endTime: this.timestamps2 !== null ? this.timestamps2 / 1000 : null,
             type: [
               "measurement",
               "data_transfer",
