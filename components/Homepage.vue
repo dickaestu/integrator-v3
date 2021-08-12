@@ -672,13 +672,13 @@ export default {
       }
     }
   },
-  // beforeDestroy () {
-  //   clearInterval(this.dataInterval)
-  // },
-  // created(){
-  //   this.dataInterval = setInterval(() => {
-	// 		this.getSensors()
-	// 	}, 5000)
-  // }
+  beforeDestroy () {
+    clearInterval(this.dataInterval)
+  },
+  created(){
+    this.dataInterval = setInterval(() => {
+			this.getSensors()
+		}, 60000)
+  }
 };
 </script>
