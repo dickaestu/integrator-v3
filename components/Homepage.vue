@@ -395,7 +395,7 @@ export default {
         59
       ).getTime();
       this.timestamps2 = newDate2;
-    }, 3000)
+    }, 60000)
   },
   methods: {
     async getSensors() {
