@@ -373,6 +373,27 @@ export default {
     dataInterval2: null,
   }),
   created () {
+    this.dateRangeText = this.dates.join(' ~ ')
+    this.getSensors();
+    this.getLastMeasurementTime();
+    this.getLogSummary();
+    var arr1 = this.dates[0];
+    arr1 = arr1.split("-");
+    // var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
+    var newDate = new Date().getTime();
+    this.timestamps1 = newDate;
+
+    var arr2 = this.dates[1];
+    arr2 = arr2.split("-");
+    var newDate2 = new Date(
+      arr2[0],
+      arr2[1] - 1,
+      arr2[2],
+      23,
+      59,
+      59
+    ).getTime();
+    this.timestamps2 = newDate2;
     this.dataInterval = setInterval(() => {
       this.dateRangeText = this.dates.join(' ~ ')
       this.getSensors();
