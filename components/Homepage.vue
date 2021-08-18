@@ -305,16 +305,14 @@ export default {
       },
       chart: {
          animations: {
-            enabled: true,
+            enabled: false,
             easing: 'linear',
-            speed: 800,
+            speed: 0,
             animateGradually: {
-                enabled: true,
-                delay: 150
+                enabled: false,
             },
             dynamicAnimation: {
-                enabled: true,
-                speed: 350
+                enabled: false,
             }
         },
         toolbar: {
@@ -415,7 +413,7 @@ export default {
         59
       ).getTime();
       this.timestamps2 = newDate2;
-    }, 60000)
+    }, 3000)
   },
   methods: {
     async getSensors() {
