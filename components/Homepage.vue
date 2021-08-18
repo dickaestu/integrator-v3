@@ -379,8 +379,7 @@ export default {
     this.getLogSummary();
     var arr1 = this.dates[0];
     arr1 = arr1.split("-");
-    // var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
-    var newDate = new Date().getTime();
+    var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
     this.timestamps1 = newDate;
 
     var arr2 = this.dates[1];
