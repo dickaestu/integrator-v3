@@ -2,7 +2,7 @@
   <v-app>
     <section id="config_common_setup">
       <Header />
-      <Menu />
+      <Menu title="Configuration" />
       <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
@@ -228,10 +228,12 @@
 
 <script>
 import SideMenu from "../../../components/config/SideMenu.vue";
+import Menu from '../../../components/Menu.vue'
 export default {
   name: "common_setup",
   components: {
-    SideMenu
+    SideMenu,
+    Menu
   },
   data: () => ({
     sidebarMenu: false,

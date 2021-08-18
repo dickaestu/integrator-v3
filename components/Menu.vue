@@ -51,7 +51,7 @@ export default {
         icon: "mdi-format-list-bulleted"
       },
       {
-        link: "/configuration/user_management",
+        link: "/configuration/common_setup",
         title: "Configuration",
         icon: "mdi-cog"
       },

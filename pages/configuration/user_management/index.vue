@@ -2,7 +2,7 @@
   <v-app>
     <section id="user_management">
       <Header />
-      <Menu title="User Management"/>
+      <Menu title="Configuration"/>
       <v-container :fluid="$vuetify.breakpoint.mdAndDown">
         <v-row>
           <v-col>
@@ -371,9 +371,10 @@
                           </v-menu>
                         </template>
                         <template v-slot:no-data>
-                          <v-btn color="primary" @click="users">
+                          <!-- <v-btn color="primary" @click="users">
                             Reset
-                          </v-btn>
+                          </v-btn> -->
+                          No data
                         </template>
                         <template v-slot:[`item.roles`]="{ item }">
                           <v-chip :color="getColor(item.roles)" dark>
