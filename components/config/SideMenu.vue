@@ -32,8 +32,8 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <!-- <NuxtLink to="/configuration/device_list" class="link-route"> -->
-      <NuxtLink to="#" class="link-route">
+      <NuxtLink to="/configuration/device_list" class="link-route">
+      <!-- <NuxtLink to="#" class="link-route"> -->
         <v-list-item-content>
           <v-list-item-title>
             Device List
