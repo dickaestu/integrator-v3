@@ -427,118 +427,343 @@
                         </v-card>
                       </v-dialog>
                       <!-- End -->
+                      <!-- Create Entry Issue -->
+                      <v-dialog
+                        content-class="edit_user_dialog"
+                        v-model="dialogAddEntryIssue"
+                        persistent
+                        max-width="90%"
+                      >
+                        <v-form method="POST" @submit.prevent="save">
+                          <v-card>
+                            <v-card-title class="justify-space-between">
+                              <span class="text-h5">{{ formTitleIssue }}</span>
+                              <v-icon
+                                class="close_dialog white--text"
+                                @click="dialogAddEntryIssue = false"
+                              >
+                                mdi-close-thick
+                              </v-icon>
+                            </v-card-title>
+                            <v-card-text>
+                              <v-container>
+                                <v-row>
+                                  <v-col cols="12" md="6">
+                                    <v-row>
+                                      <v-col cols="12">
+                                        <label class="title_field"
+                                          >Issue Date</label
+                                        >
+                                        <v-menu
+                                          content-class="date_single_range"
+                                          ref="menu"
+                                          v-model="menuIssueDate"
+                                          :close-on-content-click="false"
+                                          :return-value.sync="issueDate"
+                                          transition="scale-transition"
+                                          min-width="auto"
+                                        >
+                                          <template
+                                            v-slot:activator="{ on, attrs }"
+                                          >
+                                            <v-text-field
+                                              class="form_edit single_date"
+                                              v-model="issueDate"
+                                              readonly
+                                              v-bind="attrs"
+                                              v-on="on"
+                                              hide-details="auto"
+                                              outlined
+                                              append-icon="mdi-menu-down"
+                                            ></v-text-field>
+                                          </template>
+                                          <v-date-picker
+                                            v-model="issueDate"
+                                            @change="dateChange(issueDate)"
+                                            no-title
+                                            scrollable
+                                            color="color_current_date"
+                                          >
+                                            <v-spacer></v-spacer>
+                                            <v-btn text @click="menu = false">
+                                              Cancel
+                                            </v-btn>
+                                            <v-btn
+                                              text
+                                              @click="
+                                                $refs.menu.save(issueDate)
+                                              "
+                                            >
+                                              OK
+                                            </v-btn>
+                                          </v-date-picker>
+                                        </v-menu>
+                                      </v-col>
+                                      <v-col cols="12">
+                                        <label class="title_field"
+                                          >Person & Company Name</label
+                                        >
+                                        <v-text-field
+                                          ref="editedItem.brand"
+                                          class="form_edit"
+                                          v-model="editedItem.brand"
+                                          label="Enter person & company name"
+                                          solo
+                                          hide-details="auto"
+                                          placeholder="Enter person & company name"
+                                          required
+                                        ></v-text-field>
+                                      </v-col>
+                                      <v-col cols="12">
+                                        <label class="title_field"
+                                          >Issue Description</label
+                                        >
+                                        <v-textarea
+                                          ref="editedItem.calibration"
+                                          v-model="editedItem.calibration"
+                                          solo
+                                          class="form_edit"
+                                          label="Enter calibration description"
+                                          placeholder="Enter calibration description"
+                                          hide-details="auto"
+                                        ></v-textarea>
+                                      </v-col>
+                                      <v-col cols="12">
+                                        <label class="title_field"
+                                          >Status</label
+                                        >
+                                        <v-select
+                                          ref="editedItem.unit"
+                                          class="form_edit_select"
+                                          v-model="editedItem.unit"
+                                          :items="unit"
+                                          label="Select Status"
+                                          solo
+                                          hide-details="auto"
+                                          @change="handleChangeUnit()"
+                                        ></v-select>
+                                      </v-col>
+                                      <v-col cols="12">
+                                        <label class="title_field"
+                                          >Solved Note</label
+                                        >
+                                        <v-textarea
+                                          ref="editedItem.calibration"
+                                          v-model="editedItem.calibration"
+                                          solo
+                                          class="form_edit"
+                                          label="Enter Note"
+                                          placeholder="Enter Note"
+                                          hide-details="auto"
+                                        ></v-textarea>
+                                      </v-col>
+                                    </v-row>
+                                  </v-col>
+                                  <v-col cols="12">
+                                    <v-col cols="12" class="d-flex justify-end">
+                                      <v-btn
+                                        text
+                                        class="btnBgColor mr-5"
+                                        @click="save"
+                                        :loading="loadingAddSensors"
+                                        :disabled="loadingAddSensors"
+                                      >
+                                        Add Issue History
+                                      </v-btn>
+                                      <v-btn
+                                        text
+                                        class="btnTransBgColor"
+                                        @click="close"
+                                      >
+                                        Cancel
+                                      </v-btn>
+                                    </v-col>
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                            </v-card-text>
+                          </v-card>
+                        </v-form>
+                      </v-dialog>
+                      <!-- End -->
+                      <!-- Full Table Issue -->
+                      <v-dialog
+                        content-class="edit_user_dialog"
+                        v-model="dialogFullTableIssue"
+                        persistent
+                        max-width="90%"
+                      >
+                        <v-container fluid>
+                          <v-row>
+                            <v-col cols="6">
+                              <h1>
+                                <v-icon> mdi-chevron-left </v-icon>Issue History
+                              </h1>
+                            </v-col>
+                            <v-col cols="6">
+                              <div class="d-flex justify-space-between">
+                                <div class="left">
+                                  <v-select
+                                    ref="editedItem.unit"
+                                    class="form_edit_select"
+                                    v-model="editedItem.unit"
+                                    :items="unit"
+                                    label="Select Status"
+                                    solo
+                                    hide-details="auto"
+                                    @change="handleChangeUnit()"
+                                  ></v-select>
+                                </div>
+                                <div class="right">
+                                  <v-menu
+                                    content-class="date_single_range"
+                                    ref="menu"
+                                    v-model="menuIssueDate"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="issueDate"
+                                    transition="scale-transition"
+                                    min-width="auto"
+                                  >
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-text-field
+                                        class="form_edit single_date"
+                                        v-model="issueDate"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        hide-details="auto"
+                                        outlined
+                                        append-icon="mdi-menu-down"
+                                      ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                      v-model="issueDate"
+                                      @change="dateChange(issueDate)"
+                                      no-title
+                                      scrollable
+                                      color="color_current_date"
+                                    >
+                                      <v-spacer></v-spacer>
+                                      <v-btn text @click="menu = false">
+                                        Cancel
+                                      </v-btn>
+                                      <v-btn
+                                        text
+                                        @click="$refs.menu.save(issueDate)"
+                                      >
+                                        OK
+                                      </v-btn>
+                                    </v-date-picker>
+                                  </v-menu>
+                                </div>
+                              </div>
+                            </v-col>
+                            <v-col cols="12">
+                              <v-simple-table height="170px">
+                                <template v-slot:default>
+                                  <thead>
+                                    <tr>
+                                      <th class="text-left">
+                                        Issue Date
+                                      </th>
+                                      <th class="text-left">
+                                        Person & Company Name
+                                      </th>
+                                      <th class="text-left">
+                                        Issue Description
+                                      </th>
+                                      <th class="text-left">
+                                        Status
+                                      </th>
+                                      <th class="text-left">
+                                        Solved Note
+                                      </th>
+                                      <th></th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>15-04-21</td>
+                                      <td>
+                                        Aulia Rizky H - Emerson
+                                      </td>
+                                      <td>
+                                        Signal interference
+                                      </td>
+                                      <td>Open</td>
+                                      <td>
+                                        Is being monitored
+                                      </td>
+                                      <td>
+                                        <v-menu>
+                                          <template
+                                            v-slot:activator="{
+                                              on,
+                                              attrs
+                                            }"
+                                          >
+                                            <v-icon v-bind="attrs" v-on="on">
+                                              mdi-dots-horizontal
+                                            </v-icon>
+                                          </template>
+                                          <v-list class="py-0">
+                                            <v-list-item
+                                              @click="editItemIssue(item)"
+                                            >
+                                              <v-list-item-title>
+                                                <v-icon small class="mr-1">
+                                                  mdi-pencil
+                                                </v-icon>
+                                                Edit
+                                              </v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item
+                                              @click="deleteItemIssue(item)"
+                                            >
+                                              <v-list-item-title>
+                                                <v-icon small class="mr-1">
+                                                  mdi-delete
+                                                </v-icon>
+                                                Delete
+                                              </v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item
+                                              @click="downloadItemIssue(item)"
+                                            >
+                                              <v-list-item-title>
+                                                <v-icon small class="mr-1">
+                                                  mdi-download
+                                                </v-icon>
+                                                Download
+                                              </v-list-item-title>
+                                            </v-list-item>
+                                          </v-list>
+                                        </v-menu>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </template>
+                              </v-simple-table>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-dialog>
+                      <!-- End -->
                       <v-row>
                         <v-col cols="12" class="custom-scroll">
-                          <!-- <v-row class="mb-5">
-                            <v-col cols="12">
-                              <p class="title_head">Controllers</p>
-                              <v-row>
-                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
-                                  <v-card class="list_unit_detail">
-                                    <div class="d-flex justify-space-between">
-                                      <p class="title-card mb-0">
-                                        Inlet SPARING
-                                      </p>
-                                      <v-menu>
-                                        <template
-                                          v-slot:activator="{ on, attrs }"
-                                        >
-                                          <v-icon v-bind="attrs" v-on="on">
-                                            mdi-dots-horizontal
-                                          </v-icon>
-                                        </template>
-                                        <v-list class="py-0">
-                                          <v-list-item @click="editItem(item)">
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-pencil
-                                              </v-icon>
-                                              Edit
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                          <v-list-item
-                                            @click="deleteItem(item)"
-                                          >
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-delete
-                                              </v-icon>
-                                              Delete
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                        </v-list>
-                                      </v-menu>
-                                    </div>
-                                    <p class="size">BOD5</p>
-                                    <div class="d-flex justify-space-between">
-                                      <div class="left">
-                                        <p class="mb-0">Value</p>
-                                        <p class="mb-0">Series</p>
-                                      </div>
-                                      <div class="right">
-                                        <p class="mb-0">23 mg/L</p>
-                                        <p class="mb-0">RX3i CPL410</p>
-                                      </div>
-                                    </div>
-                                  </v-card>
-                                </v-col>
-                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
-                                  <v-card class="list_unit_detail">
-                                    <div class="d-flex justify-space-between">
-                                      <p class="title-card mb-0">
-                                        Inlet SPARING
-                                      </p>
-                                      <v-menu>
-                                        <template
-                                          v-slot:activator="{ on, attrs }"
-                                        >
-                                          <v-icon v-bind="attrs" v-on="on">
-                                            mdi-dots-horizontal
-                                          </v-icon>
-                                        </template>
-                                        <v-list class="py-0">
-                                          <v-list-item @click="editItem(item)">
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-pencil
-                                              </v-icon>
-                                              Edit
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                          <v-list-item
-                                            @click="deleteItem(item)"
-                                          >
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-delete
-                                              </v-icon>
-                                              Delete
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                        </v-list>
-                                      </v-menu>
-                                    </div>
-                                    <p class="size">BOD5</p>
-                                    <div class="d-flex justify-space-between">
-                                      <div class="left">
-                                        <p class="mb-0">Value</p>
-                                        <p class="mb-0">Series</p>
-                                      </div>
-                                      <div class="right">
-                                        <p class="mb-0">23 mg/L</p>
-                                        <p class="mb-0">RX3i CPL410</p>
-                                      </div>
-                                    </div>
-                                  </v-card>
-                                </v-col>
-                              </v-row>
-                            </v-col>
-                          </v-row> -->
                           <v-row class="mb-5">
                             <v-col cols="12">
                               <p class="title_head">Sensors</p>
                               <v-row>
-                                <v-col xl="2" lg="3" md="6" sm="6" cols="12" v-for="(i, index) in sensors_device_list" :key="index">
+                                <v-col
+                                  xl="2"
+                                  lg="3"
+                                  md="6"
+                                  sm="6"
+                                  cols="12"
+                                  v-for="(i, index) in sensors_device_list"
+                                  :key="index"
+                                >
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">
@@ -574,17 +799,412 @@
                                         </v-list>
                                       </v-menu>
                                     </div>
-                                    <p class="size">{{ i.sensors_name }}</p>
+                                    <p
+                                      class="size"
+                                      @click.stop="dialogDeviceHealth = true"
+                                    >
+                                      {{ i.sensors_name }}
+                                    </p>
                                     <div class="d-flex justify-space-between">
                                       <div class="left">
                                         <p class="mb-0">Value</p>
                                         <p class="mb-0">Parameter</p>
                                       </div>
                                       <div class="right">
-                                        <p class="mb-0">{{ i.value }} {{ i.measurementUnit }}</p>
+                                        <p class="mb-0">
+                                          {{ i.value }} {{ i.measurementUnit }}
+                                        </p>
                                         <p class="mb-0">{{ i.parameter }}</p>
                                       </div>
                                     </div>
+
+                                    <v-dialog
+                                      v-model="dialogDeviceHealth"
+                                      width="80%"
+                                      content-class="device_health_dialog"
+                                    >
+                                      <v-card>
+                                        <v-icon
+                                          class="close_dialog"
+                                          @click="dialogAddEditDevice = false"
+                                        >
+                                          mdi-close-thick
+                                        </v-icon>
+                                        <v-container fluid>
+                                          <v-row>
+                                            <v-col cols="4">
+                                              <h1>
+                                                Device Health <span>NH3N</span>
+                                              </h1>
+                                            </v-col>
+                                            <v-col class="text-right">
+                                              <ul>
+                                                <li>
+                                                  <v-btn class="btnBgColor"
+                                                    >See Datasheet</v-btn
+                                                  >
+                                                </li>
+                                                <li>
+                                                  <v-btn class="btnBgColor"
+                                                    >See Calibration
+                                                    Guide</v-btn
+                                                  >
+                                                </li>
+                                                <li>
+                                                  <v-menu
+                                                    content-class="date_single_range"
+                                                    ref="menu"
+                                                    v-model="menu"
+                                                    :close-on-content-click="
+                                                      false
+                                                    "
+                                                    :return-value.sync="dates"
+                                                    transition="scale-transition"
+                                                    min-width="auto"
+                                                  >
+                                                    <template
+                                                      v-slot:activator="{
+                                                        on,
+                                                        attrs
+                                                      }"
+                                                    >
+                                                      <v-text-field
+                                                        class="mt-0 pt-0 date_range"
+                                                        v-model="dateRangeText"
+                                                        readonly
+                                                        v-bind="attrs"
+                                                        v-on="on"
+                                                        hide-details="auto"
+                                                        label="Select Date"
+                                                        solo
+                                                        append-icon="mdi-menu-down"
+                                                      ></v-text-field>
+                                                    </template>
+                                                    <v-date-picker
+                                                      v-model="dates"
+                                                      @change="
+                                                        dateChange(dates)
+                                                      "
+                                                      no-title
+                                                      scrollable
+                                                      color="color_current_date"
+                                                      range
+                                                    >
+                                                      <v-spacer></v-spacer>
+                                                      <v-btn
+                                                        text
+                                                        @click="menu = false"
+                                                      >
+                                                        Cancel
+                                                      </v-btn>
+                                                      <v-btn
+                                                        text
+                                                        @click="
+                                                          $refs.menu.save(dates)
+                                                        "
+                                                      >
+                                                        <!-- <v-btn text @click="getSensorMeasurements()"> -->
+                                                        OK
+                                                      </v-btn>
+                                                    </v-date-picker>
+                                                  </v-menu>
+                                                </li>
+                                              </ul>
+                                            </v-col>
+                                          </v-row>
+                                          <v-row class="desc">
+                                            <v-col cols="3">
+                                              <div
+                                                class="d-flex justify-space-between"
+                                              >
+                                                <div class="left">
+                                                  <p>Device UUID</p>
+                                                  <p>Device Type</p>
+                                                  <p>Series</p>
+                                                </div>
+                                                <div class="right">
+                                                  <p>
+                                                    fc78835c-ad79-41ad-8a4f-20a725ae012e
+                                                  </p>
+                                                  <p>Sensor</p>
+                                                  <p>Emerson HX-200693DR</p>
+                                                </div>
+                                              </div>
+                                            </v-col>
+                                            <v-col cols="3">
+                                              <div
+                                                class="d-flex justify-space-between"
+                                              >
+                                                <div class="left">
+                                                  <p>Installation Date</p>
+                                                  <p>Last Calibration Date</p>
+                                                  <p>Next Calibration Date</p>
+                                                </div>
+                                                <div class="right">
+                                                  <p>
+                                                    01-03-2021
+                                                  </p>
+                                                  <p>01-05-2021</p>
+                                                  <p>14-06-2021</p>
+                                                </div>
+                                              </div>
+                                            </v-col>
+                                            <v-col cols="3">
+                                              <div
+                                                class="d-flex justify-space-between"
+                                              >
+                                                <div class="left">
+                                                  <p>Current Value</p>
+                                                  <p>Max Value</p>
+                                                  <p>Min Value</p>
+                                                </div>
+                                                <div class="right">
+                                                  <p>
+                                                    230
+                                                  </p>
+                                                  <p>500</p>
+                                                  <p>80</p>
+                                                </div>
+                                              </div>
+                                            </v-col>
+                                            <v-col cols="3">
+                                              <div
+                                                class="d-flex justify-space-between"
+                                              >
+                                                <div class="left">
+                                                  <p>Last Update</p>
+                                                  <p>Down Time</p>
+                                                  <p>Ghost Peak</p>
+                                                </div>
+                                                <div class="right">
+                                                  <p>
+                                                    15-04-2020
+                                                  </p>
+                                                  <p>10 Minutes</p>
+                                                  <p>2 Minutes</p>
+                                                </div>
+                                              </div>
+                                            </v-col>
+                                          </v-row>
+                                          <v-row>
+                                            <v-col cols="12">
+                                              <div
+                                                class="d-flex justify-space-between"
+                                              >
+                                                <h4>Graph</h4>
+                                                <div>
+                                                  <v-select
+                                                    class="form_edit_select"
+                                                    :items="selectGraph"
+                                                    label="Trend"
+                                                    solo
+                                                  ></v-select>
+                                                </div>
+                                              </div>
+                                            </v-col>
+                                          </v-row>
+                                          <v-row>
+                                            <v-col cols="12">
+                                              <div id="vuechart-health">
+                                                <apexchart
+                                                  type="area"
+                                                  height="200"
+                                                  :options="options"
+                                                  :series="series"
+                                                ></apexchart>
+                                              </div>
+                                            </v-col>
+                                          </v-row>
+                                          <v-row>
+                                            <v-col cols="12">
+                                              <div
+                                                class="d-flex justify-space-between"
+                                              >
+                                                <div class="left">
+                                                  <v-tabs v-model="tab">
+                                                    <v-tab>Issue History</v-tab>
+                                                    <v-tab
+                                                      >Calibration
+                                                      History</v-tab
+                                                    >
+                                                  </v-tabs>
+                                                </div>
+                                                <div class="right">
+                                                  <template>
+                                                    <v-dialog
+                                                      v-model="
+                                                        dialogAddEntryIssue
+                                                      "
+                                                      max-width="500px"
+                                                    >
+                                                      <template
+                                                        v-slot:activator="{
+                                                          on,
+                                                          attrs
+                                                        }"
+                                                      >
+                                                        <v-btn
+                                                          class="btnBgColor"
+                                                          v-bind="attrs"
+                                                          v-on="on"
+                                                        >
+                                                          <v-icon left>
+                                                            mdi-plus
+                                                          </v-icon>
+                                                          Add Entry
+                                                        </v-btn>
+                                                      </template>
+                                                    </v-dialog>
+                                                  </template>
+                                                  <template>
+                                                    <v-dialog
+                                                      v-model="
+                                                        dialogFullTableIssue
+                                                      "
+                                                      max-width="500px"
+                                                    >
+                                                      <template
+                                                        v-slot:activator="{
+                                                          on,
+                                                          attrs
+                                                        }"
+                                                      >
+                                                        <v-btn
+                                                          class="btnTransBgColor"
+                                                          v-bind="attrs"
+                                                          v-on="on"
+                                                        >
+                                                          Show Full Table
+                                                        </v-btn>
+                                                      </template>
+                                                    </v-dialog>
+                                                  </template>
+                                                </div>
+                                              </div>
+                                              <v-tabs-items v-model="tab">
+                                                <v-tab-item>
+                                                  <v-simple-table
+                                                    height="170px"
+                                                  >
+                                                    <template v-slot:default>
+                                                      <thead>
+                                                        <tr>
+                                                          <th class="text-left">
+                                                            Issue Date
+                                                          </th>
+                                                          <th class="text-left">
+                                                            Person & Company
+                                                            Name
+                                                          </th>
+                                                          <th class="text-left">
+                                                            Issue Description
+                                                          </th>
+                                                          <th class="text-left">
+                                                            Status
+                                                          </th>
+                                                          <th class="text-left">
+                                                            Solved Note
+                                                          </th>
+                                                          <th></th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr>
+                                                          <td>15-04-21</td>
+                                                          <td>
+                                                            Aulia Rizky H -
+                                                            Emerson
+                                                          </td>
+                                                          <td>
+                                                            Signal interference
+                                                          </td>
+                                                          <td>Open</td>
+                                                          <td>
+                                                            Is being monitored
+                                                          </td>
+                                                          <td>
+                                                            <v-menu>
+                                                              <template
+                                                                v-slot:activator="{
+                                                                  on,
+                                                                  attrs
+                                                                }"
+                                                              >
+                                                                <v-icon
+                                                                  v-bind="attrs"
+                                                                  v-on="on"
+                                                                >
+                                                                  mdi-dots-horizontal
+                                                                </v-icon>
+                                                              </template>
+                                                              <v-list
+                                                                class="py-0"
+                                                              >
+                                                                <v-list-item
+                                                                  @click="
+                                                                    editItemIssue(
+                                                                      item
+                                                                    )
+                                                                  "
+                                                                >
+                                                                  <v-list-item-title>
+                                                                    <v-icon
+                                                                      small
+                                                                      class="mr-1"
+                                                                    >
+                                                                      mdi-pencil
+                                                                    </v-icon>
+                                                                    Edit
+                                                                  </v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-list-item
+                                                                  @click="
+                                                                    deleteItemIssue(
+                                                                      item
+                                                                    )
+                                                                  "
+                                                                >
+                                                                  <v-list-item-title>
+                                                                    <v-icon
+                                                                      small
+                                                                      class="mr-1"
+                                                                    >
+                                                                      mdi-delete
+                                                                    </v-icon>
+                                                                    Delete
+                                                                  </v-list-item-title>
+                                                                </v-list-item>
+                                                                <v-list-item
+                                                                  @click="
+                                                                    downloadItemIssue(
+                                                                      item
+                                                                    )
+                                                                  "
+                                                                >
+                                                                  <v-list-item-title>
+                                                                    <v-icon
+                                                                      small
+                                                                      class="mr-1"
+                                                                    >
+                                                                      mdi-download
+                                                                    </v-icon>
+                                                                    Download
+                                                                  </v-list-item-title>
+                                                                </v-list-item>
+                                                              </v-list>
+                                                            </v-menu>
+                                                          </td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </template>
+                                                  </v-simple-table>
+                                                </v-tab-item>
+                                              </v-tabs-items>
+                                            </v-col>
+                                          </v-row>
+                                        </v-container>
+                                      </v-card>
+                                    </v-dialog>
                                   </v-card>
                                 </v-col>
                               </v-row>
@@ -724,7 +1344,7 @@
 </template>
 
 <script>
-import gql from "graphql-tag";
+// import gql from "graphql-tag";
 import SideMenu from "../../../components/config/SideMenu.vue";
 import Menu from "../../../components/Menu.vue";
 
@@ -735,8 +1355,19 @@ export default {
     Menu
   },
   data: () => ({
+    issueDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .substr(0, 10),
+    tab: null,
+    dates: ["2021-06-16", "2021-06-16"],
+    menu: false,
+    menuIssueDate: false,
+    selectGraph: ["Trend", "Distribution"],
+    dialogDeviceHealth: false,
     sidebarMenu: false,
     dialogAddEditDevice: false,
+    dialogAddEntryIssue: false,
+    dialogFullTableIssue: false,
     dialogDelete: false,
     dialogRoles: false,
     toastMsgSensors: "",
@@ -753,7 +1384,7 @@ export default {
         unit_name: "Inlet Sparing",
         sensors_name: "BOD5",
         value: "23 mg/L",
-        parameter: "COD",
+        parameter: "COD"
       }
     ],
     unit: [],
@@ -821,15 +1452,174 @@ export default {
     },
     loadingAddSensors: false,
     loadingGetUnitList: false,
-    loadingGetDetailUnit: false
+    loadingGetDetailUnit: false,
+
+    options: {
+      annotations: {
+        position: "front",
+        yaxis: [
+          {
+            y: null,
+            y2: null,
+            strokeDashArray: 7,
+            borderColor: "#FFD4A2",
+            opacity: 1,
+            offsetX: 0,
+            offsetY: 0,
+            width: "100%",
+            yAxisIndex: 0,
+            label: {
+              borderWidth: 0,
+              borderRadius: 6,
+              text: "lower threshold: 6",
+              textAnchor: "center",
+              position: "left",
+              offsetX: 0,
+              offsetY: -15,
+              style: {
+                opacity: 0.5,
+                background: "#F0F2F4",
+                color: "#69747E;",
+                fontSize: "12px",
+                fontWeight: 400,
+                fontFamily: undefined,
+                cssClass: "apexcharts-yaxis-annotation-label",
+                padding: {
+                  left: 7,
+                  right: 7,
+                  top: 7,
+                  bottom: 7
+                }
+              }
+            }
+          },
+          {
+            y: 100,
+            y2: null,
+            strokeDashArray: 7,
+            borderColor: "#FFD4A2",
+            opacity: 1,
+            offsetX: 0,
+            offsetY: 0,
+            width: "100%",
+            yAxisIndex: 0,
+            label: {
+              borderWidth: 0,
+              borderRadius: 6,
+              text: "upper threshold: 100",
+              textAnchor: "center",
+              position: "left",
+              offsetX: 0,
+              offsetY: -15,
+              style: {
+                opacity: 0.5,
+                background: "#F0F2F4",
+                color: "#69747E;",
+                fontSize: "12px",
+                fontWeight: 400,
+                fontFamily: undefined,
+                cssClass: "apexcharts-yaxis-annotation-label",
+                padding: {
+                  left: 7,
+                  right: 7,
+                  top: 7,
+                  bottom: 7
+                }
+              }
+            }
+          }
+        ]
+      },
+      grid: {
+        show: false
+      },
+      chart: {
+        toolbar: {
+          show: false
+        },
+        id: "vuechart-example",
+        type: "area",
+        height: 150,
+        foreColor: "#51A1B4"
+      },
+      colors: ["#44BDD8", "#B9EFFF"],
+      stroke: {
+        curve: "smooth",
+        width: 2
+      },
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        type: "numeric",
+        categories: [""],
+        labels: {
+          show: true
+        },
+        axisBorder: {
+          show: true
+        },
+        axisTicks: {
+          show: true
+        }
+      },
+      yaxis: {
+        labels: {
+          show: true
+        }
+      },
+      fill: {
+        opacityFrom: 0.7,
+        opacityTo: 0.9
+      },
+      tooltip: {
+        enabled: true
+      }
+    },
+    // options: {
+    //   chart: {
+    //     type: "area",
+    //     id: "vuechart-health",
+    //     height: 300,
+    //     zoom: {
+    //       enabled: false
+    //     }
+    //   },
+    //   dataLabels: {
+    //     enabled: false
+    //   },
+    //   stroke: {
+    //     curve: "straight"
+    //   },
+    //   subtitle: {
+    //     text: "Price Movements",
+    //     align: "left"
+    //   },
+    //   labels: "Masak",
+    //   xaxis: {
+    //     type: "datetime"
+    //   },
+    //   yaxis: {
+    //     opposite: true
+    //   },
+    //   legend: {
+    //     horizontalAlign: "left"
+    //   }
+    // }
+    series: []
   }),
 
   computed: {
-    // mini() {
-    //   return this.$vuetify.breakpoint.smAndDown;
-    // },
+    dateRangeText() {
+      return this.dates.join(" ~ ");
+    },
     formTitle() {
       return this.editedIndex === -1 ? "Add New Device" : "Edit Device";
+    },
+    formTitleIssue() {
+      return this.editedIndex === -1
+        ? "Add Issue History"
+        : "Edit Issue History";
     },
     likesAllFilter() {
       return this.selectedFilters.length === this.filters.length;
@@ -844,8 +1634,33 @@ export default {
     }
   },
 
+  mounted() {
+    var arr1 = this.dates[0];
+    arr1 = arr1.split("-");
+    var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
+    this.timestamps1 = newDate;
+
+    var arr2 = this.dates[1];
+    arr2 = arr2.split("-");
+    var newDate2 = new Date(
+      arr2[0],
+      arr2[1] - 1,
+      arr2[2],
+      23,
+      59,
+      59
+    ).getTime();
+    this.timestamps2 = newDate2;
+  },
+
   watch: {
     dialogAddEditDevice(val) {
+      val || this.close();
+    },
+    dialogAddEntryIssue(val) {
+      val || this.close();
+    },
+    dialogFullTableIssue(val) {
       val || this.close();
     },
     dialogDelete(val) {
@@ -871,10 +1686,11 @@ export default {
         this.loadingGetUnitList = false;
         res.units.map(async unit => {
           this.unit.push({
-            text: unit.name, value: unit.id
-          })
-          if(unit.sensors !== null){
-            console.log(unit.sensors)
+            text: unit.name,
+            value: unit.id
+          });
+          if (unit.sensors !== null) {
+            console.log(unit.sensors);
             const promises = unit.sensors.map(async result => {
               const sensors = await this.$store.dispatch(
                 "configuration/device_list/getSensorMeasurements",
@@ -882,22 +1698,24 @@ export default {
               );
               return sensors;
             });
-  
+
             const dataSensors = await Promise.all(promises);
             const loopSensors = dataSensors.map(sensors => {
               const val = sensors.data.sensorMeasurements[0].values;
               const lastVal = val[val.length - 1];
               return lastVal;
             });
-  
+
             if (this.sensors_device_list.length > 0) {
-              this.sensors_device_list = []
+              this.sensors_device_list = [];
               unit.sensors.map((result, index) => {
                 this.sensors_device_list.push({
                   unit_name: unit.name,
                   sensors_name: result.name,
                   value: `${loopSensors[index].toFixed(0)} ${
-                    result.measurementUnit !== null ? result.measurementUnit : ""
+                    result.measurementUnit !== null
+                      ? result.measurementUnit
+                      : ""
                   }`,
                   parameter: result.parameter
                 });
@@ -908,7 +1726,9 @@ export default {
                   unit_name: unit.name,
                   sensors_name: result.name,
                   value: `${loopSensors[index].toFixed(0)} ${
-                    result.measurementUnit !== null ? result.measurementUnit : ""
+                    result.measurementUnit !== null
+                      ? result.measurementUnit
+                      : ""
                   }`,
                   parameter: result.parameter
                 });
@@ -916,16 +1736,14 @@ export default {
             }
           }
           this.loadingSensors = false;
-        })
-
-        
+        });
       } catch (err) {
         console.log(err);
         this.loadingGetUnitList = false;
         // this.searchResults = [];
       }
     },
-    async handleChangeUnit(){
+    async handleChangeUnit() {
       try {
         this.loadingGetDetailUnit = true;
         const res = await this.$store.dispatch(
@@ -934,7 +1752,6 @@ export default {
         );
 
         this.loadingGetDetailUnit = false;
-        
       } catch (err) {
         console.log(err);
         this.loadingGetDetailUnit = false;
@@ -955,7 +1772,17 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialogAddEditDevice = true;
     },
+    editItemIssue(item) {
+      this.editedIndex = this.users.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogAddEditDevice = true;
+    },
     deleteItem(item) {
+      this.editedIndex = this.users.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
+    deleteItemIssue(item) {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
@@ -984,6 +1811,8 @@ export default {
     },
     close() {
       this.dialogAddEditDevice = false;
+      this.dialogAddEntryIssue = false;
+      this.dialogFullTableIssue = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
@@ -999,7 +1828,7 @@ export default {
     async save() {
       if (this.editedIndex > -1) {
         let param = null;
-        console.log(this.editedItem)
+        console.log(this.editedItem);
         // if (this.editedItem.password !== null) {
         //   param = {
         //     userID: this.editedItem.id,
@@ -1054,21 +1883,21 @@ export default {
           if (res.data.addUser.ok) {
             this.loadingAddSensors = false;
             this.device_list.push({
-                device_type: this.editedItem.device_type,
-                brand: this.editedItem.brand,
-                unit: this.editedItem.unit,
-                parameter: this.editedItem.parameter,
-                port: this.editedItem.port,
-                data_length: this.editedItem.data_length,
-                input_low: this.editedItem.input_low,
-                input_high: this.editedItem.input_high,
-                output_low: this.editedItem.output_low,
-                output_high: this.editedItem.output_high,
-                threshold_low: this.editedItem.threshold_low,
-                threshold_high: this.editedItem.threshold_low,
-                measurement: this.editedItem.measurement,
-                register_type: this.editedItem.register_type,
-                calibration: this.editedItem.calibration
+              device_type: this.editedItem.device_type,
+              brand: this.editedItem.brand,
+              unit: this.editedItem.unit,
+              parameter: this.editedItem.parameter,
+              port: this.editedItem.port,
+              data_length: this.editedItem.data_length,
+              input_low: this.editedItem.input_low,
+              input_high: this.editedItem.input_high,
+              output_low: this.editedItem.output_low,
+              output_high: this.editedItem.output_high,
+              threshold_low: this.editedItem.threshold_low,
+              threshold_high: this.editedItem.threshold_low,
+              measurement: this.editedItem.measurement,
+              register_type: this.editedItem.register_type,
+              calibration: this.editedItem.calibration
             });
             this.toastMsgSensors = "Success To Save";
             this.toast = true;
