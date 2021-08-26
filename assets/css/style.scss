@@ -64,6 +64,10 @@ body {
   min-height: 100vh;
 }
 
+.w-50 {
+  width: 50% !important;
+}
+
 .v-application {
   font-family: "Inter", sans-serif;
   .uuid {
@@ -1460,7 +1464,7 @@ body {
       }
     }
     .form_edit_select {
-      margin-top: 0.5em;
+      // margin-top: 0.5em;
       &.single_date {
         fieldset {
           border: none;
@@ -1821,6 +1825,21 @@ body {
   }
   #content-one .hover_card .w-25:hover {
     width: 100%;
+  }
+}
+@media screen and (max-width: 992px) {
+  .v-dialog.device_health_dialog {
+    width: 100% !important;
+    h1 {
+      font-size: 20px;
+    }
+    .datasheet {
+      font-size: 12px;
+    }
+    .v-slide-group__prev--disabled,
+    .right.add-entry {
+      display: none !important;
+    }
   }
 }
 @media (min-width: 960px) {
