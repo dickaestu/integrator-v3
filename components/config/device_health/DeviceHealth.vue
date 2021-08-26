@@ -2,25 +2,27 @@
   <v-app>
     <div id="DeviceHealth">
       <v-card>
-        <v-card-title class="justify-end">
+        <v-card-title class="justify-end pb-0">
           <v-icon class="close_dialog" @click="dialogAddEditDevice = false">
             mdi-close-thick
           </v-icon>
         </v-card-title>
-        <v-container fluid>
+        <v-container>
           <v-row>
-            <v-col cols="4">
+            <v-col cols="12" md="4">
               <h1>Device Health <span>NH3N</span></h1>
             </v-col>
-            <v-col class="text-right">
-              <ul>
-                <li>
-                  <v-btn class="btnBgColor">See Datasheet</v-btn>
-                </li>
-                <li>
-                  <v-btn class="btnBgColor">See Calibration Guide</v-btn>
-                </li>
-                <li>
+            <v-col cols="12" md="8" class="text-right my-auto">
+              <v-row>
+                <v-col cols="auto" sm="4" class="py-md-0">
+                  <v-btn class="btnBgColor datasheet">See Datasheet</v-btn>
+                </v-col>
+                <v-col cols="auto" sm="4" class="py-md-0">
+                  <v-btn class="btnBgColor datasheet"
+                    >See Calibration Guide</v-btn
+                  >
+                </v-col>
+                <v-col cols="12" sm="4" class="py-md-0">
                   <v-menu
                     content-class="date_single_range"
                     ref="menu"
@@ -61,17 +63,16 @@
                         Cancel
                       </v-btn>
                       <v-btn text @click="$refs.menu.save(dates)">
-                        <!-- <v-btn text @click="getSensorMeasurements()"> -->
                         OK
                       </v-btn>
                     </v-date-picker>
                   </v-menu>
-                </li>
-              </ul>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
           <v-row class="desc">
-            <v-col cols="12" sm="6" md="6" lg="3" class="pb-0">
+            <v-col cols="12" sm="6" md="6" lg="3" class="pt-0">
               <div class="d-flex justify-space-between">
                 <div class="left">
                   <p>Device UUID</p>
@@ -87,7 +88,7 @@
                 </div>
               </div>
             </v-col>
-            <v-col cols="12" sm="6" md="6" lg="3" class="pb-0">
+            <v-col cols="12" sm="6" md="6" lg="3" class="pt-0">
               <div class="d-flex justify-space-between">
                 <div class="left">
                   <p>Installation Date</p>
@@ -103,7 +104,7 @@
                 </div>
               </div>
             </v-col>
-            <v-col cols="12" sm="6" md="6" lg="3" class="pb-0">
+            <v-col cols="12" sm="6" md="6" lg="3" class="pt-0">
               <div class="d-flex justify-space-between">
                 <div class="left">
                   <p>Current Value</p>
@@ -119,7 +120,7 @@
                 </div>
               </div>
             </v-col>
-            <v-col cols="12" sm="6" md="6" lg="3" class="pb-0">
+            <v-col cols="12" sm="6" md="6" lg="3" class="pt-0">
               <div class="d-flex justify-space-between">
                 <div class="left">
                   <p>Last Update</p>
@@ -139,7 +140,7 @@
           <v-row>
             <v-col cols="12">
               <v-row>
-                <v-col cols="6">
+                <v-col cols="6" class="my-auto">
                   <h4>Graph</h4>
                 </v-col>
                 <v-col cols="6" md="3" offset-lg="3">
@@ -167,7 +168,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12">
+            <v-col cols="12" id="btnFloating">
               <div class="d-flex justify-space-between">
                 <div class="left">
                   <v-tabs v-model="tab">
@@ -175,7 +176,7 @@
                     <v-tab>Calibration History</v-tab>
                   </v-tabs>
                 </div>
-                <div class="right add-entry">
+                <div class="right add-entry d-none d-sm-none d-md-block">
                   <template>
                     <v-dialog v-model="dialogAddEntryIssue" max-width="500px">
                       <template
@@ -209,6 +210,53 @@
                   </template>
                 </div>
               </div>
+              <v-speed-dial
+                class="d-block d-sm-block d-md-none"
+                v-model="fab"
+                direction="top"
+                right="true"
+                bottom="true"
+                transition="slide-y-reverse-transition"
+              >
+                <template v-slot:activator>
+                  <v-btn v-model="fab" dark fab>
+                    <v-icon v-if="fab">
+                      mdi-close
+                    </v-icon>
+                    <v-icon v-else>
+                      mdi-plus
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <template>
+                  <v-dialog v-model="dialogAddEntryIssue" max-width="500px">
+                    <template
+                      v-slot:activator="{
+                        on,
+                        attrs
+                      }"
+                    >
+                      <v-btn fab dark small v-bind="attrs" v-on="on">
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
+                    </template>
+                  </v-dialog>
+                </template>
+                <template>
+                  <v-dialog v-model="dialogFullTableIssue" max-width="500px">
+                    <template
+                      v-slot:activator="{
+                        on,
+                        attrs
+                      }"
+                    >
+                      <v-btn fab dark small v-bind="attrs" v-on="on">
+                        <v-icon>mdi-eye</v-icon>
+                      </v-btn>
+                    </template>
+                  </v-dialog>
+                </template>
+              </v-speed-dial>
               <v-tabs-items v-model="tab">
                 <v-tab-item>
                   <v-simple-table height="170px">
@@ -300,8 +348,7 @@
       <v-dialog
         content-class="edit_user_dialog"
         v-model="dialogAddEntryIssue"
-        persistent
-        max-width="90%"
+        max-width="80%"
       >
         <v-form method="POST" @submit.prevent="save">
           <v-card>
@@ -362,9 +409,9 @@
                       <v-col cols="12">
                         <label class="title_field">Person & Company Name</label>
                         <v-text-field
-                          ref="editedItem.brand"
+                          ref="editedItem.person_company"
                           class="form_edit"
-                          v-model="editedItem.brand"
+                          v-model="editedItem.person_company"
                           label="Enter person & company name"
                           solo
                           hide-details="auto"
@@ -375,8 +422,8 @@
                       <v-col cols="12">
                         <label class="title_field">Issue Description</label>
                         <v-textarea
-                          ref="editedItem.calibration"
-                          v-model="editedItem.calibration"
+                          ref="editedItem.issue_desc"
+                          v-model="editedItem.issue_desc"
                           solo
                           class="form_edit"
                           label="Enter calibration description"
@@ -387,10 +434,10 @@
                       <v-col cols="12">
                         <label class="title_field">Status</label>
                         <v-select
-                          ref="editedItem.unit"
+                          ref="editedItem.status"
                           class="form_edit_select"
-                          v-model="editedItem.unit"
-                          :items="unit"
+                          v-model="editedItem.status"
+                          :items="status"
                           label="Select Status"
                           solo
                           hide-details="auto"
@@ -400,8 +447,8 @@
                       <v-col cols="12">
                         <label class="title_field">Solved Note</label>
                         <v-textarea
-                          ref="editedItem.calibration"
-                          v-model="editedItem.calibration"
+                          ref="editedItem.note"
+                          v-model="editedItem.note"
                           solo
                           class="form_edit"
                           label="Enter Note"
@@ -476,17 +523,21 @@
       <v-dialog
         content-class="edit_user_dialog"
         v-model="dialogFullTableIssue"
-        max-width="90%"
+        max-width="80%"
       >
-        <v-card>
+        <v-card min-height="90vh">
           <v-container fluid>
             <v-row>
-              <v-col cols="6">
-                <h1><v-icon> mdi-chevron-left </v-icon>Issue History</h1>
+              <v-col cols="12" md="6">
+                <h1>
+                  <v-icon @click="dialogFullTableIssue = false">
+                    mdi-chevron-left </v-icon
+                  >Issue History
+                </h1>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" md="6">
                 <div class="d-flex justify-space-between">
-                  <div class="left">
+                  <div class="left px-3 px-sm-0">
                     <v-select
                       ref="editedItem.unit"
                       class="form_edit_select"
@@ -498,7 +549,7 @@
                       @change="handleChangeUnit()"
                     ></v-select>
                   </div>
-                  <div class="right">
+                  <div class="right px-3 px-sm-0">
                     <v-menu
                       content-class="date_single_range"
                       ref="menu"
@@ -632,6 +683,7 @@
 export default {
   name: "DeviceHealth",
   data: () => ({
+    fab: false,
     issueDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
       .toISOString()
       .substr(0, 10),
@@ -647,6 +699,7 @@ export default {
         note: "is being monitored"
       }
     ],
+    status: [],
     menuIssueDate: false,
     selectGraph: ["Trend", "Distribution"],
     dialogAddEntryIssue: false,
@@ -654,38 +707,18 @@ export default {
     dialogDelete: false,
     editedIndex: -1,
     editedItem: {
-      device_type: null,
-      brand: null,
-      unit: null,
-      parameter: null,
-      port: null,
-      data_length: null,
-      input_low: null,
-      input_high: null,
-      output_low: null,
-      output_high: null,
-      threshold_low: null,
-      threshold_high: null,
-      measurement: null,
-      register_type: null,
-      calibration: null
+      issueDate: null,
+      person_company: null,
+      issue_desc: null,
+      status: null,
+      note: null
     },
     defaultItem: {
-      device_type: null,
-      brand: null,
-      unit: null,
-      parameter: null,
-      port: null,
-      data_length: null,
-      input_low: null,
-      input_high: null,
-      output_low: null,
-      output_high: null,
-      threshold_low: null,
-      threshold_high: null,
-      measurement: null,
-      register_type: null,
-      calibration: null
+      issueDate: null,
+      person_company: null,
+      issue_desc: null,
+      status: null,
+      note: null
     },
     options: {
       annotations: {
@@ -1046,21 +1079,10 @@ export default {
           if (res.data.addUser.ok) {
             this.loadingAddSensors = false;
             this.device_list.push({
-              device_type: this.editedItem.device_type,
-              brand: this.editedItem.brand,
-              unit: this.editedItem.unit,
-              parameter: this.editedItem.parameter,
-              port: this.editedItem.port,
-              data_length: this.editedItem.data_length,
-              input_low: this.editedItem.input_low,
-              input_high: this.editedItem.input_high,
-              output_low: this.editedItem.output_low,
-              output_high: this.editedItem.output_high,
-              threshold_low: this.editedItem.threshold_low,
-              threshold_high: this.editedItem.threshold_low,
-              measurement: this.editedItem.measurement,
-              register_type: this.editedItem.register_type,
-              calibration: this.editedItem.calibration
+              person_company: this.editedItem.person_company,
+              issue_desc: this.editedItem.issue_desc,
+              status: this.editedItem.status,
+              note: this.editedItem.note
             });
             this.toastMsgSensors = "Success To Save";
             this.toast = true;

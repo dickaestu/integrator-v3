@@ -21,6 +21,7 @@ $musa_green_card_column: #eff3f4;
 
 ::-webkit-scrollbar {
   width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: $musa_green_light_text;
@@ -1392,9 +1393,30 @@ body {
   &.device_health_dialog {
     border-radius: 24px;
     border: none;
-    height: 90vh;
+    height: 90%;
+    .v-speed-dial {
+      .v-btn {
+        background: $musa_green_dark_text;
+        &--active {
+          background: $musa_green_lighter_text;
+        }
+      }
+      &__list {
+        .v-btn {
+          background: $musa_green_dark_text;
+        }
+      }
+    }
+    #btnFloating .v-speed-dial {
+      position: absolute;
+    }
+
+    #btnFloating .v-btn--floating {
+      position: relative;
+    }
     .v-card {
-      height: 100%;
+      height: auto;
+      min-height: 100vh;
     }
     h1 {
       font-size: 36px;
@@ -1452,6 +1474,14 @@ body {
       font-weight: 500;
       font-size: 16px;
       color: #333;
+    }
+    .date_range {
+      .v-input__control {
+        min-height: 36px;
+        .v-input__slot {
+          padding: 0;
+        }
+      }
     }
     .v-input__slot {
       .v-select__slot {
@@ -1589,7 +1619,7 @@ body {
     }
     .form_edit,
     .form_edit_select {
-      margin-top: 0.5em;
+      // margin-top: 0.5em;
       &.single_date {
         fieldset {
           border: none;
@@ -1835,9 +1865,9 @@ body {
     }
     .datasheet {
       font-size: 12px;
+      text-transform: capitalize;
     }
-    .v-slide-group__prev--disabled,
-    .right.add-entry {
+    .v-slide-group__prev--disabled {
       display: none !important;
     }
   }
