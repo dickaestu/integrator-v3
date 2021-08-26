@@ -38,7 +38,6 @@
                                       class="btnBgColor"
                                       v-bind="attrs"
                                       v-on="on"
-                                      disabled
                                     >
                                       <v-icon left>
                                         mdi-plus
