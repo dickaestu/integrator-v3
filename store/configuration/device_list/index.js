@@ -46,6 +46,14 @@ mutation addSensor ($s: InputSensor!) {
 }
 `
 
+const EDIT_SENSORS = gql`
+mutation editSensor ($sensorID: ID!, $s: InputSensor!) {
+  editSensor (sensorID: $sensorID, s: $s) {
+      ok
+  }
+}
+`
+
 const SENSORS_MEASUREMENTS = gql`
   query sensorMeasurements(
     $startTime: Timestamp
@@ -63,12 +71,25 @@ const SENSORS_MEASUREMENTS = gql`
     }
   }
 `;
+const DELETE_SENSORS = gql`
+mutation deleteSensor ($sensorID: ID!) {
+  deleteSensor (sensorID: $sensorID) {
+      ok
+  }
+}
+`
 
 export const mutations = {
   getUnitList(state, {data}){
     state.unitList = data
   },
   addSensors(state, {data}){
+    state.sensors = data
+  },
+  editSensors(state, {data}){
+    state.sensors = data
+  },
+  deleteSensors(state, {data}){
     state.sensors = data
   },
   getSensorsMeasurement(state, {data}){
@@ -115,9 +136,10 @@ export const actions = {
     },
     async addSensorsUnit({commit}, formData) {
         let client = this.app.apolloProvider.defaultClient
+        console.log(formData)
           try {
-              const res = await client.query({
-                query: ADD_SENSORS,
+              const res = await client.mutate({
+                mutation: ADD_SENSORS,
                 variables: {
                     "s": {
                       "name": formData.brand,
@@ -125,7 +147,7 @@ export const actions = {
                       "port": formData.port,
                       "parameter": formData.parameter,
                       "registerType": formData.register_type,
-                      "dataLength": formData.dataLength,
+                      "dataLength": formData.data_length,
                       "measurementUnit": formData.measurement,
                       "inputLow": formData.input_low,
                       "inputHigh": formData.input_high,
@@ -146,6 +168,41 @@ export const actions = {
               console.log(err);
           }
     },
+    async editSensorsUnit({commit}, formData) {
+      let client = this.app.apolloProvider.defaultClient
+        try {
+            const res = await client.mutate({
+              mutation: EDIT_SENSORS,
+              variables: {
+                  "sensorID": formData.id,
+                  "s": {
+                    "name": formData.brand,
+                    "unitID": formData.unit,
+                    "port": formData.port,
+                    "parameter": formData.parameter,
+                    "registerType": formData.register_type,
+                    "dataLength": formData.data_length,
+                    "measurementUnit": formData.measurement,
+                    "inputLow": formData.input_low,
+                    "inputHigh": formData.input_high,
+                    "outputLow": formData.output_low,
+                    "outputHigh": formData.output_high,
+                    "thresholdLow": formData.threshold_low,
+                    "thresholdHigh": formData.threshold_high,
+                    "customCalibration": formData.calibration
+                  }
+                }
+            });
+
+            if (res) {
+              commit('editSensors', { res })
+            }
+            console.log(res)
+            return res.data
+        } catch (err) {
+            console.log(err);
+        }
+    },
     async getSensorMeasurements({commit}, params) {
         let client = this.app.apolloProvider.defaultClient
         try {
@@ -165,5 +222,20 @@ export const actions = {
           console.log(err);
           // this.searchResults = [];
         }
-      },
+    },
+    async deleteSensorUnit({commit}, formData) {
+      let client = this.app.apolloProvider.defaultClient
+      try {
+        const res = await client.mutate({
+          mutation: DELETE_SENSORS,
+          variables: {
+              "sensorID" : formData.id
+          }
+        });
+        commit('deleteSensors', { res })
+        return res.data
+      } catch (error) {
+        console.log(error)
+      }
+    }
 }

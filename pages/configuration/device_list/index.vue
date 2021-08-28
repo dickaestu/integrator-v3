@@ -28,7 +28,7 @@
                         </v-col>
                         <v-col md="12" lg="6" class="my-auto">
                           <v-row>
-                            <v-col>
+                            <v-col xs="12" sm="4" md="4" lg="4" class="my-auto">
                               <template>
                                 <v-dialog
                                   v-model="dialogAddEditDevice"
@@ -49,12 +49,12 @@
                                 </v-dialog>
                               </template>
                             </v-col>
-                            <v-col>
+                            <v-col xs="12" sm="4" md="4" lg="4" class="my-auto">
                               <v-btn class="btnTransBgColor">
                                 Generate Report
                               </v-btn>
                             </v-col>
-                            <v-col>
+                            <v-col xs="12" sm="4" md="4" lg="4" class="my-auto">
                               <v-select
                                 class="radius"
                                 hide-details
@@ -430,8 +430,14 @@
                       
                       <v-row>
                         <v-col cols="12" class="custom-scroll">
-                          <v-row class="mb-5">
-                            <v-col cols="12">
+                          <v-row 
+                            class="mb-5"
+                            v-for="(sensor, indexSensor) in unit"
+                            :key="indexSensor"
+                          >
+                            <v-col 
+                              cols="12"
+                            >
                               <p class="title_head">Sensors</p>
                               <v-row>
                                 <v-col
@@ -440,13 +446,13 @@
                                   md="6"
                                   sm="6"
                                   cols="12"
-                                  v-for="(i, index) in sensors_device_list"
+                                  v-for="(i, index) in sensor.sensors_device_list"
                                   :key="index"
                                 >
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-space-between">
                                       <p class="title-card mb-0">
-                                        {{ i.unit_name }}
+                                        {{ sensor.text }}
                                       </p>
                                       <v-menu>
                                         <template
@@ -457,7 +463,7 @@
                                           </v-icon>
                                         </template>
                                         <v-list class="py-0">
-                                          <v-list-item @click="editItem(item)">
+                                          <v-list-item @click="editItem(i)">
                                             <v-list-item-title>
                                               <v-icon small class="mr-1">
                                                 mdi-pencil
@@ -466,7 +472,7 @@
                                             </v-list-item-title>
                                           </v-list-item>
                                           <v-list-item
-                                            @click="deleteItem(item)"
+                                            @click="deleteItem(i)"
                                           >
                                             <v-list-item-title>
                                               <v-icon small class="mr-1">
@@ -482,7 +488,7 @@
                                       class="size"
                                       @click.stop="dialogDeviceHealth = true"
                                     >
-                                      {{ i.sensors_name }}
+                                      {{ i.brand }}
                                     </p>
                                     <div class="d-flex justify-space-between">
                                       <div class="left">
@@ -494,111 +500,6 @@
                                           {{ i.value }} {{ i.measurementUnit }}
                                         </p>
                                         <p class="mb-0">{{ i.parameter }}</p>
-                                      </div>
-                                    </div>
-                                  </v-card>
-                                </v-col>
-                              </v-row>
-                            </v-col>
-                          </v-row>
-                          <v-row class="mb-5">
-                            <v-col cols="12">
-                              <p class="title_head">Actuators</p>
-                              <v-row>
-                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
-                                  <v-card class="list_unit_detail">
-                                    <div class="d-flex justify-space-between">
-                                      <p class="title-card mb-0">
-                                        Inlet SPARING
-                                      </p>
-                                      <v-menu>
-                                        <template
-                                          v-slot:activator="{ on, attrs }"
-                                        >
-                                          <v-icon v-bind="attrs" v-on="on">
-                                            mdi-dots-horizontal
-                                          </v-icon>
-                                        </template>
-                                        <v-list class="py-0">
-                                          <v-list-item @click="editItem(item)">
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-pencil
-                                              </v-icon>
-                                              Edit
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                          <v-list-item
-                                            @click="deleteItem(item)"
-                                          >
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-delete
-                                              </v-icon>
-                                              Delete
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                        </v-list>
-                                      </v-menu>
-                                    </div>
-                                    <p class="size">BOD5</p>
-                                    <div class="d-flex justify-space-between">
-                                      <div class="left">
-                                        <p class="mb-0">Value</p>
-                                        <p class="mb-0">Series</p>
-                                      </div>
-                                      <div class="right">
-                                        <p class="mb-0">23 mg/L</p>
-                                        <p class="mb-0">RX3i CPL410</p>
-                                      </div>
-                                    </div>
-                                  </v-card>
-                                </v-col>
-                                <v-col xl="2" lg="3" md="6" sm="6" cols="12">
-                                  <v-card class="list_unit_detail">
-                                    <div class="d-flex justify-space-between">
-                                      <p class="title-card mb-0">
-                                        Inlet SPARING
-                                      </p>
-                                      <v-menu>
-                                        <template
-                                          v-slot:activator="{ on, attrs }"
-                                        >
-                                          <v-icon v-bind="attrs" v-on="on">
-                                            mdi-dots-horizontal
-                                          </v-icon>
-                                        </template>
-                                        <v-list class="py-0">
-                                          <v-list-item @click="editItem(item)">
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-pencil
-                                              </v-icon>
-                                              Edit
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                          <v-list-item
-                                            @click="deleteItem(item)"
-                                          >
-                                            <v-list-item-title>
-                                              <v-icon small class="mr-1">
-                                                mdi-delete
-                                              </v-icon>
-                                              Delete
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                        </v-list>
-                                      </v-menu>
-                                    </div>
-                                    <p class="size">BOD5</p>
-                                    <div class="d-flex justify-space-between">
-                                      <div class="left">
-                                        <p class="mb-0">Value</p>
-                                        <p class="mb-0">Series</p>
-                                      </div>
-                                      <div class="right">
-                                        <p class="mb-0">23 mg/L</p>
-                                        <p class="mb-0">RX3i CPL410</p>
                                       </div>
                                     </div>
                                   </v-card>
@@ -670,16 +571,18 @@ export default {
       { title: "About", icon: "mdi-forum" }
     ],
     device_type: ["Sensor", "Controller", "Actuator", "Others"],
-    sensors_device_list: [
+    sensors_device_list: [],
+    unit: [],
+    register_type: [
       {
-        unit_name: "Inlet Sparing",
-        sensors_name: "BOD5",
-        value: "23 mg/L",
-        parameter: "COD"
+        text: "Holding Register",
+        value: "holding_register"
+      },
+      {
+        text: "Input Register",
+        value: "input_register"
       }
     ],
-    unit: [],
-    register_type: ["Holding Register", "Input Register"],
     filters: ["Admin", "Editor", "Viewer"],
     selectedFilters: [],
     headers: [
@@ -798,12 +701,7 @@ export default {
 
         this.loadingGetUnitList = false;
         res.units.map(async unit => {
-          this.unit.push({
-            text: unit.name,
-            value: unit.id
-          });
           if (unit.sensors !== null) {
-            console.log(unit.sensors);
             const promises = unit.sensors.map(async result => {
               const sensors = await this.$store.dispatch(
                 "configuration/device_list/getSensorMeasurements",
@@ -819,41 +717,44 @@ export default {
               return lastVal;
             });
 
-            if (this.sensors_device_list.length > 0) {
-              this.sensors_device_list = [];
-              unit.sensors.map((result, index) => {
-                this.sensors_device_list.push({
-                  unit_name: unit.name,
-                  sensors_name: result.name,
-                  value: `${loopSensors[index].toFixed(0)} ${
-                    result.measurementUnit !== null
-                      ? result.measurementUnit
-                      : ""
-                  }`,
-                  parameter: result.parameter
-                });
-              });
-            } else {
-              unit.sensors.map((result, index) => {
-                this.sensors_device_list.push({
-                  unit_name: unit.name,
-                  sensors_name: result.name,
-                  value: `${loopSensors[index].toFixed(0)} ${
-                    result.measurementUnit !== null
-                      ? result.measurementUnit
-                      : ""
-                  }`,
-                  parameter: result.parameter
-                });
-              });
-            }
+            let sensor_device = []
+            unit.sensors.map((result, index) => {
+              sensor_device.push({
+                id: result.id,
+                device_type: "Sensor",
+                unit_name: unit.name,
+                brand: result.name,
+                value: `${loopSensors[index].toFixed(0)} ${
+                  result.measurementUnit !== null
+                    ? result.measurementUnit
+                    : ""
+                }`,
+                parameter: result.parameter,
+                unit: unit.id,
+                register_type: result.registerType,
+                port: result.port,
+                data_length: result.dataLength,
+                measurement: result.measurementUnit,
+                input_low: result.inputLow,
+                input_high: result.inputHigh,
+                output_low: result.outputLow,
+                output_high: result.outputHigh,
+                threshold_low: result.thresholdLow,
+                threshold_high: result.thresholdHigh,
+                calibration: result.customCalibration
+              })
+            });
+            this.unit.push({
+              text: unit.name,
+              value: unit.id,
+              sensors_device_list: sensor_device
+            })
           }
           this.loadingSensors = false;
         });
       } catch (err) {
         console.log(err);
         this.loadingGetUnitList = false;
-        // this.searchResults = [];
       }
     },
     async handleChangeUnit() {
@@ -880,30 +781,35 @@ export default {
         }
       });
     },
-    editItem(item) {
-      this.editedIndex = this.users.indexOf(item);
+    async editItem(item) {
+      console.log(item)
+      // this.editedIndex = this.sensors_device_list.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogAddEditDevice = true;
     },
     
     deleteItem(item) {
-      this.editedIndex = this.users.indexOf(item);
+      // this.editedIndex = this.unit.sensors_device_list.indexOf(item);
+      this.unit.map((sensor, index) => {
+        this.editedIndex = sensor.sensors_device_list.indexOf(item)
+      })
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
     
     async deleteItemConfirm() {
       try {
-        const res = await this.$apollo.mutate({
-          mutation: DELETE_USERS,
-          variables: {
-            userID: this.editedItem.id
-          }
-        });
+        const res = await this.$store.dispatch(
+          "configuration/device_list/deleteSensorUnit",
+          this.editedItem
+        );
 
         if (res) {
-          if (res.data.deleteUser.ok) {
-            this.users.splice(this.editedIndex, 1);
+          if (res.deleteSensor.ok) {
+            // this.sensors_device_list.splice(this.editedIndex, 1);
+            this.unit.map((sensor) => {
+              sensor.sensors_device_list.splice(this.editedIndex, 1)
+            })
             this.toastMsgSensors = "Data has been Deleted";
             this.toast = true;
           }
@@ -930,51 +836,23 @@ export default {
     },
     async save() {
       if (this.editedIndex > -1) {
-        let param = null;
-        console.log(this.editedItem);
-        // if (this.editedItem.password !== null) {
-        //   param = {
-        //     userID: this.editedItem.id,
-        //     user: {
-        //       name: this.editedItem.name,
-        //       email: this.editedItem.email,
-        //       roles: this.editedItem.roles,
-        //       notify: true,
-        //       position: this.editedItem.position,
-        //       password: this.editedItem.password
-        //     }
-        //   };
-        // } else {
-        //   param = {
-        //     userID: this.editedItem.id,
-        //     user: {
-        //       name: this.editedItem.name,
-        //       email: this.editedItem.email,
-        //       roles: this.editedItem.roles,
-        //       notify: true,
-        //       position: this.editedItem.position
-        //     }
-        //   };
-        // }
-
-        // try {
-        //   this.loadingAddSensors = true;
-        //   const res = await this.$apollo.mutate({
-        //     mutation: EDIT_USERS,
-        //     variables: param
-        //   });
-
-        //   if (res.data.editUser.ok) {
-        //     this.loadingAddSensors = false;
-        //     Object.assign(this.users[this.editedIndex], this.editedItem);
-        //     this.toastMsgSensors = "Data has been Edited";
-        //     this.toast = true;
-        //   }
-        // } catch (err) {
-        //   console.log(err);
-        //   this.loadingAddSensors = false;
-        //   // this.searchResults = [];
-        // }
+        try {
+          this.loadingAddSensors = true;
+            const res = await this.$store.dispatch(
+              "configuration/device_list/editSensorsUnit",
+              this.editedItem
+            );
+  
+            if (res.editSensor.ok) {
+              this.loadingAddSensors = false;
+              this.toastMsgSensors = "Success To Edit";
+              this.toast = true;
+            }
+            this.getUnitList()
+        } catch (error) {
+          console.log(error);
+          this.loadingAddSensors = false;
+        }
       } else {
         try {
           this.loadingAddSensors = true;
@@ -983,32 +861,15 @@ export default {
             this.editedItem
           );
 
-          if (res.data.addUser.ok) {
+          if (res.addSensor.ok) {
             this.loadingAddSensors = false;
-            this.device_list.push({
-              device_type: this.editedItem.device_type,
-              brand: this.editedItem.brand,
-              unit: this.editedItem.unit,
-              parameter: this.editedItem.parameter,
-              port: this.editedItem.port,
-              data_length: this.editedItem.data_length,
-              input_low: this.editedItem.input_low,
-              input_high: this.editedItem.input_high,
-              output_low: this.editedItem.output_low,
-              output_high: this.editedItem.output_high,
-              threshold_low: this.editedItem.threshold_low,
-              threshold_high: this.editedItem.threshold_low,
-              measurement: this.editedItem.measurement,
-              register_type: this.editedItem.register_type,
-              calibration: this.editedItem.calibration
-            });
             this.toastMsgSensors = "Success To Save";
             this.toast = true;
           }
+          this.getUnitList()
         } catch (err) {
           console.log(err);
           this.loadingAddSensors = false;
-          // this.searchResults = [];
         }
       }
       this.close();
