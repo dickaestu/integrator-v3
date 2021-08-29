@@ -13,7 +13,7 @@
                   <v-row>
                     <v-col>
                       <v-row>
-                        <v-col md="12" lg="6">
+                        <v-col md="12" lg="5">
                           <h3>
                             <v-app-bar-nav-icon
                               class="d-inline-block d-sm-print-inline-block d-md-none"
@@ -26,9 +26,15 @@
                             device health.
                           </p>
                         </v-col>
-                        <v-col md="12" lg="6" class="my-auto">
+                        <v-col md="12" lg="7" class="my-auto">
                           <v-row>
-                            <v-col xs="12" sm="4" md="4" lg="4" class="my-auto">
+                            <v-col
+                              xs="12"
+                              sm="6"
+                              md="4"
+                              lg="auto"
+                              class="my-auto"
+                            >
                               <template>
                                 <v-dialog
                                   v-model="dialogAddEditDevice"
@@ -36,7 +42,7 @@
                                 >
                                   <template v-slot:activator="{ on, attrs }">
                                     <v-btn
-                                      class="btnBgColor"
+                                      class="btnBgColor fs-12 w-100"
                                       v-bind="attrs"
                                       v-on="on"
                                     >
@@ -49,14 +55,26 @@
                                 </v-dialog>
                               </template>
                             </v-col>
-                            <v-col xs="12" sm="4" md="4" lg="4" class="my-auto">
-                              <v-btn class="btnTransBgColor">
+                            <v-col
+                              xs="12"
+                              sm="6"
+                              md="4"
+                              lg="auto"
+                              class="my-auto"
+                            >
+                              <v-btn class="btnTransBgColor fs-12 w-100">
                                 Generate Report
                               </v-btn>
                             </v-col>
-                            <v-col xs="12" sm="4" md="4" lg="4" class="my-auto">
+                            <v-col
+                              xs="12"
+                              sm="12"
+                              md="4"
+                              lg="3"
+                              class="my-auto"
+                            >
                               <v-select
-                                class="radius"
+                                class="radius "
                                 hide-details
                                 v-model="selectedFilters"
                                 :items="filters"
@@ -427,17 +445,15 @@
                         </v-card>
                       </v-dialog>
                       <!-- End -->
-                      
+
                       <v-row>
                         <v-col cols="12" class="custom-scroll">
-                          <v-row 
+                          <v-row
                             class="mb-5"
                             v-for="(sensor, indexSensor) in unit"
                             :key="indexSensor"
                           >
-                            <v-col 
-                              cols="12"
-                            >
+                            <v-col cols="12">
                               <p class="title_head">Sensors</p>
                               <v-row>
                                 <v-col
@@ -446,7 +462,8 @@
                                   md="6"
                                   sm="6"
                                   cols="12"
-                                  v-for="(i, index) in sensor.sensors_device_list"
+                                  v-for="(i,
+                                  index) in sensor.sensors_device_list"
                                   :key="index"
                                 >
                                   <v-card class="list_unit_detail">
@@ -471,9 +488,7 @@
                                               Edit
                                             </v-list-item-title>
                                           </v-list-item>
-                                          <v-list-item
-                                            @click="deleteItem(i)"
-                                          >
+                                          <v-list-item @click="deleteItem(i)">
                                             <v-list-item-title>
                                               <v-icon small class="mr-1">
                                                 mdi-delete
@@ -646,7 +661,7 @@ export default {
     },
     loadingAddSensors: false,
     loadingGetUnitList: false,
-    loadingGetDetailUnit: false,
+    loadingGetDetailUnit: false
   }),
 
   computed: {
@@ -656,7 +671,7 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "Add New Device" : "Edit Device";
     },
-    
+
     likesAllFilter() {
       return this.selectedFilters.length === this.filters.length;
     },
@@ -671,14 +686,14 @@ export default {
   },
 
   mounted() {
-    // 
+    //
   },
 
   watch: {
     dialogAddEditDevice(val) {
       val || this.close();
     },
-    
+
     dialogDelete(val) {
       val || this.closeDelete();
     },
@@ -717,7 +732,7 @@ export default {
               return lastVal;
             });
 
-            let sensor_device = []
+            let sensor_device = [];
             unit.sensors.map((result, index) => {
               sensor_device.push({
                 id: result.id,
@@ -725,9 +740,7 @@ export default {
                 unit_name: unit.name,
                 brand: result.name,
                 value: `${loopSensors[index].toFixed(0)} ${
-                  result.measurementUnit !== null
-                    ? result.measurementUnit
-                    : ""
+                  result.measurementUnit !== null ? result.measurementUnit : ""
                 }`,
                 parameter: result.parameter,
                 unit: unit.id,
@@ -742,13 +755,13 @@ export default {
                 threshold_low: result.thresholdLow,
                 threshold_high: result.thresholdHigh,
                 calibration: result.customCalibration
-              })
+              });
             });
             this.unit.push({
               text: unit.name,
               value: unit.id,
               sensors_device_list: sensor_device
-            })
+            });
           }
           this.loadingSensors = false;
         });
@@ -782,21 +795,21 @@ export default {
       });
     },
     async editItem(item) {
-      console.log(item)
+      console.log(item);
       // this.editedIndex = this.sensors_device_list.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogAddEditDevice = true;
     },
-    
+
     deleteItem(item) {
       // this.editedIndex = this.unit.sensors_device_list.indexOf(item);
       this.unit.map((sensor, index) => {
-        this.editedIndex = sensor.sensors_device_list.indexOf(item)
-      })
+        this.editedIndex = sensor.sensors_device_list.indexOf(item);
+      });
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
-    
+
     async deleteItemConfirm() {
       try {
         const res = await this.$store.dispatch(
@@ -807,9 +820,9 @@ export default {
         if (res) {
           if (res.deleteSensor.ok) {
             // this.sensors_device_list.splice(this.editedIndex, 1);
-            this.unit.map((sensor) => {
-              sensor.sensors_device_list.splice(this.editedIndex, 1)
-            })
+            this.unit.map(sensor => {
+              sensor.sensors_device_list.splice(this.editedIndex, 1);
+            });
             this.toastMsgSensors = "Data has been Deleted";
             this.toast = true;
           }
@@ -838,17 +851,17 @@ export default {
       if (this.editedIndex > -1) {
         try {
           this.loadingAddSensors = true;
-            const res = await this.$store.dispatch(
-              "configuration/device_list/editSensorsUnit",
-              this.editedItem
-            );
-  
-            if (res.editSensor.ok) {
-              this.loadingAddSensors = false;
-              this.toastMsgSensors = "Success To Edit";
-              this.toast = true;
-            }
-            this.getUnitList()
+          const res = await this.$store.dispatch(
+            "configuration/device_list/editSensorsUnit",
+            this.editedItem
+          );
+
+          if (res.editSensor.ok) {
+            this.loadingAddSensors = false;
+            this.toastMsgSensors = "Success To Edit";
+            this.toast = true;
+          }
+          this.getUnitList();
         } catch (error) {
           console.log(error);
           this.loadingAddSensors = false;
@@ -866,7 +879,7 @@ export default {
             this.toastMsgSensors = "Success To Save";
             this.toast = true;
           }
-          this.getUnitList()
+          this.getUnitList();
         } catch (err) {
           console.log(err);
           this.loadingAddSensors = false;

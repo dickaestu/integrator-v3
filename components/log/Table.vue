@@ -114,7 +114,7 @@ const QUERY_LOGS = gql`
 export default {
   name: "Log",
   data: () => ({
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split("T")[0],
     menu: false,
     items: [],
     headers: [
@@ -127,7 +127,7 @@ export default {
     level: ["Info", "Error"],
     loading: false,
     timestamps1: null,
-    timestamps2: null,
+    timestamps2: null
   }),
   mounted() {
     this.getLogs();
@@ -139,14 +139,10 @@ export default {
         const res = await this.$apollo.query({
           query: QUERY_LOGS,
           variables: {
-            startTime: this.timestamps1 !== null ? this.timestamps1 / 1000 : null,
+            startTime:
+              this.timestamps1 !== null ? this.timestamps1 / 1000 : null,
             endTime: this.timestamps2 !== null ? this.timestamps2 / 1000 : null,
-            type: [
-              "measurement",
-              "data_transfer",
-              "iot",
-              "operation"
-            ],
+            type: ["measurement", "data_transfer", "iot", "operation"],
             level: []
           }
         });
@@ -154,20 +150,22 @@ export default {
         if (res) {
           this.loading = false;
           let result = res.data.logs;
-          var options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric', 
-                hour: 'numeric', 
-                minute: 'numeric', 
-                second: 'numeric', 
-                timeZone: 'Asia/Jakarta',
+          var options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            timeZone: "Asia/Jakarta"
           };
           result.map(items => {
             this.items.push({
               // date: new Date(items.timestamp * 1000),
-              date: new Intl.DateTimeFormat('ban-ID', options).format(new Date(items.timestamp * 1000)),
+              date: new Intl.DateTimeFormat("ban-ID", options).format(
+                new Date(items.timestamp * 1000)
+              ),
               type: items.type.toUpperCase(),
               level: items.level.toUpperCase(),
               desc: items.message
@@ -183,6 +181,10 @@ export default {
     getColor(level) {
       if (level == "Info") return "#D45757";
       else return "#399F4F";
+
+      // if (roles == "Admin") return "#386D7A";
+      // else if (roles == "Editor") return "#4593BF";
+      // else return "#71C7DC";
     },
     dateChange(val) {
       console.log(val);
@@ -210,8 +212,8 @@ export default {
         59,
         59
       ).getTime();
-      this.timestamps2 = newDate2
-      this.getLogs()
+      this.timestamps2 = newDate2;
+      this.getLogs();
     }
   }
 };
