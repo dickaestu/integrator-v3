@@ -29,23 +29,22 @@
                           <v-row>
                             <v-col>
                               <template>
-                                <v-dialog
+                                <!-- <v-dialog
                                   v-model="dialogAddEditUnit"
                                   max-width="500px"
-                                >
-                                  <template v-slot:activator="{ on, attrs }">
+                                > -->
+                                  <!-- <template v-slot:activator="{ on, attrs }"> -->
                                     <v-btn
                                       class="btnBgColor"
-                                      v-bind="attrs"
-                                      v-on="on"
+                                      @click="addUnitItem"
                                     >
                                       <v-icon left>
                                         mdi-plus
                                       </v-icon>
                                       ADD Unit
                                     </v-btn>
-                                  </template>
-                                </v-dialog>
+                                  <!-- </template> -->
+                                <!-- </v-dialog> -->
                               </template>
                             </v-col>
                           </v-row>
@@ -341,7 +340,7 @@
                                           <span
                                             >Unit
                                             <br />
-                                            fc78835c-ad79-41ad-8a4f-20a725ae012e
+                                            {{ this.editedItem.uuid }}
                                           </span>
                                         </p>
                                       </v-col>
@@ -484,7 +483,7 @@
                                 >
                                   <v-card class="list_unit_detail">
                                     <div class="d-flex justify-end">
-                                      <!-- <v-menu>
+                                      <v-menu>
                                         <template
                                           v-slot:activator="{ on, attrs }"
                                         >
@@ -512,7 +511,7 @@
                                             </v-list-item-title>
                                           </v-list-item>
                                         </v-list>
-                                      </v-menu> -->
+                                      </v-menu>
                                     </div>
                                     <p class="title-card">
                                       {{ i.name }}
@@ -582,6 +581,7 @@
 <script>
 import SideMenu from "../../../components/config/SideMenu.vue";
 import Menu from "../../../components/Menu.vue";
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   name: "unit_list",
@@ -591,6 +591,8 @@ export default {
   },
   data: () => ({
     // bell: false,
+    sidebarMenu: false,
+    menu: false,
     expired: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
       .toISOString()
       .substr(0, 10),
@@ -645,7 +647,8 @@ export default {
       data_bits: null,
       parity: null,
       stop_bits: null,
-      host: null
+      host: null,
+      uuid: null
     },
     defaultItem: {
       name: null,
@@ -661,7 +664,8 @@ export default {
       data_bits: null,
       parity: null,
       stop_bits: null,
-      host: null
+      host: null,
+      uuid: null
     },
     loadingAddUser: false,
     loadingGetUser: false
@@ -726,9 +730,17 @@ export default {
         // this.searchResults = [];
       }
     },
+    async save() {
+      console.log(this.editedItem)
+    },
     handleDialogSeeMore(params) {
       this.dialogSeeMore = true;
       this.dataDialogSeeMore = params;
+    },
+    addUnitItem() {
+      this.editedItem.uuid = uuidv4()
+      this.dialogAddEditUnit = true;
+      console.log(this.editedItem)
     },
     editItem(item) {
       this.editedIndex = this.unit_list.indexOf(item);
