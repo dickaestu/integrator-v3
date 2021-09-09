@@ -11,7 +11,7 @@
           <v-container>
             <v-row>
               <v-col cols="12" md="5" class="my-auto">
-                <h1>Device Health <span>NH3N</span></h1>
+                <h1>Device Health <span>{{ sensorParams.brand }}</span></h1>
               </v-col>
               <v-col cols="12" md="7" class="text-right my-auto">
                 <v-row class="justify-end">
@@ -84,10 +84,10 @@
                   </div>
                   <div class="right">
                     <p>
-                      fc78835c-ad79-41ad-8a4f-20a725ae012e
+                      {{ sensorParams.id}}
                     </p>
-                    <p>Sensor</p>
-                    <p>Emerson HX-200693DR</p>
+                    <p>{{ sensorParams.device_type}}</p>
+                    <p>...</p>
                   </div>
                 </div>
               </v-col>
@@ -100,7 +100,7 @@
                   </div>
                   <div class="right">
                     <p>
-                      01-03-2021
+                      {{ deviceHealthValue !== null ? deviceHealthValue.installationDate : "" }}
                     </p>
                     <p>01-05-2021</p>
                     <p>14-06-2021</p>
@@ -116,10 +116,10 @@
                   </div>
                   <div class="right">
                     <p>
-                      230
+                      {{ deviceHealthValue !== null ? deviceHealthValue.current : "" }}
                     </p>
-                    <p>500</p>
-                    <p>80</p>
+                    <p>{{ deviceHealthValue !== null ? deviceHealthValue.max : "" }}</p>
+                    <p>{{ deviceHealthValue !== null ? deviceHealthValue.min : ""}}</p>
                   </div>
                 </div>
               </v-col>
@@ -132,10 +132,10 @@
                   </div>
                   <div class="right">
                     <p>
-                      15-04-2020
+                      {{ deviceHealthValue !== null ? deviceHealthValue.lastUpdate : '' }}
                     </p>
-                    <p>10 Minutes</p>
-                    <p>2 Minutes</p>
+                    <p>{{ deviceHealthValue !== null ? deviceHealthValue.downTime : '' }}</p>
+                    <p>{{ deviceHealthValue !== null ? deviceHealthValue.ghostPeak : '' }}</p>
                   </div>
                 </div>
               </v-col>
@@ -224,8 +224,8 @@
                   class="d-block d-sm-block d-md-none"
                   v-model="fab"
                   direction="top"
-                  right="true"
-                  bottom="true"
+                  right
+                  bottom
                   transition="slide-y-reverse-transition"
                 >
                   <template v-slot:activator>
@@ -553,7 +553,7 @@
                       ref="editedItem.unit"
                       class="form_edit_select"
                       v-model="editedItem.unit"
-                      :items="unit"
+                      :items="status"
                       label="Select Status"
                       solo
                       hide-details="auto"
@@ -693,6 +693,9 @@
 <script>
 export default {
   name: "DeviceHealth",
+  props: {
+    sensorParams: Object
+  },
   data: () => ({
     fab: false,
     issueDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -855,8 +858,9 @@ export default {
     },
     series: [],
     loadingAddSensors: false,
-    loadingGetUnitList: false,
-    loadingGetDetailUnit: false
+    loadingGetDeviceHealthItem: false,
+    loadingGetDetailUnit: false,
+    deviceHealthValue: null,
   }),
   computed: {
     dateRangeText() {
@@ -867,23 +871,6 @@ export default {
         ? "Add Issue History"
         : "Edit Issue History";
     }
-  },
-  mounted() {
-    // var arr1 = this.dates[0];
-    // arr1 = arr1.split("-");
-    // var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
-    // this.timestamps1 = newDate;
-    // var arr2 = this.dates[1];
-    // arr2 = arr2.split("-");
-    // var newDate2 = new Date(
-    //   arr2[0],
-    //   arr2[1] - 1,
-    //   arr2[2],
-    //   23,
-    //   59,
-    //   59
-    // ).getTime();
-    // this.timestamps2 = newDate2;
   },
   watch: {
     dialogAddEntryIssue(val) {
@@ -900,7 +887,7 @@ export default {
     }
   },
   created() {
-    this.getUnitList();
+    this.getSensors();
   },
   methods: {
     editItemIssue(item) {
@@ -928,70 +915,89 @@ export default {
         this.editedIndex = -1;
       });
     },
-    async getUnitList() {
+    async getSensors() {
       try {
-        this.loadingGetUnitList = true;
+        this.loadingGetDeviceHealthItem = true;
         const res = await this.$store.dispatch(
-          "configuration/device_list/getUnitList"
+          "configuration/device_list/getSensorMeasurements",
+          this.sensorParams.parameter
+        );
+        const current = res.data.sensorMeasurements.map(sensors => {
+          const val = sensors.values;
+          const lastVal = val[val.length - 1];
+          return lastVal;
+        });
+        const dataMin = res.data.sensorMeasurements.map(sensors => {
+          const val = sensors.values;
+          const lastVal = Math.min(...val).toFixed(2)
+          return lastVal;
+        });
+        const dataMax = res.data.sensorMeasurements.map(sensors => {
+          const val = sensors.values;
+          const lastVal = Math.max(...val).toFixed(2)
+          return lastVal;
+        });
+
+        const resDeviceHealth = await this.$store.dispatch(
+          "configuration/device_list/getDeviceHealth",
+          this.sensorParams.parameter
         );
 
-        this.loadingGetUnitList = false;
-        res.units.map(async unit => {
-          this.unit.push({
-            text: unit.name,
-            value: unit.id
-          });
-          if (unit.sensors !== null) {
-            console.log(unit.sensors);
-            const promises = unit.sensors.map(async result => {
-              const sensors = await this.$store.dispatch(
-                "configuration/device_list/getSensorMeasurements",
-                result.parameter
-              );
-              return sensors;
-            });
+        this.deviceHealthValue = {
+          current : current[0].toFixed(2),
+          min : dataMin[0],
+          max: dataMax[0],
+          downTime: resDeviceHealth.deviceHealth.downTime,
+          ghostPeak: resDeviceHealth.deviceHealth.ghostPeak,
+          installationDate: new Date(resDeviceHealth.deviceHealth.installationDate),
+          lastCalibrationDate: new Date(resDeviceHealth.deviceHealth.lastCalibrationDate),
+          lastUpdate: new Date(resDeviceHealth.deviceHealth.lastUpdate),
+          nextCalibrationDate: new Date(resDeviceHealth.deviceHealth.nextCalibrationDate)
+        }
 
-            const dataSensors = await Promise.all(promises);
-            const loopSensors = dataSensors.map(sensors => {
-              const val = sensors.data.sensorMeasurements[0].values;
-              const lastVal = val[val.length - 1];
-              return lastVal;
-            });
+        console.log(this.deviceHealthValue)
 
-            if (this.sensors_device_list.length > 0) {
-              this.sensors_device_list = [];
-              unit.sensors.map((result, index) => {
-                this.sensors_device_list.push({
-                  unit_name: unit.name,
-                  sensors_name: result.name,
-                  value: `${loopSensors[index].toFixed(0)} ${
-                    result.measurementUnit !== null
-                      ? result.measurementUnit
-                      : ""
-                  }`,
-                  parameter: result.parameter
-                });
-              });
-            } else {
-              unit.sensors.map((result, index) => {
-                this.sensors_device_list.push({
-                  unit_name: unit.name,
-                  sensors_name: result.name,
-                  value: `${loopSensors[index].toFixed(0)} ${
-                    result.measurementUnit !== null
-                      ? result.measurementUnit
-                      : ""
-                  }`,
-                  parameter: result.parameter
-                });
-              });
-            }
-          }
-          this.loadingSensors = false;
-        });
+        // if (res) {
+        //   if (res.data.units.length > 0) {
+        //     const promises = res.data.units[0].sensors.map(async result => {
+        //       const sensors = await this.getSensorMeasurements(
+        //         result.parameter
+        //       );
+        //       return sensors;
+        //     });
+
+        //     const dataSensors = await Promise.all(promises);
+
+        //     const loopSensors = dataSensors.map(sensors => {
+        //       const val = sensors.data.sensorMeasurements[0].values;
+        //       const lastVal = val[val.length - 1];
+        //       return lastVal;
+        //     });
+
+        //     res.data.units[0].sensors.map((result, index) => {
+        //       this.items.push({
+        //         title: result.parameter,
+        //         unit: res.data.units[0].name,
+        //         desc: "",
+        //         size: `${loopSensors[index].toFixed(2)} ${
+        //           result.measurementUnit !== null ? result.measurementUnit : ""
+        //         }`,
+        //         color: `${
+        //           loopSensors[index] >= result.outputHigh
+        //             ? `red`
+        //             : loopSensors[index] >= result.thresholdHigh
+        //             ? "yellow"
+        //             : ""
+        //         }`
+        //       });
+        //     });
+        //     this.loadingGetDeviceHealthItem = false;
+        //   }
+        //   this.getGraphicSensors(this.items[0]);
+        // }
       } catch (err) {
         console.log(err);
-        this.loadingGetUnitList = false;
+        this.loadingGetDeviceHealthItem = false;
         // this.searchResults = [];
       }
     },

@@ -8,7 +8,7 @@
           <v-col>
             <v-card class="mx-auto">
               <SideMenu :sideBar="sidebarMenu" />
-              <v-content class="menu-right">
+              <v-main class="menu-right">
                 <v-container fluid class="pa-7">
                   <v-row>
                     <v-col>
@@ -501,7 +501,7 @@
                                     </div>
                                     <p
                                       class="size"
-                                      @click.stop="dialogDeviceHealth = true"
+                                      @click="dialogDeviceHealthOpen(i)"
                                     >
                                       {{ i.brand }}
                                     </p>
@@ -530,12 +530,12 @@
                         width="80%"
                         content-class="device_health_dialog"
                       >
-                        <DeviceHealth />
+                        <DeviceHealth :sensorParams="sensorsParamsDeviceHealth" />
                       </v-dialog>
                     </v-col>
                   </v-row>
                 </v-container>
-              </v-content>
+              </v-main>
             </v-card>
           </v-col>
         </v-row>
@@ -661,7 +661,8 @@ export default {
     },
     loadingAddSensors: false,
     loadingGetUnitList: false,
-    loadingGetDetailUnit: false
+    loadingGetDetailUnit: false,
+    sensorsParamsDeviceHealth: null
   }),
 
   computed: {
@@ -886,6 +887,10 @@ export default {
         }
       }
       this.close();
+    },
+    dialogDeviceHealthOpen(params) {
+      this.sensorsParamsDeviceHealth = params
+      this.dialogDeviceHealth = open
     }
   }
 };

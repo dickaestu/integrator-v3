@@ -4,6 +4,7 @@ export const state = () => ({
     unitList : null,
     loading: false,
     sensors: null,
+    deviceHealth: null,
     sensorsMeasurement: null
 })
 
@@ -54,6 +55,19 @@ mutation editSensor ($sensorID: ID!, $s: InputSensor!) {
 }
 `
 
+const DEVICE_HEALTH = gql`
+query deviceHealth ($parameter: String!, $date: String!) {
+  deviceHealth (parameter: $parameter, date: $date) {
+      installationDate
+      lastCalibrationDate
+      nextCalibrationDate
+      lastUpdate
+      ghostPeak
+      downTime
+  }
+}
+`
+
 const SENSORS_MEASUREMENTS = gql`
   query sensorMeasurements(
     $startTime: Timestamp
@@ -94,6 +108,9 @@ export const mutations = {
   },
   getSensorsMeasurement(state, {data}){
     state.sensorsMeasurement = data
+  },
+  getDeviceHealth(state, {data}){
+    state.deviceHealth = data
   }
 }
 
@@ -237,5 +254,25 @@ export const actions = {
       } catch (error) {
         console.log(error)
       }
+    },
+    async getDeviceHealth({commit}, params){
+      console.log(params)
+      let client = this.app.apolloProvider.defaultClient
+        try {
+            const res = await client.query({
+              query: DEVICE_HEALTH,
+              variables: {
+                "parameter": params,
+                "date": "2021-09-03"
+              }
+            });
+
+            if (res) {
+              commit('getDeviceHealth', { res })
+            }
+            return res.data
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
