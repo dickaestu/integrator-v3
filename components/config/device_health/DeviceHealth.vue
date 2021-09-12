@@ -11,7 +11,9 @@
           <v-container>
             <v-row>
               <v-col cols="12" md="5" class="my-auto">
-                <h1>Device Health <span>{{ sensorParams.brand }}</span></h1>
+                <h1>
+                  Device Health <span>{{ sensorParams.brand }}</span>
+                </h1>
               </v-col>
               <v-col cols="12" md="7" class="text-right my-auto">
                 <v-row class="justify-end">
@@ -84,9 +86,9 @@
                   </div>
                   <div class="right">
                     <p>
-                      {{ sensorParams.id}}
+                      {{ sensorParams.id }}
                     </p>
-                    <p>{{ sensorParams.device_type}}</p>
+                    <p>{{ sensorParams.device_type }}</p>
                     <p>...</p>
                   </div>
                 </div>
@@ -100,7 +102,11 @@
                   </div>
                   <div class="right">
                     <p>
-                      {{ deviceHealthValue !== null ? deviceHealthValue.installationDate : "" }}
+                      {{
+                        deviceHealthValue !== null
+                          ? deviceHealthValue.installationDate
+                          : ""
+                      }}
                     </p>
                     <p>01-05-2021</p>
                     <p>14-06-2021</p>
@@ -116,10 +122,22 @@
                   </div>
                   <div class="right">
                     <p>
-                      {{ deviceHealthValue !== null ? deviceHealthValue.current : "" }}
+                      {{
+                        deviceHealthValue !== null
+                          ? deviceHealthValue.current
+                          : ""
+                      }}
                     </p>
-                    <p>{{ deviceHealthValue !== null ? deviceHealthValue.max : "" }}</p>
-                    <p>{{ deviceHealthValue !== null ? deviceHealthValue.min : ""}}</p>
+                    <p>
+                      {{
+                        deviceHealthValue !== null ? deviceHealthValue.max : ""
+                      }}
+                    </p>
+                    <p>
+                      {{
+                        deviceHealthValue !== null ? deviceHealthValue.min : ""
+                      }}
+                    </p>
                   </div>
                 </div>
               </v-col>
@@ -132,10 +150,26 @@
                   </div>
                   <div class="right">
                     <p>
-                      {{ deviceHealthValue !== null ? deviceHealthValue.lastUpdate : '' }}
+                      {{
+                        deviceHealthValue !== null
+                          ? deviceHealthValue.lastUpdate
+                          : ""
+                      }}
                     </p>
-                    <p>{{ deviceHealthValue !== null ? deviceHealthValue.downTime : '' }}</p>
-                    <p>{{ deviceHealthValue !== null ? deviceHealthValue.ghostPeak : '' }}</p>
+                    <p>
+                      {{
+                        deviceHealthValue !== null
+                          ? deviceHealthValue.downTime
+                          : ""
+                      }}
+                    </p>
+                    <p>
+                      {{
+                        deviceHealthValue !== null
+                          ? deviceHealthValue.ghostPeak
+                          : ""
+                      }}
+                    </p>
                   </div>
                 </div>
               </v-col>
@@ -170,13 +204,22 @@
                 </div>
               </v-col>
             </v-row>
+            <!-- Issue And Calibration -->
             <v-row>
               <v-col cols="12" id="btnFloating">
                 <div class="d-flex justify-space-between">
                   <div class="left">
                     <v-tabs v-model="tab">
-                      <v-tab>Issue History</v-tab>
-                      <v-tab>Calibration History</v-tab>
+                      <v-tab
+                        href="#issue-history"
+                        @click="changeBtnAddType(`issue`)"
+                        >Issue History</v-tab
+                      >
+                      <v-tab
+                        href="#calibration-history"
+                        @click="changeBtnAddType(`calibration`)"
+                        >Calibration History</v-tab
+                      >
                     </v-tabs>
                   </div>
                   <div class="right add-entry d-none d-sm-none d-md-block">
@@ -267,88 +310,23 @@
                     </v-dialog>
                   </template>
                 </v-speed-dial>
+
+                <!-- Table Issue History -->
                 <v-tabs-items v-model="tab">
-                  <v-tab-item>
-                    <v-simple-table height="170px">
-                      <template v-slot:default>
-                        <thead>
-                          <tr>
-                            <th class="text-left">
-                              Issue Date
-                            </th>
-                            <th class="text-left">
-                              Person & Company Name
-                            </th>
-                            <th class="text-left">
-                              Issue Description
-                            </th>
-                            <th class="text-left">
-                              Status
-                            </th>
-                            <th class="text-left">
-                              Solved Note
-                            </th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr v-for="(i, index) in item" :key="index">
-                            <td>{{ i.date }}</td>
-                            <td>
-                              {{ i.name }}
-                            </td>
-                            <td>
-                              {{ i.description }}
-                            </td>
-                            <td>{{ i.status }}</td>
-                            <td>
-                              {{ i.note }}
-                            </td>
-                            <td>
-                              <v-menu>
-                                <template
-                                  v-slot:activator="{
-                                    on,
-                                    attrs
-                                  }"
-                                >
-                                  <v-icon v-bind="attrs" v-on="on">
-                                    mdi-dots-horizontal
-                                  </v-icon>
-                                </template>
-                                <v-list class="py-0">
-                                  <v-list-item @click="editItemIssue(i)">
-                                    <v-list-item-title>
-                                      <v-icon small class="mr-1">
-                                        mdi-pencil
-                                      </v-icon>
-                                      Edit
-                                    </v-list-item-title>
-                                  </v-list-item>
-                                  <v-list-item @click="deleteItemIssue(i)">
-                                    <v-list-item-title>
-                                      <v-icon small class="mr-1">
-                                        mdi-delete
-                                      </v-icon>
-                                      Delete
-                                    </v-list-item-title>
-                                  </v-list-item>
-                                  <v-list-item @click="downloadItemIssue(i)">
-                                    <v-list-item-title>
-                                      <v-icon small class="mr-1">
-                                        mdi-download
-                                      </v-icon>
-                                      Download
-                                    </v-list-item-title>
-                                  </v-list-item>
-                                </v-list>
-                              </v-menu>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-tab-item>
+                  <TabItemIssue
+                    :issueHistoryList="issueHistoryList"
+                    :deleteItem="deleteItem"
+                    :editItem="editItem"
+                  />
+                </v-tabs-items>
+
+                <!-- Table Calibration History -->
+                <v-tabs-items v-model="tab">
+                  <TabItemCalibration
+                    :calibrationHistoryList="calibrationHistoryList"
+                    :deleteItem="deleteItem"
+                    :editItem="editItem"
+                  />
                 </v-tabs-items>
               </v-col>
             </v-row>
@@ -356,141 +334,42 @@
         </v-card-text>
       </v-card>
       <!-- Create Entry Issue -->
-      <v-dialog
-        content-class="edit_user_dialog"
-        v-model="dialogAddEntryIssue"
-        max-width="80%"
-      >
-        <v-form method="POST" @submit.prevent="save">
-          <v-card>
-            <v-card-title class="justify-space-between">
-              <span class="text-h5">{{ formTitleIssue }}</span>
-              <v-icon
-                class="close_dialog white--text"
-                @click="dialogAddEntryIssue = false"
-              >
-                mdi-close-thick
-              </v-icon>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" md="6">
-                    <v-row>
-                      <v-col cols="12">
-                        <label class="title_field">Issue Date</label>
-                        <v-menu
-                          content-class="date_single_range"
-                          ref="menu"
-                          v-model="menuIssueDate"
-                          :close-on-content-click="false"
-                          :return-value.sync="issueDate"
-                          transition="scale-transition"
-                          min-width="auto"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              class="form_edit single_date"
-                              v-model="issueDate"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                              hide-details="auto"
-                              outlined
-                              append-icon="mdi-menu-down"
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                            v-model="issueDate"
-                            @change="dateChange(issueDate)"
-                            no-title
-                            scrollable
-                            color="color_current_date"
-                          >
-                            <v-spacer></v-spacer>
-                            <v-btn text @click="menu = false">
-                              Cancel
-                            </v-btn>
-                            <v-btn text @click="$refs.menu.save(issueDate)">
-                              OK
-                            </v-btn>
-                          </v-date-picker>
-                        </v-menu>
-                      </v-col>
-                      <v-col cols="12">
-                        <label class="title_field">Person & Company Name</label>
-                        <v-text-field
-                          ref="editedItem.person_company"
-                          class="form_edit"
-                          v-model="editedItem.person_company"
-                          label="Enter person & company name"
-                          solo
-                          hide-details="auto"
-                          placeholder="Enter person & company name"
-                          required
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <label class="title_field">Issue Description</label>
-                        <v-textarea
-                          ref="editedItem.issue_desc"
-                          v-model="editedItem.issue_desc"
-                          solo
-                          class="form_edit"
-                          label="Enter calibration description"
-                          placeholder="Enter calibration description"
-                          hide-details="auto"
-                        ></v-textarea>
-                      </v-col>
-                      <v-col cols="12">
-                        <label class="title_field">Status</label>
-                        <v-select
-                          ref="editedItem.status"
-                          class="form_edit_select"
-                          v-model="editedItem.status"
-                          :items="status"
-                          label="Select Status"
-                          solo
-                          hide-details="auto"
-                          @change="handleChangeUnit()"
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12">
-                        <label class="title_field">Solved Note</label>
-                        <v-textarea
-                          ref="editedItem.note"
-                          v-model="editedItem.note"
-                          solo
-                          class="form_edit"
-                          label="Enter Note"
-                          placeholder="Enter Note"
-                          hide-details="auto"
-                        ></v-textarea>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-col cols="12" class="d-flex justify-end">
-                      <v-btn
-                        text
-                        class="btnBgColor mr-5"
-                        @click="save"
-                        :loading="loadingAddSensors"
-                        :disabled="loadingAddSensors"
-                      >
-                        Add Issue History
-                      </v-btn>
-                      <v-btn text class="btnTransBgColor" @click="close">
-                        Cancel
-                      </v-btn>
-                    </v-col>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-          </v-card>
-        </v-form>
-      </v-dialog>
+      <DialogFormIssue
+        v-if="btnAddType == `issue`"
+        :dialogAddEntryIssue="dialogAddEntryIssue"
+        :close="close"
+        :param="sensorParameter.parameter"
+        :saveIssue="saveIssue"
+      />
+      <!-- End -->
+
+      <!-- Create Entry Calibration -->
+      <DialogFormCalibration
+        v-else
+        :dialogAddEntryIssue="dialogAddEntryIssue"
+        :close="close"
+        :param="sensorParameter.parameter"
+      />
+      <!-- End -->
+
+      <!-- Edit Issue -->
+      <DialogFormEditIssue
+        v-if="btnEditType == `issue`"
+        :dialogEditIssue="dialogEditIssue"
+        :close="close"
+        :data="editedItem"
+        :param="sensorParameter.parameter"
+      />
+      <!-- End -->
+
+      <!-- Edit Issue -->
+      <DialogFormEditCalibration
+        v-else
+        :dialogEditIssue="dialogEditIssue"
+        :close="close"
+        :data="editedItem"
+        :param="sensorParameter.parameter"
+      />
       <!-- End -->
 
       <!-- Delete Dialog -->
@@ -531,172 +410,74 @@
       <!-- End -->
 
       <!-- Full Table Issue -->
-      <v-dialog
-        content-class="edit_user_dialog"
-        v-model="dialogFullTableIssue"
-        max-width="80%"
-      >
-        <v-card min-height="90vh">
-          <v-container fluid>
-            <v-row>
-              <v-col cols="12" md="6">
-                <h1>
-                  <v-icon @click="dialogFullTableIssue = false">
-                    mdi-chevron-left </v-icon
-                  >Issue History
-                </h1>
-              </v-col>
-              <v-col cols="12" md="6">
-                <div class="d-flex justify-space-between">
-                  <div class="left px-3 px-sm-0">
-                    <v-select
-                      ref="editedItem.unit"
-                      class="form_edit_select"
-                      v-model="editedItem.unit"
-                      :items="status"
-                      label="Select Status"
-                      solo
-                      hide-details="auto"
-                      @change="handleChangeUnit()"
-                    ></v-select>
-                  </div>
-                  <div class="right px-3 px-sm-0">
-                    <v-menu
-                      content-class="date_single_range"
-                      ref="menu"
-                      v-model="menuIssueDate"
-                      :close-on-content-click="false"
-                      :return-value.sync="issueDate"
-                      transition="scale-transition"
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          class="form_edit single_date"
-                          v-model="issueDate"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          hide-details="auto"
-                          outlined
-                          append-icon="mdi-menu-down"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="issueDate"
-                        @change="dateChange(issueDate)"
-                        no-title
-                        scrollable
-                        color="color_current_date"
-                      >
-                        <v-spacer></v-spacer>
-                        <v-btn text @click="menu = false">
-                          Cancel
-                        </v-btn>
-                        <v-btn text @click="$refs.menu.save(issueDate)">
-                          OK
-                        </v-btn>
-                      </v-date-picker>
-                    </v-menu>
-                  </div>
-                </div>
-              </v-col>
-              <v-col cols="12">
-                <v-simple-table height="170px">
-                  <template v-slot:default>
-                    <thead>
-                      <tr>
-                        <th class="text-left">
-                          Issue Date
-                        </th>
-                        <th class="text-left">
-                          Person & Company Name
-                        </th>
-                        <th class="text-left">
-                          Issue Description
-                        </th>
-                        <th class="text-left">
-                          Status
-                        </th>
-                        <th class="text-left">
-                          Solved Note
-                        </th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>15-04-21</td>
-                        <td>
-                          Aulia Rizky H - Emerson
-                        </td>
-                        <td>
-                          Signal interference
-                        </td>
-                        <td>Open</td>
-                        <td>
-                          Is being monitored
-                        </td>
-                        <td>
-                          <v-menu>
-                            <template
-                              v-slot:activator="{
-                                on,
-                                attrs
-                              }"
-                            >
-                              <v-icon v-bind="attrs" v-on="on">
-                                mdi-dots-horizontal
-                              </v-icon>
-                            </template>
-                            <v-list class="py-0">
-                              <v-list-item @click="editItemIssue(item)">
-                                <v-list-item-title>
-                                  <v-icon small class="mr-1">
-                                    mdi-pencil
-                                  </v-icon>
-                                  Edit
-                                </v-list-item-title>
-                              </v-list-item>
-                              <v-list-item @click="deleteItemIssue(item)">
-                                <v-list-item-title>
-                                  <v-icon small class="mr-1">
-                                    mdi-delete
-                                  </v-icon>
-                                  Delete
-                                </v-list-item-title>
-                              </v-list-item>
-                              <v-list-item @click="downloadItemIssue(item)">
-                                <v-list-item-title>
-                                  <v-icon small class="mr-1">
-                                    mdi-download
-                                  </v-icon>
-                                  Download
-                                </v-list-item-title>
-                              </v-list-item>
-                            </v-list>
-                          </v-menu>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-dialog>
+      <FullTabItemIssue
+        :dialogFullTableIssue="dialogFullTableIssue"
+        :close="close"
+      />
       <!-- End -->
+
+      <v-snackbar
+        :timeout="-1"
+        :value="toast"
+        color="blue-grey"
+        fixed
+        rounded="pill"
+      >
+        {{ toastMsg }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="white" text v-bind="attrs" @click="toast = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </div>
   </v-app>
 </template>
 <script>
+import TabItemIssue from "./TabItemIssue.vue";
+import TabItemCalibration from "./TabItemCalibration.vue";
+import DialogFormIssue from "./DialogFormIssue.vue";
+import DialogFormEditIssue from "./DialogFormEditIssue.vue";
+import DialogFormCalibration from "./DialogFormCalibration.vue";
+import DialogFormEditCalibration from "./DialogFormEditCalibration.vue";
+import FullTabItemIssue from "./FullTabItemIssue.vue";
+import gql from "graphql-tag";
+
+const SENSORS_MEASUREMENTS_DISTRIBUTION = gql`
+  query sensorMeasurementDistributions(
+    $startTime: Timestamp
+    $endTime: Timestamp
+    $parameters: [String!]
+  ) {
+    sensorMeasurementDistributions(
+      startTime: $startTime
+      endTime: $endTime
+      parameters: $parameters
+    ) {
+      parameter
+      values
+      fractions
+    }
+  }
+`;
 export default {
   name: "DeviceHealth",
+  components: {
+    TabItemIssue,
+    TabItemCalibration,
+    DialogFormIssue,
+    DialogFormCalibration,
+    FullTabItemIssue,
+    DialogFormEditIssue,
+    DialogFormEditCalibration
+  },
   props: {
     sensorParams: Object
   },
   data: () => ({
+    toastMsg: "",
+    toast: false,
+
     fab: false,
     issueDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
       .toISOString()
@@ -704,22 +485,18 @@ export default {
     tab: null,
     dates: ["2021-06-16", "2021-06-16"],
     menu: false,
-    item: [
-      {
-        date: "15-07-2020",
-        name: "Oji",
-        description: "deskripsi",
-        status: "Open",
-        note: "is being monitored"
-      }
-    ],
+    issueHistoryList: [],
+    calibrationHistoryList: [],
     status: [],
     menuIssueDate: false,
     selectGraph: ["Trend", "Distribution"],
     dialogAddEntryIssue: false,
+    dialogEditIssue: false,
     dialogFullTableIssue: false,
     dialogDelete: false,
-    editedIndex: -1,
+    editedIndex: null,
+    deletedIndex: null,
+    deleteType: null,
     editedItem: {
       issueDate: null,
       person_company: null,
@@ -858,18 +635,21 @@ export default {
     },
     series: [],
     loadingAddSensors: false,
+    loadingAddIssue: false,
     loadingGetDeviceHealthItem: false,
     loadingGetDetailUnit: false,
     deviceHealthValue: null,
+    sensorParameter: null,
+
+    btnAddType: "issue",
+    btnEditType: null,
+
+    timestamps1: new Date().getTime(),
+    timestamps2: new Date().getTime()
   }),
   computed: {
     dateRangeText() {
       return this.dates.join(" ~ ");
-    },
-    formTitleIssue() {
-      return this.editedIndex === -1
-        ? "Add Issue History"
-        : "Edit Issue History";
     }
   },
   watch: {
@@ -884,43 +664,122 @@ export default {
     },
     dialogFullTableIssue(val) {
       val || this.close();
+    },
+    sensorParams() {
+      this.sensorParameter = this.sensorParams;
+      this.getSensors();
+      this.getIssueList();
+      this.getCalibrationHistoryList();
+      this.getGraphicSensorsMeasurementsDistribution();
+      // console.log(this.sensorParameter);
     }
   },
   created() {
+    this.sensorParameter = this.sensorParams;
     this.getSensors();
+    this.getIssueList();
+    this.getCalibrationHistoryList();
+    this.getGraphicSensorsMeasurementsDistribution();
   },
   methods: {
-    editItemIssue(item) {
-      this.editedIndex = this.item.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogAddEntryIssue = true;
+    changeBtnAddType(item) {
+      this.btnAddType = item;
     },
-    deleteItemIssue(item) {
-      this.editedIndex = this.item.indexOf(item);
+
+    editItem(item, index, type) {
+      this.btnEditType = type;
+      this.editedIndex = index;
+      this.editedItem = Object.assign({}, item);
+      this.dialogEditIssue = true;
+    },
+    deleteItem(item, index, type) {
+      this.deletedIndex = index;
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
+      this.deleteType = type;
     },
     close() {
       this.dialogAddEntryIssue = false;
+      this.dialogEditIssue = false;
       this.dialogFullTableIssue = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+      this.editedItem = Object.assign({}, this.defaultItem);
+      this.btnEditType = null;
     },
     closeDelete() {
       this.dialogDelete = false;
+      this.deletedIndex = false;
+      this.deleteType = null;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
+        this.editedIndex = null;
       });
     },
+
+    async getSensorMeasurementsDistribution(params) {
+      try {
+        const res = await this.$apollo.query({
+          query: SENSORS_MEASUREMENTS_DISTRIBUTION,
+          variables: {
+            startTime: null,
+            endTime: null,
+            parameters: [params]
+          }
+        });
+        if (res) {
+          return res;
+        }
+      } catch (err) {
+        console.log(err);
+        // this.searchResults = [];
+      }
+    },
+
+    async getGraphicSensorsMeasurementsDistribution() {
+      try {
+        let res = await this.getSensorMeasurementsDistribution(
+          this.sensorParameter.parameter
+        );
+        // console.log(res.data.sensorMeasurements[0].values)
+        let value = res.data.sensorMeasurementDistributions[0].values;
+        // let time = res.data.sensorMeasurements[0].timestamps;
+        let data = [];
+        // let day = [];
+        // var options = {
+        //   year: "numeric",
+        //   month: "long",
+        //   day: "numeric",
+        //   hour: "numeric",
+        //   minute: "numeric",
+        //   second: "numeric",
+        //   timeZone: "Asia/Jakarta",
+        //   hour12: false
+        // };
+        for (let i = 0; i < value.length; i++) {
+          // day[i] = new Intl.DateTimeFormat('ban-ID', options).format(new Date(time[i] * 1000));
+          // day[i] = new Date(time[i] * 1000);
+          data.push({
+            x: [i],
+            y: value[i].toFixed(2)
+          });
+        }
+        this.series = [
+          {
+            name: "Values",
+            data: data
+          }
+        ];
+        // this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async getSensors() {
       try {
         this.loadingGetDeviceHealthItem = true;
         const res = await this.$store.dispatch(
           "configuration/device_list/getSensorMeasurements",
-          this.sensorParams.parameter
+          this.sensorParameter.parameter
         );
         const current = res.data.sensorMeasurements.map(sensors => {
           const val = sensors.values;
@@ -929,33 +788,37 @@ export default {
         });
         const dataMin = res.data.sensorMeasurements.map(sensors => {
           const val = sensors.values;
-          const lastVal = Math.min(...val).toFixed(2)
+          const lastVal = Math.min(...val).toFixed(2);
           return lastVal;
         });
         const dataMax = res.data.sensorMeasurements.map(sensors => {
           const val = sensors.values;
-          const lastVal = Math.max(...val).toFixed(2)
+          const lastVal = Math.max(...val).toFixed(2);
           return lastVal;
         });
 
         const resDeviceHealth = await this.$store.dispatch(
           "configuration/device_list/getDeviceHealth",
-          this.sensorParams.parameter
+          this.sensorParameter.parameter
         );
 
         this.deviceHealthValue = {
-          current : current[0].toFixed(2),
-          min : dataMin[0],
+          current: current[0].toFixed(2),
+          min: dataMin[0],
           max: dataMax[0],
           downTime: resDeviceHealth.deviceHealth.downTime,
           ghostPeak: resDeviceHealth.deviceHealth.ghostPeak,
-          installationDate: new Date(resDeviceHealth.deviceHealth.installationDate),
-          lastCalibrationDate: new Date(resDeviceHealth.deviceHealth.lastCalibrationDate),
+          installationDate: new Date(
+            resDeviceHealth.deviceHealth.installationDate
+          ),
+          lastCalibrationDate: new Date(
+            resDeviceHealth.deviceHealth.lastCalibrationDate
+          ),
           lastUpdate: new Date(resDeviceHealth.deviceHealth.lastUpdate),
-          nextCalibrationDate: new Date(resDeviceHealth.deviceHealth.nextCalibrationDate)
-        }
-
-        console.log(this.deviceHealthValue)
+          nextCalibrationDate: new Date(
+            resDeviceHealth.deviceHealth.nextCalibrationDate
+          )
+        };
 
         // if (res) {
         //   if (res.data.units.length > 0) {
@@ -995,6 +858,34 @@ export default {
         //   }
         //   this.getGraphicSensors(this.items[0]);
         // }
+        this.loadingGetDeviceHealthItem = false;
+      } catch (err) {
+        console.log(err);
+        this.loadingGetDeviceHealthItem = false;
+        // this.searchResults = [];
+      }
+    },
+    async getIssueList() {
+      try {
+        const res = await this.$store.dispatch(
+          "configuration/issue_history/getIssueList",
+          { parameter: this.sensorParameter.parameter }
+        );
+
+        this.issueHistoryList = res.issues;
+      } catch (err) {
+        console.log(err);
+        // this.searchResults = [];
+      }
+    },
+    async getCalibrationHistoryList() {
+      try {
+        const res = await this.$store.dispatch(
+          "configuration/calibration_history/getCalibrationHistoryList",
+          { parameter: this.sensorParameter.parameter }
+        );
+
+        this.calibrationHistoryList = res.calibrationActivities;
       } catch (err) {
         console.log(err);
         this.loadingGetDeviceHealthItem = false;
@@ -1017,100 +908,44 @@ export default {
       }
     },
     async deleteItemConfirm() {
-      try {
-        const res = await this.$apollo.mutate({
-          mutation: DELETE_USERS,
-          variables: {
-            userID: this.editedItem.id
-          }
-        });
-
-        if (res) {
-          if (res.data.deleteUser.ok) {
-            this.users.splice(this.editedIndex, 1);
-            this.toastMsgSensors = "Data has been Deleted";
-            this.toast = true;
-          }
-        }
-      } catch (err) {
-        console.log(err);
-        // this.searchResults = [];
-      }
-      this.closeDelete();
-    },
-    async save() {
-      if (this.editedIndex > -1) {
-        let param = null;
-        console.log(this.editedItem);
-        // if (this.editedItem.password !== null) {
-        //   param = {
-        //     userID: this.editedItem.id,
-        //     user: {
-        //       name: this.editedItem.name,
-        //       email: this.editedItem.email,
-        //       roles: this.editedItem.roles,
-        //       notify: true,
-        //       position: this.editedItem.position,
-        //       password: this.editedItem.password
-        //     }
-        //   };
-        // } else {
-        //   param = {
-        //     userID: this.editedItem.id,
-        //     user: {
-        //       name: this.editedItem.name,
-        //       email: this.editedItem.email,
-        //       roles: this.editedItem.roles,
-        //       notify: true,
-        //       position: this.editedItem.position
-        //     }
-        //   };
-        // }
-
-        // try {
-        //   this.loadingAddSensors = true;
-        //   const res = await this.$apollo.mutate({
-        //     mutation: EDIT_USERS,
-        //     variables: param
-        //   });
-
-        //   if (res.data.editUser.ok) {
-        //     this.loadingAddSensors = false;
-        //     Object.assign(this.users[this.editedIndex], this.editedItem);
-        //     this.toastMsgSensors = "Data has been Edited";
-        //     this.toast = true;
-        //   }
-        // } catch (err) {
-        //   console.log(err);
-        //   this.loadingAddSensors = false;
-        //   // this.searchResults = [];
-        // }
-      } else {
+      if (this.deleteType === "delete-issue") {
         try {
-          this.loadingAddSensors = true;
           const res = await this.$store.dispatch(
-            "/pages/configuration/device_list/addSensorsUnit",
-            this.editedItem
+            "configuration/issue_history/deleteIssue",
+            this.editedItem.id
           );
 
-          if (res.data.addUser.ok) {
-            this.loadingAddSensors = false;
-            this.device_list.push({
-              person_company: this.editedItem.person_company,
-              issue_desc: this.editedItem.issue_desc,
-              status: this.editedItem.status,
-              note: this.editedItem.note
-            });
-            this.toastMsgSensors = "Success To Save";
+          if (res.deleteIssue.ok) {
+            this.issueHistoryList.splice(this.deletedIndex, 1);
+            this.toastMsg = "Data has been Deleted";
             this.toast = true;
           }
         } catch (err) {
           console.log(err);
-          this.loadingAddSensors = false;
-          // this.searchResults = [];
+        }
+      } else {
+        try {
+          const res = await this.$store.dispatch(
+            "configuration/calibration_history/deleteCalibrationHistory",
+            this.editedItem.id
+          );
+          if (res.deleteCalibrationActivity.ok) {
+            this.calibrationHistoryList.splice(this.deletedIndex, 1);
+            this.toastMsg = "Data has been Deleted";
+            this.toast = true;
+          }
+        } catch (err) {
+          console.log(err);
         }
       }
-      this.close();
+
+      this.closeDelete();
+    },
+
+    async saveIssue() {
+      this.issueHistoryList = [];
+
+      this.getIssueList();
     }
   }
 };

@@ -1,55 +1,49 @@
 import { gql } from "graphql-tag";
 
 export const state = () => ({
-  unitList: null,
-  loading: false,
-  sensors: null,
-  deviceHealth: null,
-  sensorsMeasurement: null
+  calibrationHistory: null,
+  loading: false
 });
 
-const GET_UNIT_LIST = gql`
-  query units($id: [ID!]) {
-    units(id: $id) {
+const GET_CALIBRATION_HISTORY_LIST = gql`
+  query calibrationActivities(
+    $startTime: Timestamp
+    $endTime: Timestamp
+    $statuses: [Status!]
+    $parameter: String!
+  ) {
+    calibrationActivities(
+      startTime: $startTime
+      endTime: $endTime
+      statuses: $statuses
+      parameter: $parameter
+    ) {
       id
-      name
-      location
-      latitude
-      longitude
-      certificationExpirationDate
+      date
+      personAndCompanyName
       description
-      sensors {
-        id
-        name
-        parameter
-        unitID
-        registerType
-        port
-        dataLength
-        measurementUnit
-        inputLow
-        inputHigh
-        outputLow
-        outputHigh
-        thresholdLow
-        thresholdHigh
-        customCalibration
-      }
+      status
+      note
+      fileID
+      nextSchedule
     }
   }
 `;
 
-const ADD_SENSORS = gql`
-  mutation addSensor($s: InputSensor!) {
-    addSensor(s: $s) {
+const ADD_CALIBRATION = gql`
+  mutation addCalibrationActivity($activity: InputCalibrationActivity!) {
+    addCalibrationActivity(activity: $activity) {
       ok
     }
   }
 `;
 
-const EDIT_SENSORS = gql`
-  mutation editSensor($sensorID: ID!, $s: InputSensor!) {
-    editSensor(sensorID: $sensorID, s: $s) {
+const EDIT_CALIBRATION = gql`
+  mutation editCalibrationActivity(
+    $activityID: ID!
+    $activity: InputCalibrationActivity!
+  ) {
+    editCalibrationActivity(activityID: $activityID, activity: $activity) {
       ok
     }
   }
@@ -85,19 +79,19 @@ const SENSORS_MEASUREMENTS = gql`
     }
   }
 `;
-const DELETE_SENSORS = gql`
-  mutation deleteSensor($sensorID: ID!) {
-    deleteSensor(sensorID: $sensorID) {
+const DELETE_CALIBRATION_HISTORY = gql`
+  mutation deleteCalibrationActivity($activityID: ID!) {
+    deleteCalibrationActivity(activityID: $activityID) {
       ok
     }
   }
 `;
 
 export const mutations = {
-  getUnitList(state, { data }) {
-    state.unitList = data;
+  getCalibrationHistoryList(state, { data }) {
+    state.calibrationHistory = data;
   },
-  addSensors(state, { data }) {
+  addCalibration(state, { data }) {
     state.sensors = data;
   },
   editSensors(state, { data }) {
@@ -115,19 +109,23 @@ export const mutations = {
 };
 
 export const actions = {
-  async getUnitList({ commit }) {
+  async getCalibrationHistoryList({ commit }, params) {
     let client = this.app.apolloProvider.defaultClient;
     try {
       const res = await client.query({
-        query: GET_UNIT_LIST,
+        query: GET_CALIBRATION_HISTORY_LIST,
         variables: {
-          id: []
+          startTime: 1,
+          endTime: null,
+          statuses: [],
+          parameter: params.parameter
         }
       });
 
-      if (res) {
-        commit("getUnitList", { res });
-      }
+      // if (res) {
+      //   commit("getUnitList", { res });
+      // }
+
       return res.data;
     } catch (err) {
       console.log(err);
@@ -151,62 +149,46 @@ export const actions = {
       console.log(err);
     }
   },
-  async addSensorsUnit({ commit }, formData) {
+  async addCalibration({ commit }, formData) {
     let client = this.app.apolloProvider.defaultClient;
-    console.log(formData);
     try {
       const res = await client.mutate({
-        mutation: ADD_SENSORS,
+        mutation: ADD_CALIBRATION,
         variables: {
-          s: {
-            name: formData.brand,
-            unitID: formData.unit,
-            port: formData.port,
+          activity: {
+            date: formData.calibrationDate,
+            personAndCompanyName: formData.person_company,
             parameter: formData.parameter,
-            registerType: formData.register_type,
-            dataLength: formData.data_length,
-            measurementUnit: formData.measurement,
-            inputLow: formData.input_low,
-            inputHigh: formData.input_high,
-            outputLow: formData.output_low,
-            outputHigh: formData.output_high,
-            thresholdLow: formData.threshold_low,
-            thresholdHigh: formData.threshold_high,
-            customCalibration: formData.calibration
+            description: formData.desc,
+            status: formData.status,
+            note: formData.note,
+            nextSchedule: formData.nextSchedule,
+            fileID: formData.fileID
           }
         }
       });
 
-      if (res) {
-        commit("addSensors", { res });
-      }
       return res.data;
     } catch (err) {
       console.log(err);
     }
   },
-  async editSensorsUnit({ commit }, formData) {
+  async editCalibration({ commit }, formData) {
     let client = this.app.apolloProvider.defaultClient;
     try {
       const res = await client.mutate({
-        mutation: EDIT_SENSORS,
+        mutation: EDIT_CALIBRATION,
         variables: {
-          sensorID: formData.id,
-          s: {
-            name: formData.brand,
-            unitID: formData.unit,
-            port: formData.port,
+          activityID: formData.id,
+          activity: {
+            date: formData.calibrationDate,
+            personAndCompanyName: formData.person_company,
+            description: formData.desc,
+            status: formData.status,
+            note: formData.note,
             parameter: formData.parameter,
-            registerType: formData.register_type,
-            dataLength: formData.data_length,
-            measurementUnit: formData.measurement,
-            inputLow: formData.input_low,
-            inputHigh: formData.input_high,
-            outputLow: formData.output_low,
-            outputHigh: formData.output_high,
-            thresholdLow: formData.threshold_low,
-            thresholdHigh: formData.threshold_high,
-            customCalibration: formData.calibration
+            fileID: formData.fileID,
+            nextSchedule: formData.nextSchedule
           }
         }
       });
@@ -240,22 +222,22 @@ export const actions = {
       // this.searchResults = [];
     }
   },
-  async deleteSensorUnit({ commit }, formData) {
+  async deleteCalibrationHistory({ commit }, formData) {
     let client = this.app.apolloProvider.defaultClient;
     try {
       const res = await client.mutate({
-        mutation: DELETE_SENSORS,
+        mutation: DELETE_CALIBRATION_HISTORY,
         variables: {
-          sensorID: formData.id
+          activityID: formData
         }
       });
-      commit("deleteSensors", { res });
       return res.data;
     } catch (error) {
       console.log(error);
     }
   },
   async getDeviceHealth({ commit }, params) {
+    console.log(params);
     let client = this.app.apolloProvider.defaultClient;
     try {
       const res = await client.query({

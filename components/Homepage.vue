@@ -20,14 +20,14 @@
                   <p class="ph mb-0">{{ dataGrafik.title }}</p>
                   <p class="unit">{{ dataGrafik.size }}</p>
                   <div class="d-flex justify-space-between">
-                    <p class="subtitle mb-0">Unit Name</p>
+                    <p class="subtitle mb-0">Unit Names</p>
                     <!-- ambil dari unit name -->
                     <p class="text mb-0">{{ dataGrafik.unit }}</p>
                   </div>
                   <div class="d-flex justify-space-between">
                     <p class="subtitle">Device ID</p>
                     <!-- ambil dari parameter -->
-                    <p class="text">{{ dataGrafik.parameter}}</p> 
+                    <p class="text">{{ dataGrafik.parameter }}</p>
                   </div>
                   <div class="d-flex justify-space-between">
                     <p class="subtitle mb-0">Min</p>
@@ -78,7 +78,10 @@
                           <v-btn text @click="menu = false">
                             Cancel
                           </v-btn>
-                          <v-btn text @click="$refs.menu.save(dateChange(dates))">
+                          <v-btn
+                            text
+                            @click="$refs.menu.save(dateChange(dates))"
+                          >
                             OK
                           </v-btn>
                         </v-date-picker>
@@ -173,9 +176,8 @@
 </template>
 
 <script>
-import HomeLog from './home/Log.vue'
+import HomeLog from "./home/Log.vue";
 import gql from "graphql-tag";
-
 
 const SENSORS_MEASUREMENTS = gql`
   query sensorMeasurements(
@@ -212,8 +214,8 @@ export default {
   middleware: "auth",
   data: () => ({
     dates: [
-      new Date().toISOString().split('T')[0], 
-      new Date().toISOString().split('T')[0]
+      new Date().toISOString().split("T")[0],
+      new Date().toISOString().split("T")[0]
       // "2021-06-16",
       // "2021-06-16"
     ],
@@ -237,7 +239,7 @@ export default {
             offsetX: 0,
             offsetY: 0,
             width: "100%",
-            yAxisIndex: 0,
+            yAxisIndex: 0
             // label: {
             //   borderWidth: 0,
             //   borderRadius: 6,
@@ -272,7 +274,7 @@ export default {
             offsetX: 0,
             offsetY: 0,
             width: "100%",
-            yAxisIndex: 0,
+            yAxisIndex: 0
             // label: {
             //   borderWidth: 0,
             //   borderRadius: 6,
@@ -304,16 +306,16 @@ export default {
         show: false
       },
       chart: {
-         animations: {
-            enabled: false,
-            easing: 'linear',
-            speed: 0,
-            animateGradually: {
-                enabled: false,
-            },
-            dynamicAnimation: {
-                enabled: false,
-            }
+        animations: {
+          enabled: false,
+          easing: "linear",
+          speed: 0,
+          animateGradually: {
+            enabled: false
+          },
+          dynamicAnimation: {
+            enabled: false
+          }
         },
         toolbar: {
           show: false
@@ -368,10 +370,10 @@ export default {
     medianValueGraphic: 0,
     summaryLogTime: null,
     dataInterval: null,
-    dataInterval2: null,
+    dataInterval2: null
   }),
-  created () {
-    this.dateRangeText = this.dates.join(' ~ ')
+  created() {
+    this.dateRangeText = this.dates.join(" ~ ");
     this.getSensors();
     this.getLastMeasurementTime();
     this.getLogSummary();
@@ -392,7 +394,7 @@ export default {
     ).getTime();
     this.timestamps2 = newDate2;
     this.dataInterval = setInterval(() => {
-      this.dateRangeText = this.dates.join(' ~ ')
+      this.dateRangeText = this.dates.join(" ~ ");
       this.getSensors();
       this.getLastMeasurementTime();
       this.getLogSummary();
@@ -401,7 +403,7 @@ export default {
       // var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
       var newDate = new Date().getTime();
       this.timestamps1 = newDate;
-  
+
       var arr2 = this.dates[1];
       arr2 = arr2.split("-");
       var newDate2 = new Date(
@@ -413,120 +415,117 @@ export default {
         59
       ).getTime();
       this.timestamps2 = newDate2;
-    }, 60000)
+    }, 60000);
   },
   methods: {
     async getSensors() {
       try {
         this.loading = true;
         // this.dataInterval = setInterval(async () => {
-          const res = await this.$store.dispatch(
-            "home/getSensors"
-          );
-          // console.log(this.$store.state.home.sensors)
-          // if (res) {
-            if (res.data.units.length > 0) {
-              const promises = res.data.units[0].sensors.map(async result => {
-                const sensors = await this.getSensorMeasurements(
-                  result.parameter
-                );
-                return sensors;
+        const res = await this.$store.dispatch("home/getSensors");
+        // console.log(this.$store.state.home.sensors)
+        // if (res) {
+        if (res.data.units.length > 0) {
+          const promises = res.data.units[0].sensors.map(async result => {
+            const sensors = await this.getSensorMeasurements(result.parameter);
+            return sensors;
+          });
+
+          const dataSensors = await Promise.all(promises);
+
+          const loopSensors = dataSensors.map(sensors => {
+            const val = sensors.data.sensorMeasurements[0].values;
+            const lastVal = val[val.length - 1];
+            return lastVal;
+          });
+
+          const dataMin = dataSensors.map(sensors => {
+            const val = sensors.data.sensorMeasurements[0].values;
+            const lastVal = Math.min(...val).toFixed(2);
+            return lastVal;
+          });
+
+          const dataMax = dataSensors.map(sensors => {
+            const val = sensors.data.sensorMeasurements[0].values;
+            const lastVal = Math.max(...val).toFixed(2);
+            return lastVal;
+          });
+
+          const dataMedian = dataSensors.map(sensors => {
+            const val = sensors.data.sensorMeasurements[0].values;
+            const lastVal = this.medianof2Arr(val).toFixed(2);
+            return lastVal;
+          });
+
+          if (this.items.length > 0) {
+            this.items = [];
+            res.data.units[0].sensors.map((result, index) => {
+              this.items.push({
+                title: result.name,
+                parameter: result.parameter,
+                unit: res.data.units[0].name,
+                desc: "",
+                size: `${loopSensors[index].toFixed(2)} ${
+                  result.measurementUnit !== null ? result.measurementUnit : ""
+                }`,
+                color: `${
+                  result.thresholdHigh !== null
+                    ? loopSensors[index] >= result.outputHigh
+                      ? `red`
+                      : loopSensors[index] >= result.thresholdHigh
+                      ? "yellow"
+                      : ""
+                    : loopSensors[index] >= result.outputHigh
+                    ? `red`
+                    : ""
+                }`,
+                minValue: dataMin[index],
+                maxValue: dataMax[index],
+                medianValue: dataMedian[index]
               });
-  
-              const dataSensors = await Promise.all(promises);
-  
-              const loopSensors = dataSensors.map(sensors => {
-                const val = sensors.data.sensorMeasurements[0].values;
-                const lastVal = val[val.length - 1];
-                return lastVal;
+            });
+          } else {
+            res.data.units[0].sensors.map((result, index) => {
+              this.items.push({
+                title: result.name,
+                parameter: result.parameter,
+                unit: res.data.units[0].name,
+                desc: "",
+                size: `${loopSensors[index].toFixed(2)} ${
+                  result.measurementUnit !== null ? result.measurementUnit : ""
+                }`,
+                color: `${
+                  result.thresholdHigh !== null
+                    ? loopSensors[index] >= result.outputHigh
+                      ? `red`
+                      : loopSensors[index] >= result.thresholdHigh
+                      ? "yellow"
+                      : ""
+                    : loopSensors[index] >= result.outputHigh
+                    ? `red`
+                    : ""
+                }`,
+                minValue: dataMin[index],
+                maxValue: dataMax[index],
+                medianValue: dataMedian[index]
               });
-  
-              const dataMin = dataSensors.map(sensors => {
-                const val = sensors.data.sensorMeasurements[0].values;
-                const lastVal = Math.min(...val).toFixed(2)
-                return lastVal;
-              });
-  
-              const dataMax = dataSensors.map(sensors => {
-                const val = sensors.data.sensorMeasurements[0].values;
-                const lastVal = Math.max(...val).toFixed(2)
-                return lastVal;
-              });
-  
-              const dataMedian = dataSensors.map(sensors => {
-                const val = sensors.data.sensorMeasurements[0].values;
-                const lastVal = this.medianof2Arr(val).toFixed(2)
-                return lastVal;
-              });
-  
-              if (this.items.length > 0) {
-                this.items = []
-                res.data.units[0].sensors.map((result, index) => {
-                  this.items.push({
-                    title: result.name,
-                    parameter: result.parameter,
-                    unit: res.data.units[0].name,
-                    desc: "",
-                    size: `${loopSensors[index].toFixed(2)} ${
-                      result.measurementUnit !== null ? result.measurementUnit : ""
-                    }`,
-                    color: `${
-                      result.thresholdHigh !== null ?
-                        loopSensors[index] >= result.outputHigh
-                          ? `red`
-                          : loopSensors[index] >= result.thresholdHigh
-                          ? "yellow"
-                          : ""
-                      :
-                        loopSensors[index] >= result.outputHigh
-                          ? `red`
-                          : ""
-                    }`,
-                    minValue: dataMin[index],
-                    maxValue: dataMax[index],
-                    medianValue: dataMedian[index]
-                  });
-                });
-              } else {
-                res.data.units[0].sensors.map((result, index) => {
-                  this.items.push({
-                    title: result.name,
-                    parameter: result.parameter,
-                    unit: res.data.units[0].name,
-                    desc: "",
-                    size: `${loopSensors[index].toFixed(2)} ${
-                      result.measurementUnit !== null ? result.measurementUnit : ""
-                    }`,
-                    color: `${
-                      result.thresholdHigh !== null ?
-                        loopSensors[index] >= result.outputHigh
-                          ? `red`
-                          : loopSensors[index] >= result.thresholdHigh
-                          ? "yellow"
-                          : ""
-                      :
-                        loopSensors[index] >= result.outputHigh
-                          ? `red`
-                          : ""
-                    }`,
-                    minValue: dataMin[index],
-                    maxValue: dataMax[index],
-                    medianValue: dataMedian[index]
-                  });
-                });
-              }
-              this.loading = false;
-            }
-            if (this.parameter !== null) {
-              this.items.filter(e => e.title === this.parameter.title).map(result => {
-                this.parameter = result
-              })
-            }else{
-              this.parameter = this.items[0]
-            }
-            this.getGraphicSensors(this.parameter);
-          // }
-          // console.log('masuk')
+            });
+          }
+          this.loading = false;
+        }
+        if (this.parameter !== null) {
+          this.items
+            .filter(e => e.title === this.parameter.title)
+            .map(result => {
+              this.parameter = result;
+            });
+        } else {
+          this.parameter = this.items[0];
+        }
+        this.getGraphicSensors(this.parameter);
+
+        // }
+        // console.log('masuk')
         // }, 3000)
       } catch (err) {
         console.log(err);
@@ -536,8 +535,8 @@ export default {
       }
     },
     onClickSensors(params) {
-      console.log(params)
-      this.parameter = params
+      console.log(params);
+      this.parameter = params;
       this.getGraphicSensors(params);
     },
     async getSensorMeasurements(params) {
@@ -616,22 +615,22 @@ export default {
         59,
         59
       ).getTime();
-      this.timestamps2 = newDate2
+      this.timestamps2 = newDate2;
       this.dates = [
         `${arr1[0]}-${arr1[1]}-${arr1[2]}`,
         `${arr2[0]}-${arr2[1]}-${arr2[2]}`
-      ]
-      this.dateRangeText = this.dates.join(' ~ ')
-      this.getGraphicSensors(this.parameter)
-      this.dataGrafik = this.parameter
-      this.getSensors()
+      ];
+      this.dateRangeText = this.dates.join(" ~ ");
+      this.getGraphicSensors(this.parameter);
+      this.dataGrafik = this.parameter;
+      this.getSensors();
     },
     async getGraphicSensors(params) {
       if (params === undefined) {
         params = this.dataGrafik;
       }
       try {
-        this.loading = true
+        this.loading = true;
         let res = await this.getSensorMeasurements(params.parameter);
         this.dataGrafik = params;
         // console.log(res.data.sensorMeasurements[0].values)
@@ -639,21 +638,23 @@ export default {
         let time = res.data.sensorMeasurements[0].timestamps;
         let data = [];
         let day = [];
-        var options = { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric', 
-          hour: 'numeric', 
-          minute: 'numeric', 
-          second: 'numeric',
-          timeZone: 'Asia/Jakarta',
-          hour12: false,
+        var options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          timeZone: "Asia/Jakarta",
+          hour12: false
         };
         for (let i = 0; i < value.length; i++) {
           // day[i] = new Intl.DateTimeFormat('ban-ID', options).format(new Date(time[i] * 1000));
           day[i] = new Date(time[i] * 1000);
           data.push({
-            x: new Intl.DateTimeFormat('ban-ID', options).format(day[i])+' WIB',
+            x:
+              new Intl.DateTimeFormat("ban-ID", options).format(day[i]) +
+              " WIB",
             y: value[i].toFixed(2)
           });
         }
@@ -664,54 +665,48 @@ export default {
           }
         ];
         this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
-        this.loading = false
+        this.loading = false;
       } catch (error) {
-        console.log(error)
+        console.log(error);
         this.loading = false;
       }
     },
     medianof2Arr(arr1) {
-        var concat = arr1;
-        // concat = concat.sort(
-        //     function (a, b) { return a - b });
-  
-        // console.log(concat);
-        var length = concat.length;
-  
-        if (length % 2 == 1) {
-  
-            // If length is odd
-            // console.log(concat[(length / 2) - .5])
-            return concat[(length / 2) - .5]
-  
-        }
-        else {
-            // console.log((concat[length / 2] 
-            //     + concat[(length / 2) - 1]) / 2);
-                  
-            return (concat[length / 2] 
-                + concat[(length / 2) - 1]) / 2;
-        }
-    },
-    async getLastMeasurementTime(){
-      try {
-        this.loading = true
-        const res = await this.$store.dispatch(
-          "home/getLastMeasurementTime"
-        );
-        this.summaryLogTime = res.lastMeasurementTime
-        this.loading = false
-      } catch (error) {
-        this.loading = false
-        console.log(error)
+      var concat = arr1;
+      // concat = concat.sort(
+      //     function (a, b) { return a - b });
+
+      // console.log(concat);
+      var length = concat.length;
+
+      if (length % 2 == 1) {
+        // If length is odd
+        // console.log(concat[(length / 2) - .5])
+        return concat[length / 2 - 0.5];
+      } else {
+        // console.log((concat[length / 2]
+        //     + concat[(length / 2) - 1]) / 2);
+
+        return (concat[length / 2] + concat[length / 2 - 1]) / 2;
       }
     },
-    cancelAutoUpdate () {
+    async getLastMeasurementTime() {
+      try {
+        this.loading = true;
+        const res = await this.$store.dispatch("home/getLastMeasurementTime");
+        this.summaryLogTime = res.lastMeasurementTime;
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+        console.log(error);
+      }
+    },
+    cancelAutoUpdate() {
       clearInterval(this.dataInterval);
     }
   },
-  beforeDestroy(){
-    this.cancelAutoUpdate()
+  beforeDestroy() {
+    this.cancelAutoUpdate();
   }
 };
 </script>
