@@ -349,6 +349,7 @@
         :dialogAddEntryIssue="dialogAddEntryIssue"
         :close="close"
         :param="sensorParameter.parameter"
+        :saveCalibration="saveCalibration"
       />
       <!-- End -->
 
@@ -942,10 +943,34 @@ export default {
       this.closeDelete();
     },
 
-    async saveIssue() {
-      this.issueHistoryList = [];
+    async saveIssue(item) {
+      this.issueHistoryList.push({
+        id: item.id,
+        date: item.issueDate,
+        personAndCompanyName: item.person_company,
+        description: item.issue_desc,
+        status: item.status,
+        note: item.note
+      });
 
-      this.getIssueList();
+      this.toastMsg = "Data has been Created";
+      this.toast = true;
+    },
+
+    async saveCalibration(item) {
+      this.calibrationHistoryList.push({
+        id: item.id,
+        date: item.calibrationDate,
+        personAndCompanyName: item.person_company,
+        description: item.desc,
+        status: item.status,
+        note: item.note,
+        nextSchedule: item.nextSchedule,
+        fileID: item.fileID
+      });
+
+      this.toastMsg = "Data has been Created";
+      this.toast = true;
     }
   }
 };

@@ -139,6 +139,7 @@
   </v-dialog>
 </template>
 <script>
+import { v4 as uuidv4 } from "uuid";
 export default {
   name: "DialogFormIssue",
   props: {
@@ -161,14 +162,16 @@ export default {
       issue_desc: null,
       status: null,
       note: null,
-      parameter: null
+      parameter: null,
+      id: null
     },
     defaultItem: {
       issueDate: null,
       person_company: null,
       issue_desc: null,
       status: null,
-      note: null
+      note: null,
+      id: null
     },
     loadingAddIssue: false
   }),
@@ -186,15 +189,16 @@ export default {
     },
 
     async save() {
+      this.editedItem.id = uuidv4();
       try {
         const res = await this.$store.dispatch(
-          "configuration/issue_history/addIssue",
+          "configuration/issue_history/editIssue",
           this.editedItem
         );
+        this.saveIssue(this.editedItem);
       } catch (err) {
         console.log(err);
       }
-      this.saveIssue();
 
       this.close();
     }

@@ -4,7 +4,7 @@
     v-model="dialogAddEntryIssue"
     max-width="80%"
   >
-    <v-form method="POST" @submit.prevent="saveCalibration">
+    <v-form method="POST" @submit.prevent="save">
       <v-card>
         <v-card-title class="justify-space-between">
           <span class="text-h5">Add Calibration History </span>
@@ -180,7 +180,7 @@
                   <v-btn
                     text
                     class="btnBgColor mr-5"
-                    @click="saveCalibration"
+                    @click="save"
                     :loading="loadingAddCalibration"
                     :disabled="loadingAddCalibration"
                   >
@@ -199,12 +199,15 @@
   </v-dialog>
 </template>
 <script>
+import { v4 as uuidv4 } from "uuid";
+
 export default {
   name: "DialogFormCalibration",
   props: {
     dialogAddEntryIssue: Boolean,
     close: Function,
-    param: String
+    param: String,
+    saveCalibration: Function
   },
   data: () => ({
     calibrationDate: new Date(
@@ -232,7 +235,8 @@ export default {
       note: null,
       parameter: null,
       fileID: null,
-      nextSchedule: null
+      nextSchedule: null,
+      id: null
     },
     defaultItem: {
       calibrationDate: null,
@@ -241,7 +245,8 @@ export default {
       status: null,
       note: null,
       fileID: null,
-      nextSchedule: null
+      nextSchedule: null,
+      id: null
     },
     loadingAddCalibration: false
   }),
@@ -264,7 +269,7 @@ export default {
       this.editedItem.nextSchedule = Math.floor(new Date(val).getTime() / 1000);
     },
 
-    async saveCalibration({ $axios }) {
+    async save({ $axios }) {
       const myData = new FormData();
       myData.append("file", this.file);
 
@@ -282,11 +287,14 @@ export default {
         );
         this.editedItem.fileID = resFile.id;
 
+        this.editedItem.id = uuidv4();
+
         const res = await this.$store.dispatch(
-          "configuration/calibration_history/addCalibration",
+          "configuration/calibration_history/editCalibration",
           this.editedItem
         );
-        console.log(res);
+
+        this.saveCalibration(this.editedItem);
       } catch (err) {
         console.log(err);
       }
