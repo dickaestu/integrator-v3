@@ -263,6 +263,8 @@
                     </template>
                   </div>
                 </div>
+
+                <!-- Button Add and Show Full Table when mobile view -->
                 <v-speed-dial
                   class="d-block d-sm-block d-md-none"
                   v-model="fab"
@@ -414,6 +416,9 @@
       <FullTabItemIssue
         :dialogFullTableIssue="dialogFullTableIssue"
         :close="close"
+        :issueHistoryList="issueHistoryList"
+        :deleteItem="deleteItem"
+        :editItem="editItem"
       />
       <!-- End -->
 

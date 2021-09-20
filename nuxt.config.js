@@ -44,7 +44,7 @@ export default {
     "@nuxtjs/apollo"
   ],
 
-apollo: {
+  apollo: {
     clientConfigs: {
       default: "~/plugins/graphql-config.js"
     }
@@ -62,7 +62,7 @@ apollo: {
     proxy: false,
     browserBaseURL:
       // "https://musa-integrator-v3-sandbox-production.up.railway.app/api",
-      "http://34.101.181.84.nip.io/api",
+      "http://34.101.181.84:1337/api",
     // browserBaseURL: 'https://7a312f874d9b.up.railway.app/api',
     headers: {
       common: {
@@ -89,7 +89,11 @@ apollo: {
         },
         endpoints: {
           login: { url: "login", method: "post", propertyName: "access_token" },
-          refresh: { url: "refresh", method: "get", propertyName: "access_token" },
+          refresh: {
+            url: "refresh",
+            method: "get",
+            propertyName: "access_token"
+          },
           user: { url: "me", method: "get", propertyName: false }
           // logout : false,
         }
