@@ -414,9 +414,21 @@
 
       <!-- Full Table Issue -->
       <FullTabItemIssue
+        v-if="btnAddType == `issue`"
         :dialogFullTableIssue="dialogFullTableIssue"
         :close="close"
         :issueHistoryList="issueHistoryList"
+        :deleteItem="deleteItem"
+        :editItem="editItem"
+      />
+      <!-- End -->
+
+      <!-- Full Table Calibration History -->
+      <FullTabItemCalibrationHistory
+        v-else
+        :dialogFullTableIssue="dialogFullTableIssue"
+        :close="close"
+        :calibrationHistoryList="calibrationHistoryList"
         :deleteItem="deleteItem"
         :editItem="editItem"
       />
@@ -447,6 +459,7 @@ import DialogFormEditIssue from "./DialogFormEditIssue.vue";
 import DialogFormCalibration from "./DialogFormCalibration.vue";
 import DialogFormEditCalibration from "./DialogFormEditCalibration.vue";
 import FullTabItemIssue from "./FullTabItemIssue.vue";
+import FullTabItemCalibrationHistory from "./FullTabItemCalibrationHistory.vue";
 import gql from "graphql-tag";
 
 const SENSORS_MEASUREMENTS_DISTRIBUTION = gql`
@@ -474,6 +487,7 @@ export default {
     DialogFormIssue,
     DialogFormCalibration,
     FullTabItemIssue,
+    FullTabItemCalibrationHistory,
     DialogFormEditIssue,
     DialogFormEditCalibration
   },
