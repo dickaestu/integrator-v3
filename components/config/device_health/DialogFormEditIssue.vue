@@ -145,7 +145,8 @@ export default {
     dialogEditIssue: Boolean,
     close: Function,
     data: Object,
-    param: String
+    param: String,
+    updateIssue: Function
   },
   data: () => ({
     issueDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -165,7 +166,11 @@ export default {
   }),
   watch: {
     addingData() {
-      this.issueDate = this.data.date;
+      this.issueDate = new Date(
+        this.data.date * 1000 - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10);
       this.editedItem = {
         issueDate: this.data.date,
         person_company: this.data.personAndCompanyName,
@@ -178,7 +183,11 @@ export default {
     }
   },
   created() {
-    this.issueDate = this.data.date;
+    this.issueDate = new Date(
+      this.data.date * 1000 - new Date().getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .substr(0, 10);
     this.editedItem = {
       issueDate: this.data.date,
       person_company: this.data.personAndCompanyName,
@@ -200,6 +209,8 @@ export default {
           "configuration/issue_history/editIssue",
           this.editedItem
         );
+
+        this.updateIssue(this.editedItem);
       } catch (err) {
         console.log(err);
       }

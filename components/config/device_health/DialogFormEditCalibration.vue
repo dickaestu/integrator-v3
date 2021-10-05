@@ -205,7 +205,8 @@ export default {
     dialogEditIssue: Boolean,
     close: Function,
     data: Object,
-    param: String
+    param: String,
+    updateCalibration: Function
   },
   data: () => ({
     calibrationDate: new Date(
@@ -233,15 +234,22 @@ export default {
       note: null,
       parameter: null,
       fileID: null,
-      nextSchedule: null
+      nextSchedule: Math.floor(Date.now() / 1000)
     },
     loadingEditCalibration: false
   }),
   watch: {
     addingData() {
-      this.calibrationDate = this.data.date;
-
-      this.calibrationDate2 = this.data.nextSchedule;
+      this.calibrationDate = new Date(
+        this.data.date * 1000 - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10);
+      this.calibrationDate2 = new Date(
+        this.data.nextSchedule * 1000 - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10);
 
       this.editedItem = {
         calibrationDate: this.data.date,
@@ -257,9 +265,17 @@ export default {
     }
   },
   created() {
-    this.calibrationDate = this.data.date;
+    this.calibrationDate = new Date(
+      this.data.date * 1000 - new Date().getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .substr(0, 10);
+    this.calibrationDate2 = new Date(
+      this.data.nextSchedule * 1000 - new Date().getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .substr(0, 10);
 
-    this.calibrationDate2 = this.data.nextSchedule;
     this.editedItem = {
       calibrationDate: this.data.date,
       person_company: this.data.personAndCompanyName,
@@ -271,6 +287,8 @@ export default {
       fileID: this.data.fileID,
       nextSchedule: this.data.nextSchedule
     };
+
+    // console.log(this.data);
   },
   methods: {
     dateChange(val) {
