@@ -163,7 +163,7 @@
                           text
                           @click="
                             () => {
-                              $refs.menu.save(calibrationDate2);
+                              $refs.menu2.save(calibrationDate2);
                               dateChange2(calibrationDate2);
                             }
                           "

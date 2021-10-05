@@ -33,17 +33,14 @@
                                   v-model="dialogAddEditUnit"
                                   max-width="500px"
                                 > -->
-                                  <!-- <template v-slot:activator="{ on, attrs }"> -->
-                                    <v-btn
-                                      class="btnBgColor"
-                                      @click="addUnitItem"
-                                    >
-                                      <v-icon left>
-                                        mdi-plus
-                                      </v-icon>
-                                      ADD Unit
-                                    </v-btn>
-                                  <!-- </template> -->
+                                <!-- <template v-slot:activator="{ on, attrs }"> -->
+                                <v-btn class="btnBgColor" @click="addUnitItem">
+                                  <v-icon left>
+                                    mdi-plus
+                                  </v-icon>
+                                  ADD Unit
+                                </v-btn>
+                                <!-- </template> -->
                                 <!-- </v-dialog> -->
                               </template>
                             </v-col>
@@ -187,8 +184,8 @@
                                           >Description</label
                                         >
                                         <v-textarea
-                                          ref="editedItem.desc"
-                                          v-model="editedItem.desc"
+                                          ref="editedItem.description"
+                                          v-model="editedItem.description"
                                           solo
                                           class="form_edit"
                                           label="Enter unit description"
@@ -492,7 +489,7 @@
                                           </v-icon>
                                         </template>
                                         <v-list class="py-0">
-                                          <v-list-item @click="editItem(item)">
+                                          <v-list-item @click="editItem(i)">
                                             <v-list-item-title>
                                               <v-icon small class="mr-1">
                                                 mdi-pencil
@@ -500,9 +497,7 @@
                                               Edit
                                             </v-list-item-title>
                                           </v-list-item>
-                                          <v-list-item
-                                            @click="deleteItem(item)"
-                                          >
+                                          <v-list-item @click="deleteItem(i)">
                                             <v-list-item-title>
                                               <v-icon small class="mr-1">
                                                 mdi-delete
@@ -581,7 +576,7 @@
 <script>
 import SideMenu from "../../../components/config/SideMenu.vue";
 import Menu from "../../../components/Menu.vue";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "unit_list",
@@ -639,7 +634,7 @@ export default {
       latitude: null,
       longitude: null,
       expired: null,
-      desc: null,
+      description: null,
       protocol: null,
       port_rtu: null,
       port_tcp: null,
@@ -731,18 +726,26 @@ export default {
       }
     },
     async save() {
-      console.log(this.editedItem)
+      try {
+        const res = await this.$store.dispatch(
+          "configuration/unit_list/addUnit",
+          this.editedItem
+        );
+      } catch (err) {
+        console.log(err);
+      }
+      this.close();
     },
     handleDialogSeeMore(params) {
       this.dialogSeeMore = true;
       this.dataDialogSeeMore = params;
     },
     addUnitItem() {
-      this.editedItem.uuid = uuidv4()
+      this.editedItem.uuid = uuidv4();
       this.dialogAddEditUnit = true;
-      console.log(this.editedItem)
     },
     editItem(item) {
+      // console.log(item);
       this.editedIndex = this.unit_list.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogAddEditUnit = true;
