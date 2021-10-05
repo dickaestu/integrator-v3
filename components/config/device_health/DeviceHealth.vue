@@ -368,7 +368,7 @@
 
       <!-- Edit Issue -->
       <DialogFormEditCalibration
-        v-else
+        v-else-if="btnEditType == `calibration`"
         :dialogEditIssue="dialogEditIssue"
         :close="close"
         :data="editedItemCalibration"

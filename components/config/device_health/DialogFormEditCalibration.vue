@@ -163,7 +163,7 @@
                           text
                           @click="
                             () => {
-                              $refs.menu.save(calibrationDate2);
+                              $refs.menu2.save(calibrationDate2);
                               dateChange2(calibrationDate2);
                             }
                           "
@@ -324,7 +324,7 @@ export default {
             "configuration/calibration_history/editCalibration",
             this.editedItem
           );
-          console.log(res);
+          this.updateCalibration(this.editedItem);
         } catch (err) {
           console.log(err);
         }
@@ -334,7 +334,7 @@ export default {
             "configuration/calibration_history/editCalibration",
             this.editedItem
           );
-          console.log(res);
+          this.updateCalibration(this.editedItem);
         } catch (err) {
           console.log(err);
         }
