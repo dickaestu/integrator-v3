@@ -1,6 +1,6 @@
 export default () => {
   return {
-    httpEndpoint: "http://34.101.181.84:1337/api/graphql",
+    httpEndpoint: "https://integrator.staging.musagreen.com/api/graphql",
 
     /*
      * For permanent authentication provide `getAuth` function.

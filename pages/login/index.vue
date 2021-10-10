@@ -100,6 +100,7 @@ export default {
           }
         });
         this.loading = false;
+        console.log(response)
         localStorage.setItem("token_musa", response.data.access_token);
         // window.console.log('test login with', this.$auth.loginWith)
         // window.console.log('test login user', this.$auth.user)

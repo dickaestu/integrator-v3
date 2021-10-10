@@ -62,7 +62,8 @@ export default {
     proxy: false,
     browserBaseURL:
       // "https://musa-integrator-v3-sandbox-production.up.railway.app/api",
-      "http://34.101.181.84:1337/api",
+      // "http://34.101.181.84:1337/api",
+      "https://integrator.staging.musagreen.com/api",
     // browserBaseURL: 'https://7a312f874d9b.up.railway.app/api',
     headers: {
       common: {
