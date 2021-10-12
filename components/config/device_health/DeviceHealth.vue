@@ -85,9 +85,14 @@
                     <p>Series</p>
                   </div>
                   <div class="right">
-                    <p>
-                      {{ sensorParams.id }}
-                    </p>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <p v-bind="attrs" v-on="on">
+                          {{ sensorParams.id.substring(0, 15) }}...
+                        </p>
+                      </template>
+                      <span>{{ sensorParams.id }}</span>
+                    </v-tooltip>
                     <p>{{ sensorParams.device_type }}</p>
                     <p>...</p>
                   </div>
@@ -108,8 +113,20 @@
                           : ""
                       }}
                     </p>
-                    <p>01-05-2021</p>
-                    <p>14-06-2021</p>
+                    <p>
+                      {{
+                        deviceHealthValue !== null
+                          ? deviceHealthValue.lastCalibrationDate
+                          : ""
+                      }}
+                    </p>
+                    <p>
+                      {{
+                        deviceHealthValue !== null
+                          ? deviceHealthValue.nextCalibrationDate
+                          : ""
+                      }}
+                    </p>
                   </div>
                 </div>
               </v-col>
@@ -385,7 +402,7 @@
       >
         <v-card>
           <v-card-title class="text-h5 justify-space-between"
-            >Delete Device?
+            >Delete {{ dialogDeleteName }}?
             <v-icon
               class="close_dialog white--text"
               @click="dialogDelete = false"
@@ -394,19 +411,18 @@
             </v-icon>
           </v-card-title>
           <v-card-text class="pb-0">
-            Deleting a device will permanently remove it from the system.
+            Deleting a {{ dialogDeleteName }} will permanently remove it from
+            the system.
           </v-card-text>
           <v-container fluid>
             <v-row class="pb-3 my-auto mx-auto">
               <v-col cols="12" sm="6">
-                <v-btn text @click="deleteItemConfirm"
-                  >YES, DELETE DEVICE</v-btn
-                >
+                <v-btn text @click="deleteItemConfirm">YES, DELETE </v-btn>
               </v-col>
               <v-col cols="12" sm="6">
                 <v-btn class="cancel_delete" text @click="closeDelete"
-                  >NO, KEEP DEVICE</v-btn
-                >
+                  >NO, KEEP
+                </v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -519,6 +535,7 @@ export default {
     editedIndex: null,
     deletedIndex: null,
     deleteType: null,
+    dialogDeleteName: "",
     editedItem: {
       issueDate: null,
       person_company: null,
@@ -728,11 +745,12 @@ export default {
       this.editedIndex = index;
       this.dialogEditIssue = true;
     },
-    deleteItem(item, index, type) {
+    deleteItem(item, index, type, title) {
       this.deletedIndex = index;
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
       this.deleteType = type;
+      this.dialogDeleteName = title;
     },
     close() {
       this.dialogAddEntryIssue = false;
@@ -845,15 +863,30 @@ export default {
           downTime: resDeviceHealth.deviceHealth.downTime,
           ghostPeak: resDeviceHealth.deviceHealth.ghostPeak,
           installationDate: new Date(
-            resDeviceHealth.deviceHealth.installationDate
-          ),
-          lastCalibrationDate: new Date(
-            resDeviceHealth.deviceHealth.lastCalibrationDate
-          ),
-          lastUpdate: new Date(resDeviceHealth.deviceHealth.lastUpdate),
-          nextCalibrationDate: new Date(
-            resDeviceHealth.deviceHealth.nextCalibrationDate
+            resDeviceHealth.deviceHealth.installationDate * 1000 -
+              new Date().getTimezoneOffset() * 60000
           )
+            .toISOString()
+            .substr(0, 10),
+          lastCalibrationDate: new Date(
+            resDeviceHealth.deviceHealth.lastCalibrationDate * 1000 -
+              new Date().getTimezoneOffset() * 60000
+          )
+            .toISOString()
+            .substr(0, 10),
+
+          lastUpdate: new Date(
+            resDeviceHealth.deviceHealth.lastUpdate * 1000 -
+              new Date().getTimezoneOffset() * 60000
+          )
+            .toISOString()
+            .substr(0, 10),
+          nextCalibrationDate: new Date(
+            resDeviceHealth.deviceHealth.nextCalibrationDate * 1000 -
+              new Date().getTimezoneOffset() * 60000
+          )
+            .toISOString()
+            .substr(0, 10)
         };
 
         // if (res) {
