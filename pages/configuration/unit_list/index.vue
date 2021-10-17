@@ -351,7 +351,7 @@
                                       :loading="loadingAddUser"
                                       :disabled="loadingAddUser"
                                     >
-                                      Add New Unit
+                                      {{ formTitle }}
                                     </v-btn>
                                     <v-btn
                                       text
@@ -561,7 +561,7 @@
           fixed
           rounded="pill"
         >
-          {{ toastMsgAddUser }}
+          {{ toastMsg }}
           <template v-slot:action="{ attrs }">
             <v-btn color="white" text v-bind="attrs" @click="toast = false">
               Close
@@ -586,18 +586,18 @@ export default {
   },
   data: () => ({
     // bell: false,
+    update: false,
     sidebarMenu: false,
     menu: false,
     expired: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
       .toISOString()
       .substr(0, 10),
-    // expired: new Date().toISOString().substr(0, 10),
     dialogAddEditUnit: false,
     dialogSeeMore: false,
     dialogDelete: false,
     dialogRoles: false,
     dataDialogSeeMore: null,
-    toastMsgAddUser: "",
+    toastMsg: "",
     toast: false,
     errorMessages: "",
     modbusRTU: false,
@@ -608,8 +608,8 @@ export default {
     ],
     // expired: ["Test1", "Test2", "Test3"],
     protocol: [
-      { text: "Modbus RTU", value: "rtu" },
-      { text: "Modbus TCP", value: "tcp" }
+      { text: "Modbus RTU", value: "ModbusRTU" },
+      { text: "Modbus TCP", value: "ModbusTCP" }
     ],
     parity: ["Even", "Odd"],
     headers: [
@@ -643,7 +643,8 @@ export default {
       parity: null,
       stop_bits: null,
       host: null,
-      uuid: null
+      uuid: null,
+      serial_port: null
     },
     defaultItem: {
       name: null,
@@ -651,7 +652,7 @@ export default {
       latitude: null,
       longitude: null,
       expired: null,
-      desc: null,
+      description: null,
       protocol: null,
       port_rtu: null,
       port_tcp: null,
@@ -660,7 +661,8 @@ export default {
       parity: null,
       stop_bits: null,
       host: null,
-      uuid: null
+      uuid: null,
+      serial_port: null
     },
     loadingAddUser: false,
     loadingGetUser: false
@@ -695,6 +697,7 @@ export default {
 
   created() {
     this.getUnitList();
+    // console.log(this.unit_list);
   },
 
   methods: {
@@ -706,17 +709,42 @@ export default {
         );
 
         this.loadingGetUser = false;
+        // console.log(res);
+
         if (res.units.length > 0) {
           res.units.map(unit => {
-            this.unit_list.push({
-              id: unit.id,
-              name: unit.name,
-              description: unit.description,
-              location: unit.location,
-              longitude: unit.longitude,
-              latitude: unit.latitude,
-              sensors: unit.sensors
-            });
+            if (unit.config.__typename === "ModbusTCP") {
+              this.unit_list.push({
+                id: unit.id,
+                name: unit.name,
+                description: unit.description,
+                location: unit.location,
+                longitude: unit.longitude,
+                latitude: unit.latitude,
+                sensors: unit.sensors,
+                protocol: unit.config.__typename,
+                host: unit.config.host,
+                port_tcp: unit.config.tcpPort,
+                expired: unit.certificationExpirationDate
+              });
+            } else {
+              this.unit_list.push({
+                id: unit.id,
+                name: unit.name,
+                description: unit.description,
+                location: unit.location,
+                longitude: unit.longitude,
+                latitude: unit.latitude,
+                sensors: unit.sensors,
+                protocol: unit.config.__typename,
+                baud_rate: unit.config.baudRate,
+                data_bits: unit.config.dataBits,
+                parity: unit.config.parity,
+                port_rtu: unit.config.serialPort,
+                stop_bits: unit.config.stopBits,
+                expired: unit.certificationExpirationDate
+              });
+            }
           });
         }
       } catch (err) {
@@ -726,13 +754,71 @@ export default {
       }
     },
     async save() {
+      let dataModbus = null;
+      if (this.editedItem.protocol === "ModbusTCP") {
+        dataModbus = {
+          unitID: this.editedItem.id,
+          config: {
+            host: this.editedItem.host,
+            port: this.editedItem.port_tcp
+          }
+        };
+      } else if (this.editedItem.protocol === "ModbusRTU") {
+        dataModbus = {
+          unitID: this.editedItem.id,
+          config: {
+            baudRate: this.editedItem.baud_rate,
+            dataBits: this.editedItem.data_bits,
+            parity: this.editedItem.parity,
+            port: this.editedItem.port_rtu,
+            stopBits: this.editedItem.stop_bits
+          }
+        };
+      }
       try {
         const res = await this.$store.dispatch(
           "configuration/unit_list/addUnit",
           this.editedItem
         );
+
+        if (dataModbus !== null) {
+          let resModbus;
+          if (this.editedItem.protocol === "ModbusTCP") {
+            resModbus = await this.$store.dispatch(
+              "configuration/unit_list/addTcp",
+              dataModbus
+            );
+          } else {
+            resModbus = await this.$store.dispatch(
+              "configuration/unit_list/addRtu",
+              dataModbus
+            );
+          }
+
+          if (this.update) {
+            if (resModbus === "Something went wrong") {
+              this.toastMsg = resModbus;
+              this.toast = true;
+            } else {
+              this.updateData(this.editedItem);
+              this.toastMsg = "Data has been Updated";
+              this.toast = true;
+            }
+          } else {
+            if (resModbus === "Something went wrong") {
+              this.toastMsg = resModbus;
+              this.toast = true;
+            } else {
+              this.saveData(this.editedItem);
+              this.toastMsg = "Data has been Created";
+              this.toast = true;
+            }
+          }
+        }
       } catch (err) {
         console.log(err);
+        this.toastMsg = "Something went wrong";
+        this.toast = true;
       }
       this.close();
     },
@@ -741,7 +827,7 @@ export default {
       this.dataDialogSeeMore = params;
     },
     addUnitItem() {
-      this.editedItem.uuid = uuidv4();
+      this.editedItem.id = uuidv4();
       this.dialogAddEditUnit = true;
     },
     editItem(item) {
@@ -749,6 +835,19 @@ export default {
       this.editedIndex = this.unit_list.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogAddEditUnit = true;
+      if (this.editedItem.protocol === "ModbusRTU") {
+        this.modbusTCP = false;
+        this.modbusRTU = true;
+      } else {
+        this.modbusTCP = true;
+        this.modbusRTU = false;
+      }
+      this.update = true;
+      this.expired = new Date(
+        item.expired * 1000 - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10);
     },
     deleteItem(item) {
       this.editedIndex = this.unit_list.indexOf(item);
@@ -767,7 +866,7 @@ export default {
         if (res) {
           if (res.data.deleteUser.ok) {
             this.unit_list.splice(this.editedIndex, 1);
-            this.toastMsgAddUser = "Data has been Deleted";
+            this.toastMsg = "Data has been Deleted";
             this.toast = true;
           }
         }
@@ -783,6 +882,14 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+      this.modbusTCP = false;
+      this.modbusRTU = false;
+      this.update = false;
+      this.expired = new Date(
+        Date.now() - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10);
     },
     closeDelete() {
       this.dialogDelete = false;
@@ -792,16 +899,65 @@ export default {
       });
     },
     dateChange(val) {
-      console.log(val);
+      this.editedItem.expired = Math.floor(new Date(val).getTime() / 1000);
     },
     ShowHideProtocol() {
-      if (this.editedItem.protocol === "rtu") {
+      if (this.editedItem.protocol === "ModbusRTU") {
         this.modbusTCP = false;
         this.modbusRTU = true;
       } else {
         this.modbusTCP = true;
         this.modbusRTU = false;
       }
+    },
+    async updateData(item) {
+      const newData = this.unit_list.map(i => {
+        if (i.id === item.id) {
+          return {
+            ...i,
+            name: item.name,
+            location: item.location,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            expired: item.expired,
+            description: item.description,
+            protocol: item.protocol,
+            port_rtu: item.port_rtu,
+            port_tcp: item.port_tcp,
+            baud_rate: item.baud_rate,
+            data_bits: item.data_bits,
+            parity: item.parity,
+            stop_bits: item.stop_bits,
+            host: item.host,
+            id: item.id,
+            serial_port: item.serial_port
+          };
+        }
+        return i;
+      });
+
+      this.unit_list = newData;
+    },
+
+    async saveData(item) {
+      this.unit_list.push({
+        name: item.name,
+        location: item.location,
+        latitude: item.latitude,
+        longitude: item.longitude,
+        expired: item.expired,
+        description: item.description,
+        protocol: item.protocol,
+        port_rtu: item.port_rtu,
+        port_tcp: item.port_tcp,
+        baud_rate: item.baud_rate,
+        data_bits: item.data_bits,
+        parity: item.parity,
+        stop_bits: item.stop_bits,
+        host: item.host,
+        id: item.id,
+        serial_port: item.serial_port
+      });
     }
   }
 };

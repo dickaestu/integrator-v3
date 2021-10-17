@@ -1,5 +1,5 @@
 import { gql } from "graphql-tag";
-// import { ModbusTCPCore, ModbusRTUCore } from './fragments'
+import { ModbusRTU, ModbusTCP } from "./fragments";
 
 export const state = () => ({
   unitList: null,
@@ -7,6 +7,8 @@ export const state = () => ({
 });
 
 const GET_UNIT_LIST = gql`
+  ${ModbusRTU}
+  ${ModbusTCP}
   query units($id: [ID!]) {
     units(id: $id) {
       id
@@ -32,6 +34,10 @@ const GET_UNIT_LIST = gql`
         thresholdLow
         thresholdHigh
         customCalibration
+      }
+      config {
+        ...modbusRtu
+        ...modbusTcp
       }
     }
   }
@@ -78,7 +84,7 @@ export const actions = {
         }
       });
 
-      console.log(res);
+      // console.log(res);
       // if (res) {
       //   commit('getUnitList', { res })
       // }
@@ -88,7 +94,6 @@ export const actions = {
     }
   },
   async addUnit({ commit }, formData) {
-    // return console.log(formData);
     let client = this.app.apolloProvider.defaultClient;
     try {
       const res = await client.mutate({
@@ -113,6 +118,58 @@ export const actions = {
       return res.data;
     } catch (err) {
       console.log(err);
+    }
+  },
+  async addTcp({ commit }, formData) {
+    let client = this.app.apolloProvider.defaultClient;
+    try {
+      const res = await client.mutate({
+        mutation: EDIT_MODBUS_TCP,
+        variables: {
+          unitID: formData.unitID,
+          config: {
+            host: formData.config.host,
+            port: formData.config.port
+          }
+        }
+      });
+
+      // console.log(res);
+      // if (res) {
+      //   commit('getUnitList', { res })
+      // }
+      // console.log(res);
+      return res.data;
+    } catch (err) {
+      console.log(err.message);
+      return "Something went wrong";
+    }
+  },
+  async addRtu({ commit }, formData) {
+    let client = this.app.apolloProvider.defaultClient;
+    try {
+      const res = await client.mutate({
+        mutation: EDIT_MODBUS_RTU,
+        variables: {
+          unitID: formData.unitID,
+          config: {
+            baudRate: formData.config.baudRate,
+            dataBits: formData.config.dataBits,
+            parity: formData.config.parity,
+            port: formData.config.port,
+            stopBits: formData.config.stopBits
+          }
+        }
+      });
+
+      // console.log(res);
+      // if (res) {
+      //   commit('getUnitList', { res })
+      // }
+      return res.data;
+    } catch (err) {
+      console.log(err.message);
+      return "Something went wrong";
     }
   }
 };
