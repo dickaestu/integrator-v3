@@ -577,6 +577,15 @@
 import SideMenu from "../../../components/config/SideMenu.vue";
 import Menu from "../../../components/Menu.vue";
 import { v4 as uuidv4 } from "uuid";
+import gql from "graphql-tag";
+
+const DELETE_UNIT = gql`
+  mutation deleteUnit($unitID: ID!) {
+    deleteUnit(unitID: $unitID) {
+      ok
+    }
+  }
+`;
 
 export default {
   name: "unit_list",
@@ -857,14 +866,14 @@ export default {
     async deleteItemConfirm() {
       try {
         const res = await this.$apollo.mutate({
-          mutation: DELETE_unit_list,
+          mutation: DELETE_UNIT,
           variables: {
-            userID: this.editedItem.id
+            unitID: this.editedItem.id
           }
         });
 
         if (res) {
-          if (res.data.deleteUser.ok) {
+          if (res.data.deleteUnit.ok) {
             this.unit_list.splice(this.editedIndex, 1);
             this.toastMsg = "Data has been Deleted";
             this.toast = true;
