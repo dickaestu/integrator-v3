@@ -112,13 +112,7 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-    extend: function(config, { isDev, isClient }) {
-      config.node = {
-        fs: "empty"
-      };
-    }
-  },
+  build: {},
   server: {
     port: 2500, // default: 3000
     host: "localhost" // default: localhost

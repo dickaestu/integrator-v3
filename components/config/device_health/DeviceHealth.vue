@@ -213,10 +213,11 @@
               <v-col cols="12">
                 <div id="vuechart-health">
                   <apexchart
+                    id="vuechart-example"
                     type="area"
-                    height="200"
                     :options="options"
                     :series="series"
+                    height="200"
                   ></apexchart>
                 </div>
               </v-col>
@@ -497,6 +498,24 @@ const SENSORS_MEASUREMENTS_DISTRIBUTION = gql`
     }
   }
 `;
+
+const SENSORS_MEASUREMENTS = gql`
+  query sensorMeasurements(
+    $startTime: Timestamp
+    $endTime: Timestamp
+    $parameters: [String!]
+  ) {
+    sensorMeasurements(
+      startTime: $startTime
+      endTime: $endTime
+      parameters: $parameters
+    ) {
+      parameter
+      timestamps
+      values
+    }
+  }
+`;
 export default {
   name: "DeviceHealth",
   components: {
@@ -522,6 +541,12 @@ export default {
       .substr(0, 10),
     tab: null,
     dates: ["2021-06-16", "2021-06-16"],
+    datesArray: [
+      new Date().toISOString().split("T")[0],
+      new Date().toISOString().split("T")[0]
+      // "2021-06-16",
+      // "2021-06-16"
+    ],
     menu: false,
     issueHistoryList: [],
     calibrationHistoryList: [],
@@ -682,7 +707,6 @@ export default {
         enabled: true
       }
     },
-    series: [],
     loadingAddSensors: false,
     loadingAddIssue: false,
     loadingGetDeviceHealthItem: false,
@@ -694,7 +718,14 @@ export default {
     btnEditType: null,
 
     timestamps1: new Date().getTime(),
-    timestamps2: new Date().getTime()
+    timestamps2: new Date().getTime(),
+    dataInterval: null,
+
+    series: [],
+    yAxisGrafik: [],
+    dataGrafik: {},
+    loading: false,
+    parameter: null
   }),
   computed: {
     dateRangeText() {
@@ -719,8 +750,35 @@ export default {
       this.getSensors();
       this.getIssueList();
       this.getCalibrationHistoryList();
-      this.getGraphicSensorsMeasurementsDistribution();
+      // this.getGraphicSensorsMeasurementsDistribution();
+
       // console.log(this.sensorParameter);
+      var arr1 = this.datesArray[0];
+      arr1 = arr1.split("-");
+      var newDate = new Date(
+        arr1[0],
+        arr1[1] - 1,
+        arr1[2],
+        0,
+        0,
+        1,
+        0
+      ).getTime();
+      this.timestamps1 = newDate;
+
+      var arr2 = this.datesArray[1];
+      arr2 = arr2.split("-");
+      var newDate2 = new Date(
+        arr2[0],
+        arr2[1] - 1,
+        arr2[2],
+        23,
+        59,
+        59
+      ).getTime();
+      this.timestamps2 = newDate2;
+
+      this.getGraphicSensors(this.sensorParameter.parameter);
     }
   },
   created() {
@@ -728,7 +786,25 @@ export default {
     this.getSensors();
     this.getIssueList();
     this.getCalibrationHistoryList();
-    this.getGraphicSensorsMeasurementsDistribution();
+    // this.getGraphicSensorsMeasurementsDistribution();
+    var arr1 = this.datesArray[0];
+    arr1 = arr1.split("-");
+    var newDate = new Date(arr1[0], arr1[1] - 1, arr1[2], 0, 0, 1, 0).getTime();
+    this.timestamps1 = newDate;
+
+    var arr2 = this.datesArray[1];
+    arr2 = arr2.split("-");
+    var newDate2 = new Date(
+      arr2[0],
+      arr2[1] - 1,
+      arr2[2],
+      23,
+      59,
+      59
+    ).getTime();
+    this.timestamps2 = newDate2;
+
+    this.getGraphicSensors(this.sensorParameter.parameter);
   },
   methods: {
     changeBtnAddType(item) {
@@ -827,7 +903,73 @@ export default {
         console.log(error);
       }
     },
-
+    async getSensorMeasurements(params) {
+      try {
+        this.loading = true;
+        const res = await this.$apollo.query({
+          query: SENSORS_MEASUREMENTS,
+          variables: {
+            startTime: this.timestamps1 / 1000,
+            endTime: this.timestamps2 / 1000,
+            parameters: [params]
+          }
+        });
+        if (res) {
+          this.loading = false;
+          return res;
+        }
+      } catch (err) {
+        console.log(err);
+        this.loading = false;
+        // this.searchResults = [];
+      }
+    },
+    async getGraphicSensors(params) {
+      // if (params === undefined) {
+      //   params = this.dataGrafik;
+      // }
+      try {
+        this.loading = true;
+        let res = await this.getSensorMeasurements(params);
+        this.dataGrafik = params;
+        // console.log(res.data.sensorMeasurements[0].values)
+        let value = res.data.sensorMeasurements[0].values;
+        let time = res.data.sensorMeasurements[0].timestamps;
+        let data = [];
+        let day = [];
+        var options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          timeZone: "Asia/Jakarta",
+          hour12: false
+        };
+        for (let i = 0; i < value.length; i++) {
+          // day[i] = new Intl.DateTimeFormat('ban-ID', options).format(new Date(time[i] * 1000));
+          day[i] = new Date(time[i] * 1000);
+          data.push({
+            x:
+              new Intl.DateTimeFormat("ban-ID", options).format(day[i]) +
+              " WIB",
+            y: value[i].toFixed(2)
+          });
+        }
+        this.series = [
+          {
+            name: "Values",
+            data: data
+          }
+        ];
+        this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
     async getSensors() {
       try {
         this.loadingGetDeviceHealthItem = true;

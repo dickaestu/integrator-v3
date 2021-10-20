@@ -530,7 +530,9 @@
                         width="80%"
                         content-class="device_health_dialog"
                       >
-                        <DeviceHealth :sensorParams="sensorsParamsDeviceHealth" />
+                        <DeviceHealth
+                          :sensorParams="sensorsParamsDeviceHealth"
+                        />
                       </v-dialog>
                     </v-col>
                   </v-row>
@@ -889,8 +891,8 @@ export default {
       this.close();
     },
     dialogDeviceHealthOpen(params) {
-      this.sensorsParamsDeviceHealth = params
-      this.dialogDeviceHealth = open
+      this.sensorsParamsDeviceHealth = params;
+      this.dialogDeviceHealth = open;
     }
   }
 };
