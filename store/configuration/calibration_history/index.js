@@ -196,7 +196,6 @@ export const actions = {
       if (res) {
         commit("editSensors", { res });
       }
-      console.log(res);
       return res.data;
     } catch (err) {
       console.log(err);

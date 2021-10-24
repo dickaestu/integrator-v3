@@ -362,16 +362,18 @@
         :close="close"
         :data="editedItem"
         :param="sensorParameter.parameter"
+        :updateIssue="updateIssue"
       />
       <!-- End -->
 
       <!-- Edit Issue -->
       <DialogFormEditCalibration
-        v-else
+        v-else-if="btnEditType == `calibration`"
         :dialogEditIssue="dialogEditIssue"
         :close="close"
-        :data="editedItem"
+        :data="editedItemCalibration"
         :param="sensorParameter.parameter"
+        :updateCalibration="updateCalibration"
       />
       <!-- End -->
 
@@ -523,6 +525,16 @@ export default {
       issue_desc: null,
       status: null,
       note: null
+    },
+    editedItemCalibration: {
+      date: null,
+      personAndCompanyName: null,
+      description: null,
+      status: null,
+      note: null,
+      parameter: null,
+      fileID: null,
+      nextSchedule: null
     },
     defaultItem: {
       issueDate: null,
@@ -707,9 +719,13 @@ export default {
     },
 
     editItem(item, index, type) {
+      if (type === "calibration") {
+        this.editedItemCalibration = Object.assign({}, item);
+      } else {
+        this.editedItem = Object.assign({}, item);
+      }
       this.btnEditType = type;
       this.editedIndex = index;
-      this.editedItem = Object.assign({}, item);
       this.dialogEditIssue = true;
     },
     deleteItem(item, index, type) {
@@ -976,6 +992,28 @@ export default {
       this.toast = true;
     },
 
+    async updateIssue(item) {
+      const newData = this.issueHistoryList.map(i => {
+        if (i.id === item.id) {
+          return {
+            ...i,
+            id: item.id,
+            date: item.issueDate,
+            personAndCompanyName: item.person_company,
+            description: item.issue_desc,
+            status: item.status,
+            note: item.note
+          };
+        }
+        return i;
+      });
+
+      this.issueHistoryList = newData;
+
+      this.toastMsg = "Data has been Updated";
+      this.toast = true;
+    },
+
     async saveCalibration(item) {
       this.calibrationHistoryList.push({
         id: item.id,
@@ -989,6 +1027,30 @@ export default {
       });
 
       this.toastMsg = "Data has been Created";
+      this.toast = true;
+    },
+
+    async updateCalibration(item) {
+      const newData = this.calibrationHistoryList.map(i => {
+        if (i.id === item.id) {
+          return {
+            ...i,
+            id: item.id,
+            date: item.calibrationDate,
+            personAndCompanyName: item.person_company,
+            description: item.desc,
+            status: item.status,
+            note: item.note,
+            nextSchedule: item.nextSchedule,
+            fileID: item.fileID
+          };
+        }
+        return i;
+      });
+
+      this.calibrationHistoryList = newData;
+
+      this.toastMsg = "Data has been Updated";
       this.toast = true;
     }
   }
