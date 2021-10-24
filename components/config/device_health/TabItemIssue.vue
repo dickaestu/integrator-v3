@@ -54,7 +54,7 @@
                   </v-icon>
                 </template>
                 <v-list class="py-0">
-                  <v-list-item @click="editItem(i, index, `issue`)">
+                  <v-list-item @click="editItem(i, index, `issue`, `Issue`)">
                     <v-list-item-title>
                       <v-icon small class="mr-1">
                         mdi-pencil
@@ -62,7 +62,9 @@
                       Edit
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item @click="deleteItem(i, index, `delete-issue`)">
+                  <v-list-item
+                    @click="deleteItem(i, index, `delete-issue`, `Issue`)"
+                  >
                     <v-list-item-title>
                       <v-icon small class="mr-1">
                         mdi-delete

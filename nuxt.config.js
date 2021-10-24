@@ -45,6 +45,7 @@ export default {
   ],
 
   apollo: {
+    includeNodeModules: true,
     clientConfigs: {
       default: "~/plugins/graphql-config.js"
     }

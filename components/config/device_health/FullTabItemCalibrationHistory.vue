@@ -123,7 +123,9 @@
                         </template>
                         <v-list class="py-0">
                           <v-list-item
-                            @click="editItem(i, index, `calibration`)"
+                            @click="
+                              editItem(i, index, `calibration`, `Calibration`)
+                            "
                           >
                             <v-list-item-title>
                               <v-icon small class="mr-1">
@@ -133,7 +135,14 @@
                             </v-list-item-title>
                           </v-list-item>
                           <v-list-item
-                            @click="deleteItem(i, index, `delete-calibration`)"
+                            @click="
+                              deleteItem(
+                                i,
+                                index,
+                                `delete-calibration`,
+                                `Calibration`
+                              )
+                            "
                           >
                             <v-list-item-title>
                               <v-icon small class="mr-1">

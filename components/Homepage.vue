@@ -393,6 +393,7 @@ export default {
       59
     ).getTime();
     this.timestamps2 = newDate2;
+
     this.dataInterval = setInterval(() => {
       this.dateRangeText = this.dates.join(" ~ ");
       this.getSensors();
@@ -632,6 +633,7 @@ export default {
       try {
         this.loading = true;
         let res = await this.getSensorMeasurements(params.parameter);
+        console.log(res);
         this.dataGrafik = params;
         // console.log(res.data.sensorMeasurements[0].values)
         let value = res.data.sensorMeasurements[0].values;
