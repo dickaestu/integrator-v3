@@ -199,11 +199,14 @@
                   </v-col>
                   <v-col cols="6" md="3" offset-lg="3">
                     <v-select
+                      ref="selectedGraph"
                       class="form_edit_select"
                       :items="selectGraph"
                       label="Trend"
                       solo
                       hide-details="auto"
+                      v-model="selectedGraph"
+                      @change="changeTrendDistribution()"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -553,6 +556,7 @@ export default {
     status: [],
     menuIssueDate: false,
     selectGraph: ["Trend", "Distribution"],
+    selectedGraph: "Trend",
     dialogAddEntryIssue: false,
     dialogEditIssue: false,
     dialogFullTableIssue: false,
@@ -947,7 +951,8 @@ export default {
           timeZone: "Asia/Jakarta",
           hour12: false
         };
-        for (let i = 0; i < value.length; i++) {
+
+        for (let i = 0; i < time.length; i++) {
           // day[i] = new Intl.DateTimeFormat('ban-ID', options).format(new Date(time[i] * 1000));
           day[i] = new Date(time[i] * 1000);
           data.push({
@@ -955,6 +960,198 @@ export default {
               new Intl.DateTimeFormat("ban-ID", options).format(day[i]) +
               " WIB",
             y: value[i].toFixed(2)
+            // y: formatDate(
+            //   new Date(time[i] * 1000 - new Date().getTimezoneOffset() * 60000)
+            // )
+            // y: time[i]
+          });
+        }
+        this.series = [
+          {
+            name: "Values",
+            data: data
+          }
+        ];
+        this.yAxisGrafik = res.data.sensorMeasurements[0].timestamps;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async getGraphicSensorsByDistribution(params) {
+      this.options = {
+        annotations: {
+          position: "front",
+          yaxis: [
+            {
+              y: null,
+              y2: null,
+              strokeDashArray: 7,
+              borderColor: "#FFD4A2",
+              opacity: 1,
+              offsetX: 0,
+              offsetY: 0,
+              width: "100%",
+              yAxisIndex: 0,
+              label: {
+                borderWidth: 0,
+                borderRadius: 6,
+                text: "lower threshold: 6",
+                textAnchor: "center",
+                position: "left",
+                offsetX: 0,
+                offsetY: -15,
+                style: {
+                  opacity: 0.5,
+                  background: "#F0F2F4",
+                  color: "#69747E;",
+                  fontSize: "12px",
+                  fontWeight: 400,
+                  fontFamily: undefined,
+                  cssClass: "apexcharts-yaxis-annotation-label",
+                  padding: {
+                    left: 7,
+                    right: 7,
+                    top: 7,
+                    bottom: 7
+                  }
+                }
+              }
+            },
+            {
+              y: 100,
+              y2: null,
+              strokeDashArray: 7,
+              borderColor: "#FFD4A2",
+              opacity: 1,
+              offsetX: 0,
+              offsetY: 0,
+              width: "100%",
+              yAxisIndex: 0,
+              label: {
+                borderWidth: 0,
+                borderRadius: 6,
+                text: "upper threshold: 100",
+                textAnchor: "center",
+                position: "left",
+                offsetX: 0,
+                offsetY: -15,
+                style: {
+                  opacity: 0.5,
+                  background: "#F0F2F4",
+                  color: "#69747E;",
+                  fontSize: "12px",
+                  fontWeight: 400,
+                  fontFamily: undefined,
+                  cssClass: "apexcharts-yaxis-annotation-label",
+                  padding: {
+                    left: 7,
+                    right: 7,
+                    top: 7,
+                    bottom: 7
+                  }
+                }
+              }
+            }
+          ]
+        },
+        grid: {
+          show: false
+        },
+        chart: {
+          toolbar: {
+            show: false
+          },
+          id: "vuechart-example",
+          type: "area",
+          height: 150,
+          foreColor: "#51A1B4"
+        },
+        colors: ["#44BDD8", "#B9EFFF"],
+        stroke: {
+          curve: "smooth",
+          width: 2
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          type: "numeric",
+          categories: [""],
+          labels: {
+            show: true
+          },
+          axisBorder: {
+            show: true
+          },
+          axisTicks: {
+            show: true
+          }
+        },
+        yaxis: {
+          labels: {
+            show: true,
+            formatter: value => {
+              return new Date(
+                value * 1000 - new Date().getTimezoneOffset() * 60000
+              )
+                .toISOString()
+                .substr(0, 10);
+            }
+          }
+        },
+        fill: {
+          opacityFrom: 0.7,
+          opacityTo: 0.9
+        },
+        tooltip: {
+          enabled: true
+        }
+      };
+      // if (params === undefined) {
+      //   params = this.dataGrafik;
+      // }
+      try {
+        this.loading = true;
+        let res = await this.getSensorMeasurements(params);
+        this.dataGrafik = params;
+        // console.log(res.data.sensorMeasurements[0].values)
+        let value = res.data.sensorMeasurements[0].values;
+        let time = res.data.sensorMeasurements[0].timestamps;
+        let data = [];
+        let day = [];
+        var options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          timeZone: "Asia/Jakarta",
+          hour12: false
+        };
+        const formatDate = date => {
+          let formatted_date =
+            date.getDate() +
+            "/" +
+            (date.getMonth() + 1) +
+            "/" +
+            date.getFullYear();
+          return formatted_date;
+        };
+        for (let i = 0; i < time.length; i++) {
+          // day[i] = new Intl.DateTimeFormat('ban-ID', options).format(new Date(time[i] * 1000));
+          day[i] = new Date(time[i] * 1000);
+          data.push({
+            x:
+              new Intl.DateTimeFormat("ban-ID", options).format(day[i]) +
+              " WIB",
+            // y: value[i].toFixed(2)
+            // y: formatDate(
+            //   new Date(time[i] * 1000 - new Date().getTimezoneOffset() * 60000)
+            // )
+            y: time[i]
           });
         }
         this.series = [
@@ -1227,6 +1424,14 @@ export default {
 
       this.toastMsg = "Data has been Updated";
       this.toast = true;
+    },
+
+    async changeTrendDistribution(val) {
+      if (this.selectedGraph === "Trend") {
+        this.getGraphicSensors(this.sensorParameter.parameter);
+      } else {
+        this.getGraphicSensorsByDistribution(this.sensorParameter.parameter);
+      }
     }
   }
 };
