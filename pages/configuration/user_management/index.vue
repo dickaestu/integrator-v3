@@ -172,6 +172,22 @@
                                       </v-col>
                                       <v-col cols="12">
                                         <label class="title_field"
+                                          >Notification</label
+                                        >
+                                        <v-select
+                                          ref="editedItem.notify"
+                                          class="form_edit_select"
+                                          v-model="editedItem.notify"
+                                          :items="notify"
+                                          item-text="text"
+                                          item-value="val"
+                                          label="Select notify"
+                                          solo
+                                          hide-details="auto"
+                                        ></v-select>
+                                      </v-col>
+                                      <v-col cols="12">
+                                        <label class="title_field"
                                           >Position</label
                                         >
                                         <v-text-field
@@ -399,6 +415,10 @@ export default {
       { title: "About", icon: "mdi-forum" }
     ],
     roles: ["Admin", "Editor", "Viewer"],
+    notify: [
+      { text: "ON", val: true },
+      { text: "OFF", val: false}
+    ],
     links: ["Home", "Contacts", "Settings"],
     filters: ["Admin", "Editor", "Viewer"],
     selectedFilters: [],
@@ -421,6 +441,7 @@ export default {
       email: null,
       roles: null,
       position: null,
+      notify: null,
       password: null
     },
     defaultItem: {
@@ -588,7 +609,7 @@ export default {
               name: this.editedItem.name,
               email: this.editedItem.email,
               roles: this.editedItem.roles,
-              notify: true,
+              notify: this.editedItem.notify,
               position: this.editedItem.position,
               password: this.editedItem.password
             }
@@ -600,7 +621,7 @@ export default {
               name: this.editedItem.name,
               email: this.editedItem.email,
               roles: this.editedItem.roles,
-              notify: true,
+              notify: this.editedItem.notify,
               position: this.editedItem.position
             }
           };
@@ -634,7 +655,7 @@ export default {
                 name: this.editedItem.name,
                 email: this.editedItem.email,
                 roles: this.editedItem.roles,
-                notify: true,
+                notify: this.editedItem.notify,
                 position: this.editedItem.position
               },
               password: this.editedItem.password
