@@ -70,13 +70,13 @@ export const actions = {
             console.log(err);
         }
     },
-    async getSensors({commit}) {
+    async getSensors({commit}, id) {
       let client = this.app.apolloProvider.defaultClient
       try {
           const res = await client.query({
             query: UNITS_SENSORS,
             variables: {
-              id: []
+              id: id
             }
           });
 

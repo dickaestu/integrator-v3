@@ -112,10 +112,13 @@
           <v-col cols="6" sm="4" md="3" lg="2">
             <v-select
               :items="Unit"
+              item-text="name"
+              item-value="id"
               label="Unit"
               dense
               solo
               hide-details="auto"
+              v-on:change="handleChangeUnit"
             ></v-select>
           </v-col>
           <v-col cols="6" sm="4" md="3" lg="2">
@@ -224,7 +227,8 @@ export default {
     log: [],
     items: [],
     parameter: null,
-    Unit: ["Unit 01"],
+    Unit: [],
+    selectedUnit: [],
     Device: ["Sensors"],
     options: {
       annotations: {
@@ -240,30 +244,6 @@ export default {
             offsetY: 0,
             width: "100%",
             yAxisIndex: 0
-            // label: {
-            //   borderWidth: 0,
-            //   borderRadius: 6,
-            //   text: "lower threshold: ",
-            //   textAnchor: "center",
-            //   position: "left",
-            //   offsetX: 0,
-            //   offsetY: -15,
-            //   style: {
-            //     opacity: 0.5,
-            //     background: "#F0F2F4",
-            //     color: "#69747E;",
-            //     fontSize: "12px",
-            //     fontWeight: 400,
-            //     fontFamily: undefined,
-            //     cssClass: "apexcharts-yaxis-annotation-label",
-            //     padding: {
-            //       left: 7,
-            //       right: 7,
-            //       top: 7,
-            //       bottom: 7
-            //     }
-            //   }
-            // }
           },
           {
             y: null,
@@ -419,13 +399,23 @@ export default {
     }, 60000);
   },
   methods: {
+    handleChangeUnit(event){
+      this.selectedUnit.push(event)
+      this.getSensors()
+    },
     async getSensors() {
       try {
         this.loading = true;
         // this.dataInterval = setInterval(async () => {
-        const res = await this.$store.dispatch("home/getSensors");
+        const res = await this.$store.dispatch("home/getSensors", this.selectedUnit);
         // console.log(this.$store.state.home.sensors)
         // if (res) {
+        res.data.units.map(unitList => {
+          this.Unit.push({
+            name: unitList.name,
+            id: unitList.id
+          })
+        })
         if (res.data.units.length > 0) {
           const promises = res.data.units[0].sensors.map(async result => {
             const sensors = await this.getSensorMeasurements(result.parameter);
