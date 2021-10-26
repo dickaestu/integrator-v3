@@ -453,8 +453,13 @@
                             v-for="(sensor, indexSensor) in unit"
                             :key="indexSensor"
                           >
-                            <v-col cols="12">
-                              <p class="title_head">Sensors</p>
+                            <v-col
+                              v-if="sensor.sensors_device_list !== null"
+                              cols="12"
+                            >
+                              <p class="title_head">
+                                Sensors
+                              </p>
                               <v-row>
                                 <v-col
                                   xl="2"
@@ -712,10 +717,13 @@ export default {
   methods: {
     async getUnitList() {
       try {
+        this.unit = [];
         this.loadingGetUnitList = true;
         const res = await this.$store.dispatch(
           "configuration/device_list/getUnitList"
         );
+
+        console.log(res.units);
 
         this.loadingGetUnitList = false;
         res.units.map(async unit => {
@@ -764,6 +772,12 @@ export default {
               text: unit.name,
               value: unit.id,
               sensors_device_list: sensor_device
+            });
+          } else {
+            this.unit.push({
+              text: unit.name,
+              value: unit.id,
+              sensors_device_list: null
             });
           }
           this.loadingSensors = false;
