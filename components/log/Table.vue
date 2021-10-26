@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="renderComponent">
     <v-row class="d-flex justify-lg-end mb-5 mt-4 mt-lg-0">
       <v-col cols="12" sm="3" md="2" lg="2">
         <p class="mb-0 mt-1 text-lg-right musa_green_dark_text">Select Date</p>
@@ -28,7 +28,6 @@
           </template>
           <v-date-picker
             v-model="date"
-            @change="dateChange(date)"
             no-title
             scrollable
             color="color_current_date"
@@ -37,7 +36,7 @@
             <v-btn text @click="menu = false">
               Cancel
             </v-btn>
-            <v-btn text @click="$refs.menu.save(date)">
+            <v-btn text @click="$refs.menu.save(dateChange(date))">
               OK
             </v-btn>
           </v-date-picker>
@@ -53,6 +52,7 @@
             label="All Type"
             dense
             solo
+            v-on:change="handleChangeType"
           ></v-select>
         </v-col>
         <v-col cols="6" sm="4" md="3" lg="2">
@@ -62,6 +62,7 @@
             label="All Level"
             dense
             solo
+            v-on:change="handleChangeLevel"
           ></v-select>
         </v-col>
       </v-row>
@@ -114,6 +115,7 @@ const QUERY_LOGS = gql`
 export default {
   name: "Log",
   data: () => ({
+    renderComponent: true,
     date: new Date().toISOString().split("T")[0],
     menu: false,
     items: [],
@@ -123,8 +125,10 @@ export default {
       { text: "Level", value: "level" },
       { text: "Description", value: "desc" }
     ],
-    Type: ["Api"],
-    level: ["Info", "Error"],
+    Type: ["api", "operation", "iot", "endpoint", "database", "measurement"],
+    selectedType: [],
+    level: ["info", "error", "warn"],
+    selectedLevel: [],
     loading: false,
     timestamps1: null,
     timestamps2: null
@@ -133,8 +137,28 @@ export default {
     this.getLogs();
   },
   methods: {
+    forceRerender() {
+      // Remove my-component from the DOM
+      this.renderComponent = false;
+
+      this.$nextTick(() => {
+        // Add the component back in
+        this.renderComponent = true;
+      });
+    },
+    handleChangeType(event){
+      this.selectedType = []
+      this.selectedType.push(event)
+      this.getLogs()
+    },
+    handleChangeLevel(event){
+      this.selectedLevel = []
+      this.selectedLevel.push(event)
+      this.getLogs()
+    },
     async getLogs() {
       try {
+        console.log(this.date)
         this.loading = true;
         const res = await this.$apollo.query({
           query: QUERY_LOGS,
@@ -142,12 +166,15 @@ export default {
             startTime:
               this.timestamps1 !== null ? this.timestamps1 / 1000 : null,
             endTime: this.timestamps2 !== null ? this.timestamps2 / 1000 : null,
-            type: ["measurement", "data_transfer", "iot", "operation"],
-            level: []
+            type: this.selectedType,
+            level: this.selectedLevel
           }
         });
 
+        console.log("log response",res)
+
         if (res) {
+          this.items = [];
           this.loading = false;
           let result = res.data.logs;
           var options = {
@@ -187,8 +214,6 @@ export default {
       // else return "#71C7DC";
     },
     dateChange(val) {
-      console.log(val);
-      // this.menu = false
       var arr1 = val;
       arr1 = arr1.split("-");
       var newDate = new Date(
@@ -213,6 +238,7 @@ export default {
         59
       ).getTime();
       this.timestamps2 = newDate2;
+      this.date = new Date(newDate2).toISOString().split("T")[0]
       this.getLogs();
     }
   }

@@ -7,85 +7,6 @@
         <v-row>
           <v-col>
             <v-card class="mx-auto">
-              <!-- <v-navigation-drawer
-                class="menu-left"
-                dark
-                v-model="sidebarMenu"
-                app
-                floating
-                absolute
-                :permanent="$vuetify.breakpoint.mdAndUp"
-              >
-                <v-list dense nav>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <h5>
-                        General Configuration
-                      </h5>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider></v-divider>
-                  <v-list-item
-                    link
-                    to="/configuration/common_setup"
-                    class="mb-7"
-                  >
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Common Setup
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <h5>
-                        Device Configuration
-                      </h5>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider></v-divider>
-                  <v-list-item link to="/">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Device List
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item link to="/">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Unit List
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item link class="mb-7" to="/">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Device Calibration
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <h5>
-                        User Configuration
-                      </h5>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider></v-divider>
-                  <v-list-item
-                    link
-                    class="active"
-                    to="/configuration/user_management"
-                  >
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        User Management
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-navigation-drawer> -->
               <SideMenu :sideBar="sidebarMenu" />
               <v-content class="menu-right">
                 <v-container class="px-4 py-0 fill-height" fluid>
@@ -490,8 +411,8 @@ export default {
       { text: "Email", value: "email" },
       { text: "Roles", value: "roles" },
       { text: "Position", value: "position" },
-      { text: "", value: "notify", sortable: false },
-      { text: "", value: "actions", sortable: false }
+      { text: "Notification", value: "notify", sortable: false },
+      { text: "Actions", value: "actions", sortable: false }
     ],
     users: [],
     editedIndex: -1,
@@ -550,6 +471,7 @@ export default {
 
   methods: {
     toggleBell() {
+      console.log('masuk')
       this.bell = !this.bell;
     },
     onMouseEnterGenerateBtn() {

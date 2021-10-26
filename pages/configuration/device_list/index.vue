@@ -77,7 +77,7 @@
                                 class="radius "
                                 hide-details
                                 v-model="selectedFilters"
-                                :items="filters"
+                                :items="unit"
                                 prepend-inner-icon="mdi-filter"
                                 multiple
                                 label="Filter"
@@ -718,7 +718,7 @@ export default {
         );
 
         this.loadingGetUnitList = false;
-        res.units.map(async unit => {
+        res.units.map(async (unit, index) => {
           if (unit.sensors !== null) {
             const promises = unit.sensors.map(async result => {
               const sensors = await this.$store.dispatch(
@@ -760,10 +760,17 @@ export default {
                 calibration: result.customCalibration
               });
             });
+            console.log(unit)
             this.unit.push({
               text: unit.name,
               value: unit.id,
               sensors_device_list: sensor_device
+            });
+          }else{
+            this.unit.push({
+              text: unit.name,
+              value: unit.id,
+              sensors_device_list: null
             });
           }
           this.loadingSensors = false;
