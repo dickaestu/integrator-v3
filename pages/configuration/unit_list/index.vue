@@ -525,9 +525,34 @@
                                           v-for="(device, index2) in i.sensors"
                                           :key="index2"
                                         >
-                                          <div class="btnBgColor">
+                                          <div
+                                            v-if="device.parameter.length <= 7"
+                                            class="btnBgColor"
+                                          >
                                             {{ device.parameter }}
                                           </div>
+                                          <v-tooltip v-else bottom>
+                                            <template
+                                              v-slot:activator="{ on, attrs }"
+                                            >
+                                              <div
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                class="btnBgColor"
+                                              >
+                                                {{
+                                                  device.parameter.substring(
+                                                    0,
+                                                    7
+                                                  )
+                                                }}
+                                                ...
+                                              </div>
+                                            </template>
+                                            <span>
+                                              {{ device.parameter }}
+                                            </span>
+                                          </v-tooltip>
                                         </v-col>
                                       </v-row>
                                     </div>
