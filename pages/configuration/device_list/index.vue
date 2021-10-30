@@ -723,9 +723,10 @@ export default {
           "configuration/device_list/getUnitList"
         );
 
-        console.log(res.units);
+        // console.log(res.units);
 
         this.loadingGetUnitList = false;
+
         res.units.map(async (unit, index) => {
           if (unit.sensors !== null) {
             const promises = unit.sensors.map(async result => {
@@ -737,6 +738,7 @@ export default {
             });
 
             const dataSensors = await Promise.all(promises);
+            // console.log(dataSensors);
             const loopSensors = dataSensors.map(sensors => {
               const val = sensors.data.sensorMeasurements[0].values;
               const lastVal = val[val.length - 1];
@@ -768,7 +770,7 @@ export default {
                 calibration: result.customCalibration
               });
             });
-            console.log(unit)
+            // console.log(unit);
             this.unit.push({
               text: unit.name,
               value: unit.id,
@@ -813,8 +815,9 @@ export default {
       });
     },
     async editItem(item) {
-      console.log(item);
-      // this.editedIndex = this.sensors_device_list.indexOf(item);
+      this.unit.map((sensor, index) => {
+        this.editedIndex = sensor.sensors_device_list.indexOf(item);
+      });
       this.editedItem = Object.assign({}, item);
       this.dialogAddEditDevice = true;
     },
@@ -866,6 +869,7 @@ export default {
       });
     },
     async save() {
+      console.log(this.editedIndex);
       if (this.editedIndex > -1) {
         try {
           this.loadingAddSensors = true;
