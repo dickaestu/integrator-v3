@@ -882,6 +882,33 @@ export default {
             this.loadingAddSensors = false;
             this.toastMsgSensors = "Success To Edit";
             this.toast = true;
+
+            // const newData = this.sensor.sensors_device_list.map(i => {
+            //   if (i.id === item.id) {
+            //     return {
+            //       ...i,
+            //       name: item.name,
+            //       location: item.location,
+            //       latitude: item.latitude,
+            //       longitude: item.longitude,
+            //       expired: item.expired,
+            //       description: item.description,
+            //       protocol: item.protocol,
+            //       port_rtu: item.port_rtu,
+            //       port_tcp: item.port_tcp,
+            //       baud_rate: item.baud_rate,
+            //       data_bits: item.data_bits,
+            //       parity: item.parity,
+            //       stop_bits: item.stop_bits,
+            //       host: item.host,
+            //       id: item.id,
+            //       serial_port: item.serial_port
+            //     };
+            //   }
+            //   return i;
+            // });
+
+            // this.sensor.sensors_device_list = newData;
           }
           this.getUnitList();
         } catch (error) {
