@@ -1355,7 +1355,7 @@ export default {
           enabled: false
         },
         xaxis: {
-          type: "String",
+          type: "numeric",
           categories: [""],
           labels: {
             show: true
@@ -1371,18 +1371,19 @@ export default {
           labels: {
             show: true,
             formatter: value => {
-              const formatDate = date => {
-                let formatted_date =
-                  date.getDate() +
-                  "-" +
-                  (date.getMonth() + 1) +
-                  "-" +
-                  date.getFullYear();
-                return formatted_date;
-              };
-              return formatDate(
-                new Date(value * 1000 - new Date().getTimezoneOffset() * 60000)
-              );
+              return value;
+              // const formatDate = date => {
+              //   let formatted_date =
+              //     date.getDate() +
+              //     "-" +
+              //     (date.getMonth() + 1) +
+              //     "-" +
+              //     date.getFullYear();
+              //   return formatted_date;
+              // };
+              // return formatDate(
+              //   new Date(value * 1000 - new Date().getTimezoneOffset() * 60000)
+              // );
             }
           }
         },
@@ -1392,26 +1393,18 @@ export default {
         },
         tooltip: {
           enabled: true,
-          x: {
-            show: true,
-            type: "String"
-          },
-          y: {
-            formatter: function(value) {
-              var options = {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                timeZone: "Asia/Jakarta",
-                hour12: false
-              };
-              return new Intl.DateTimeFormat("ban-ID", options).format(
-                new Date(value * 1000)
-              );
-            }
+          custom: function({ series, seriesIndex, dataPointIndex, w }) {
+            var data =
+              w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+            return `
+            <div>
+              <ul>
+                <li>Value: ${data.y}</li>
+                <li>Date: ${data.x}</li>
+                <li>Total: ${data.count}</li>
+              </ul>
+            </div>
+            `;
           }
         }
       };
@@ -1427,6 +1420,7 @@ export default {
         let time = res.data.sensorMeasurements[0].timestamps;
         let data = [];
         let day = [];
+        let newData = [];
         var options = {
           year: "numeric",
           month: "long",
@@ -1437,19 +1431,47 @@ export default {
           timeZone: "Asia/Jakarta",
           hour12: false
         };
+        // console.log(res);
 
         for (let i = 0; i < value.length; i++) {
-          // day[i] = new Intl.DateTimeFormat('ban-ID', options).format(new Date(time[i] * 1000));
-          day[i] = new Date(time[i] * 1000);
-          data.push({
-            x: parseInt(value[i]),
-            // y: value[i].toFixed(2)
-            // y: formatDate(
-            //   new Date(time[i] * 1000 - new Date().getTimezoneOffset() * 60000)
-            // )
-            y: time[i]
+          newData.push({
+            datetime: new Date(
+              time[i] * 1000 - new Date().getTimezoneOffset() * 60000
+            )
+              .toISOString()
+              .substr(0, 10),
+
+            val: parseInt(value[i])
           });
         }
+
+        const combinedItems = (arr = []) => {
+          const res = arr.reduce((acc, obj) => {
+            let found = false;
+            for (let i = 0; i < acc.length; i++) {
+              if (acc[i].val === obj.val && acc[i].datetime === obj.datetime) {
+                found = true;
+                acc[i].count++;
+              }
+            }
+            if (!found) {
+              obj.count = 1;
+              acc.push(obj);
+            }
+            return acc;
+          }, []);
+          return res;
+        };
+        const resultNewData = combinedItems(newData);
+
+        for (let i = 0; i < resultNewData.length; i++) {
+          data.push({
+            x: resultNewData[i].datetime,
+            y: resultNewData[i].val,
+            count: resultNewData[i].count
+          });
+        }
+
         this.series2 = [
           {
             name: "Values",
